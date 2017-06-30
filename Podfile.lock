@@ -1,0 +1,59 @@
+PODS:
+  - AFNetworking (3.1.0):
+    - AFNetworking/NSURLSession (= 3.1.0)
+    - AFNetworking/Reachability (= 3.1.0)
+    - AFNetworking/Security (= 3.1.0)
+    - AFNetworking/Serialization (= 3.1.0)
+    - AFNetworking/UIKit (= 3.1.0)
+  - AFNetworking/NSURLSession (3.1.0):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (3.1.0)
+  - AFNetworking/Security (3.1.0)
+  - AFNetworking/Serialization (3.1.0)
+  - AFNetworking/UIKit (3.1.0):
+    - AFNetworking/NSURLSession
+  - ClusterPrePermissions (0.8.1)
+  - DACircularProgress (2.3.1)
+  - Mantle (2.1.0):
+    - Mantle/extobjc (= 2.1.0)
+  - Mantle/extobjc (2.1.0)
+  - Masonry (1.0.2)
+  - MBProgressHUD (0.9.2)
+  - MWPhotoBrowser (2.1.2):
+    - DACircularProgress (~> 2.3)
+    - MBProgressHUD (~> 0.9)
+    - SDWebImage (!= 3.7.2, ~> 3.7)
+  - SDWebImage (3.8.2):
+    - SDWebImage/Core (= 3.8.2)
+  - SDWebImage/Core (3.8.2)
+  - YunKits (0.0.7):
+    - AFNetworking (~> 3.0)
+    - Masonry
+    - SDWebImage
+  - YunPmsHelper (0.0.1):
+    - ClusterPrePermissions
+
+DEPENDENCIES:
+  - Mantle
+  - Masonry
+  - MWPhotoBrowser
+  - YunKits
+  - YunPmsHelper
+
+SPEC CHECKSUMS:
+  AFNetworking: 5e0e199f73d8626b11e79750991f5d173d1f8b67
+  ClusterPrePermissions: 168c127a658e423062550dd9c56fe26042a58bce
+  DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
+  Mantle: 2fa750afa478cd625a94230fbf1c13462f29395b
+  Masonry: 7c429b56da9d4ee0bbb3ed77a5ea710d6a5df39e
+  MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
+  MWPhotoBrowser: 5836d7aa041dc05a13de380c246826578adc5ea5
+  SDWebImage: '098e97e6176540799c27e804c96653ee0833d13c'
+  YunKits: 5d8b2adc17b57b26b65ee3af053c29173d01acb6
+  YunPmsHelper: 8229bbfdb2f783cc2474d6497c5ab976b5cc19af
+
+PODFILE CHECKSUM: fd44c6cdead5499c19b17766483ba3b3395f8441
+
+COCOAPODS: 1.2.1
