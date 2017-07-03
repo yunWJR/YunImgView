@@ -4,7 +4,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "YunImgDefh"
+#import "YunImgDef.h"
 
 @protocol YunSelectImgDelegate <NSObject>
 

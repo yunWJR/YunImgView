@@ -5,7 +5,7 @@
 
 #import <Mantle/Mantle.h>
 #import "UIKit/UIKit.h"
-#import "YunImgDefh"
+#import "YunImgDef.h"
 
 @interface YunImgData : MTLModel <MTLJSONSerializing, NSCopying>
 

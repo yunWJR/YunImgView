@@ -14,5 +14,6 @@ target 'YunImgView' do
   pod 'MWPhotoBrowser'
   pod 'Mantle'
   pod 'YunKits'
+  pod 'TZImagePickerController'
 
 end
