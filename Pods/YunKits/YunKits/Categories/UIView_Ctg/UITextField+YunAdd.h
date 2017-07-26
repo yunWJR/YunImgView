@@ -13,4 +13,6 @@
 
 - (void)setPhColor:(UIColor *)phColor phFont:(UIFont *)phFont;
 
+- (void)setPhText:(NSString *)text tAl:(NSTextAlignment)tAl font:(UIFont *)font color:(UIColor *)color;
+
 @end

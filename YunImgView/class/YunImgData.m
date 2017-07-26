@@ -3,8 +3,6 @@
 // Copyright (c) 2016 成都晟堃科技有限责任公司. All rights reserved.
 //
 
-#import <Mantle/MTLModel.h>
-#import <UIKit/UIKit.h>
 #import "YunImgData.h"
 #import "YunQnHelper.h"
 #import "UIImageView+WebCache.h"
@@ -71,7 +69,7 @@
         }
             break;
         default:
-            NSLog(@"ImageSrcUnkonw");
+            NSLog(@"ImageSrcUnknown");
             break;
     }
 }

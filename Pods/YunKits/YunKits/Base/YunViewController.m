@@ -26,8 +26,6 @@
 
         _hideBottomBar = YES;
 
-        _keyboardNotf = NO;
-
         _sideOff = 10;
 
         _firstLoad = YES;
@@ -78,18 +76,10 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-
-    if (_keyboardNotf) {
-        [self addKeyboardNotification];
-    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
-
-    if (_keyboardNotf) {
-        [self removeKeyboardNotification];
-    }
 
     if (_hideNagBar) {
         [self.navigationController.navigationBar setHidden:NO];
@@ -169,7 +159,9 @@
     self.leftNagItem = lBtnItem;
 }
 
-- (UIBarButtonItem *)createBarItemByNormalImg:(NSString *)norImg highLightImg:(NSString *)highImg action:(nullable SEL)action {
+- (UIBarButtonItem *)createBarItemByNormalImg:(NSString *)norImg
+                                 highLightImg:(NSString *)highImg
+                                       action:(nullable SEL)action {
     UIButton *button = [UIButton new];
     button.backgroundColor = [UIColor clearColor];
     button.imageView.contentMode = UIViewContentModeScaleAspectFit;
@@ -190,7 +182,10 @@
     return btnItem;
 }
 
-- (UIBarButtonItem *)createBarItemByName:(NSString *)name font:(UIFont *)font color:(UIColor *)color action:(nullable SEL)action {
+- (UIBarButtonItem *)createBarItemByName:(NSString *)name
+                                    font:(UIFont *)font
+                                   color:(UIColor *)color
+                                  action:(nullable SEL)action {
     UIBarButtonItem *btnItem = [[UIBarButtonItem alloc] initWithTitle:name
                                                                 style:UIBarButtonItemStyleDone
                                                                target:self
@@ -233,31 +228,6 @@
         }
     }
     return nil;
-}
-
-#pragma mark - UIKeyboard Notification
-
-- (void)addKeyboardNotification {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillShow:)
-                                                 name:UIKeyboardWillShowNotification
-                                               object:nil];
-
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(keyboardWillHide:)
-                                                 name:UIKeyboardWillHideNotification
-                                               object:nil];
-}
-
-- (void)removeKeyboardNotification {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-}
-
-- (void)keyboardWillShow:(NSNotification *)ntf {
-}
-
-- (void)keyboardWillHide:(NSNotification *)ntf {
 }
 
 #pragma mark - protocol

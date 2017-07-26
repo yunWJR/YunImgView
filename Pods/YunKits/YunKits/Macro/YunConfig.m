@@ -4,7 +4,6 @@
 //
 
 #import "YunConfig.h"
-#import "YunGlobalDefine.h"
 
 @implementation YunConfig {
 
@@ -38,6 +37,10 @@
         _isDebugMode = NO;
 
         _isApnsDevMode = NO;
+
+        _iconViewTagInImgView = 99999;
+
+        _btnDefHlColor = [UIColor lightGrayColor];
     }
 
     return self;

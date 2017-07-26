@@ -4,11 +4,11 @@
 //
 
 #import "YunImgListView.h"
+#import "YunImgCVC.h"
 #import "Masonry.h"
 #import "MWPhotoBrowser.h"
 #import "YunImgData.h"
 #import "UIView+YunAdd.h"
-#import "YunImgCVC.h"
 #import "YunSizeHelper.h"
 #import "YunSelectImgHelper.h"
 #import "YunValueVerifier.h"
@@ -62,7 +62,7 @@
 - (void)initSubView:(NSInteger)rowNum {
     [self addObserver:self forKeyPath:@"bounds" options:NSKeyValueObservingOptionNew context:nil];
 
-    _viewWidth = YunSizeHelper.screenWith;
+    _viewWidth = YunSizeHelper.screenWidth;
     _imgDataList = [NSMutableArray new];
     _isEdit = YES;
     _hasAddBtn = YES;
@@ -116,11 +116,14 @@
     return [self sectionCount];
 }
 
-- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
+                  cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSInteger index = indexPath.item + indexPath.section * _rowNum;
 
     if (index == _imgDataList.count) { // 最后一个cell 新增
-        YunImgCVC *cell = [collectionView dequeueReusableCellWithReuseIdentifier:YunImgCellId_AddItem forIndexPath:indexPath];
+        YunImgCVC
+                *cell =
+                [collectionView dequeueReusableCellWithReuseIdentifier:YunImgCellId_AddItem forIndexPath:indexPath];
         if (!cell) {
             cell = [YunImgCVC new];
         }
@@ -130,7 +133,8 @@
         return cell;
     }
 
-    YunImgCVC *cell = [collectionView dequeueReusableCellWithReuseIdentifier:YunImgCellId_ImgItem forIndexPath:indexPath];
+    YunImgCVC
+            *cell = [collectionView dequeueReusableCellWithReuseIdentifier:YunImgCellId_ImgItem forIndexPath:indexPath];
     if (!cell) {
         cell = [YunImgCVC new];
     }
@@ -142,15 +146,21 @@
 
 #pragma mark - UICollectionViewDelegateFlowLayout
 
-- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
+- (CGSize)collectionView:(UICollectionView *)collectionView
+                  layout:(UICollectionViewLayout *)collectionViewLayout
+  sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     return _cellSize;
 }
 
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
+- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
+                        layout:(UICollectionViewLayout *)collectionViewLayout
+        insetForSectionAtIndex:(NSInteger)section {
     return UIEdgeInsetsMake(_interval * 0.5f, _sideOff, _interval * 0.5f, _sideOff);
 }
 
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout *)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
+- (CGFloat)               collectionView:(UICollectionView *)collectionView
+                                  layout:(UICollectionViewLayout *)collectionViewLayout
+minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     return 0;
 }
 
@@ -494,7 +504,10 @@
 
 // 保存到相册
 - (void)savedPhotosToAlbum:(UIImage *)image {
-    UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSavingWithError:contextInfo:), (__bridge void *) self);
+    UIImageWriteToSavedPhotosAlbum(image,
+                                   self,
+                                   @selector(image:didFinishSavingWithError:contextInfo:),
+                                   (__bridge void *) self);
 }
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {

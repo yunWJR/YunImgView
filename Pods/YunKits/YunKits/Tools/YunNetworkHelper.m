@@ -6,7 +6,6 @@
 //  Copyright © 2016年 成都晟堃科技有限责任公司. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import "YunNetworkHelper.h"
 #import "AFNetworkReachabilityManager.h"
 
@@ -40,30 +39,35 @@
 
 - (void)startMonitor {
     // 网络状态检测
-    [[AFNetworkReachabilityManager sharedManager] setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
-        _started = YES;
-        NSLog(@"Reachability: %@", AFStringFromNetworkReachabilityStatus(status));
+    [[AFNetworkReachabilityManager sharedManager]
+                                   setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+                                       _started = YES;
+                                       NSLog(@"Reachability: %@", AFStringFromNetworkReachabilityStatus(status));
 
-        if (_didStatusChanged) {
-            _didStatusChanged(self.isNetworkAvailable);
-        }
+                                       if (_didStatusChanged) {
+                                           _didStatusChanged(self.isNetworkAvailable);
+                                       }
 
-        [[NSNotificationCenter defaultCenter] postNotificationName:NETWORK_STATUS_NOTI_STR
-                                                            object:nil
-                                                          userInfo:@{@"status" : @(self.isNetworkAvailable)}];
-    }];
+                                       [[NSNotificationCenter defaultCenter]
+                                                              postNotificationName:NETWORK_STATUS_NOTI_STR
+                                                                            object:nil
+                                                                          userInfo:@{@"status" : @(self.isNetworkAvailable)}];
+                                   }];
 
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
 }
 
 - (void)isNetworkReachable:(void (^)(BOOL))result {
-    dispatch_async(dispatch_queue_create("background", 0), ^{
-        while (true) {
-            if (_started) {break;}
-        }
+    result([AFNetworkReachabilityManager sharedManager].isReachable);
 
-        result([AFNetworkReachabilityManager sharedManager].isReachable);
-    });
+    //return;
+    //dispatch_async(dispatch_queue_create("background", 0), ^{
+    //    while (true) { // todo 死循环
+    //        if (_started) {break;}
+    //    }
+    //
+    //    result([AFNetworkReachabilityManager sharedManager].isReachable);
+    //});
 }
 
 - (BOOL)isNetworkAvailable {

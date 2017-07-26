@@ -17,16 +17,16 @@
 
 @property (nonatomic, assign) CGFloat height;
 
-- (UIView *)setViewRadius:(CGFloat)radius width:(CGFloat)width color:(UIColor *)color;
-
-- (UIViewController *)superViewController;
+- (void)setViewRadius:(CGFloat)radius width:(CGFloat)width color:(UIColor *)color;
 
 - (void)setShadow:(CGFloat)opacity color:(UIColor *)color radius:(CGFloat)radius offset:(CGSize)offset;
-
-- (UIView *)subViewOfClassName:(NSString *)className;
 
 - (void)removeAllSubView;
 
 - (void)stopAnm;
+
+- (UIView *)subViewOfClassName:(NSString *)className;
+
+- (UIViewController *)superViewController;
 
 @end

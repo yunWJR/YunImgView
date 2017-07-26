@@ -22,6 +22,12 @@
     return [self labelWithText:text font:font color:color align:NSTextAlignmentLeft lines:1 adjust:NO];
 }
 
++ (UILabel *)labelWithMulText:(NSString *)text
+                         font:(UIFont *)font
+                        color:(UIColor *)color {
+    return [self labelWithText:text font:font color:color align:NSTextAlignmentLeft lines:0 adjust:NO];
+}
+
 + (UILabel *)labelWithText:(NSString *)text
                       font:(UIFont *)font
                      color:(UIColor *)color
@@ -52,7 +58,7 @@
 
 + (UILabel *)labelWithIcon:(NSString *_Nullable)icon
                   fontSize:(CGFloat)fontSize
-                 textColor:(UIColor *_Nullable)color {
+                     color:(UIColor *_Nullable)color {
     UILabel *iconLbl = [UILabel new];
     iconLbl.font = [UIFont fontWithName:YunConfig.instance.iconFontName size:fontSize];
     iconLbl.text = icon;

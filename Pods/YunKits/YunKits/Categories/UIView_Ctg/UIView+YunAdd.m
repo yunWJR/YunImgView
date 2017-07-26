@@ -6,6 +6,7 @@
 //
 
 #import "UIView+YunAdd.h"
+#import "YunValueVerifier.h"
 
 @implementation UIView (YunAdd)
 
@@ -57,7 +58,7 @@
     return self.frame.size.height;
 }
 
-- (UIView *)setViewRadius:(CGFloat)radius width:(CGFloat)width color:(UIColor *)color {
+- (void)setViewRadius:(CGFloat)radius width:(CGFloat)width color:(UIColor *)color {
     self.layer.cornerRadius = radius;
     self.layer.masksToBounds = YES;
     self.layer.borderWidth = width;
@@ -65,8 +66,6 @@
     if (color) {
         self.layer.borderColor = color.CGColor;
     }
-
-    return self;
 }
 
 - (UIViewController *)superViewController {
@@ -88,6 +87,8 @@
 }
 
 - (UIView *)subViewOfClassName:(NSString *)className {
+    if ([YunValueVerifier isNilOrEmptyOrSpaceStr:className]) {return nil;}
+
     for (UIView *subView in self.subviews) {
         if ([NSStringFromClass(subView.class) isEqualToString:className]) {
             return subView;
@@ -98,11 +99,16 @@
             return resultFound;
         }
     }
+
     return nil;
 }
 
 - (void)removeAllSubView {
-    [[self subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    while (self.subviews.count) {
+        [self.subviews.lastObject removeFromSuperview];
+    }
+
+    //[[self subviews] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 }
 
 - (void)stopAnm {

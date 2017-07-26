@@ -19,13 +19,14 @@
 
 @implementation TZImageManager
 
-static CGSize AssetGridThumbnailSize;
-static CGFloat TZScreenWidth;
-static CGFloat TZScreenScale;
+CGSize AssetGridThumbnailSize;
+CGFloat TZScreenWidth;
+CGFloat TZScreenScale;
+
+static TZImageManager *manager;
+static dispatch_once_t onceToken;
 
 + (instancetype)manager {
-    static TZImageManager *manager;
-    static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         manager = [[self alloc] init];
         if (iOS8Later) {
@@ -33,21 +34,37 @@ static CGFloat TZScreenScale;
             // manager.cachingImageManager.allowsCachingHighQualityImages = YES;
         }
         
-        TZScreenWidth = [UIScreen mainScreen].bounds.size.width;
-        // 测试发现，如果scale在plus真机上取到3.0，内存会增大特别多。故这里写死成2.0
-        TZScreenScale = 2.0;
-        if (TZScreenWidth > 700) {
-            TZScreenScale = 1.5;
-        }
+        [manager configTZScreenWidth];
     });
     return manager;
 }
 
++ (void)deallocManager {
+    onceToken = 0;
+    manager = nil;
+}
+
+- (void)setPhotoWidth:(CGFloat)photoWidth {
+    _photoWidth = photoWidth;
+    TZScreenWidth = photoWidth / 2;
+}
+
 - (void)setColumnNumber:(NSInteger)columnNumber {
+    [self configTZScreenWidth];
+
     _columnNumber = columnNumber;
     CGFloat margin = 4;
     CGFloat itemWH = (TZScreenWidth - 2 * margin - 4) / columnNumber - margin;
     AssetGridThumbnailSize = CGSizeMake(itemWH * TZScreenScale, itemWH * TZScreenScale);
+}
+
+- (void)configTZScreenWidth {
+    TZScreenWidth = [UIScreen mainScreen].bounds.size.width;
+    // 测试发现，如果scale在plus真机上取到3.0，内存会增大特别多。故这里写死成2.0
+    TZScreenScale = 2.0;
+    if (TZScreenWidth > 700) {
+        TZScreenScale = 1.5;
+    }
 }
 
 - (ALAssetsLibrary *)assetLibrary {
@@ -298,24 +315,13 @@ static CGFloat TZScreenScale;
     if (!canSelect) return nil;
     
     TZAssetModel *model;
-    TZAssetModelMediaType type = TZAssetModelMediaTypePhoto;
+    TZAssetModelMediaType type = [self getAssetType:asset];
     if ([asset isKindOfClass:[PHAsset class]]) {
-        PHAsset *phAsset = (PHAsset *)asset;
-        if (phAsset.mediaType == PHAssetMediaTypeVideo)      type = TZAssetModelMediaTypeVideo;
-        else if (phAsset.mediaType == PHAssetMediaTypeAudio) type = TZAssetModelMediaTypeAudio;
-        else if (phAsset.mediaType == PHAssetMediaTypeImage) {
-            if (iOS9_1Later) {
-                // if (asset.mediaSubtypes == PHAssetMediaSubtypePhotoLive) type = TZAssetModelMediaTypeLivePhoto;
-            }
-            // Gif
-            if ([[phAsset valueForKey:@"filename"] hasSuffix:@"GIF"]) {
-                type = TZAssetModelMediaTypePhotoGif;
-            }
-        }
         if (!allowPickingVideo && type == TZAssetModelMediaTypeVideo) return nil;
         if (!allowPickingImage && type == TZAssetModelMediaTypePhoto) return nil;
         if (!allowPickingImage && type == TZAssetModelMediaTypePhotoGif) return nil;
         
+        PHAsset *phAsset = (PHAsset *)asset;
         if (self.hideWhenCanNotSelect) {
             // 过滤掉尺寸不满足要求的图片
             if (![self isPhotoSelectableWithAsset:phAsset]) {
@@ -331,8 +337,7 @@ static CGFloat TZScreenScale;
             return model;
         }
         /// Allow picking video
-        if ([[asset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo]) {
-            type = TZAssetModelMediaTypeVideo;
+        if (type == TZAssetModelMediaTypeVideo) {
             NSTimeInterval duration = [[asset valueForProperty:ALAssetPropertyDuration] doubleValue];
             NSString *timeLength = [NSString stringWithFormat:@"%0.0f",duration];
             timeLength = [self getNewTimeFromDurationSecond:timeLength.integerValue];
@@ -348,6 +353,29 @@ static CGFloat TZScreenScale;
         }
     }
     return model;
+}
+
+- (TZAssetModelMediaType)getAssetType:(id)asset {
+    TZAssetModelMediaType type = TZAssetModelMediaTypePhoto;
+    if ([asset isKindOfClass:[PHAsset class]]) {
+        PHAsset *phAsset = (PHAsset *)asset;
+        if (phAsset.mediaType == PHAssetMediaTypeVideo)      type = TZAssetModelMediaTypeVideo;
+        else if (phAsset.mediaType == PHAssetMediaTypeAudio) type = TZAssetModelMediaTypeAudio;
+        else if (phAsset.mediaType == PHAssetMediaTypeImage) {
+            if (iOS9_1Later) {
+                // if (asset.mediaSubtypes == PHAssetMediaSubtypePhotoLive) type = TZAssetModelMediaTypeLivePhoto;
+            }
+            // Gif
+            if ([[phAsset valueForKey:@"filename"] hasSuffix:@"GIF"]) {
+                type = TZAssetModelMediaTypePhotoGif;
+            }
+        }
+    } else {
+        if ([[asset valueForProperty:ALAssetPropertyType] isEqualToString:ALAssetTypeVideo]) {
+            type = TZAssetModelMediaTypeVideo;
+        }
+    }
+    return type;
 }
 
 - (NSString *)getNewTimeFromDurationSecond:(NSInteger)duration {
@@ -375,7 +403,7 @@ static CGFloat TZScreenScale;
     for (NSInteger i = 0; i < photos.count; i++) {
         TZAssetModel *model = photos[i];
         if ([model.asset isKindOfClass:[PHAsset class]]) {
-            [[PHImageManager defaultManager] requestImageDataForAsset:model.asset options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+            [[PHImageManager defaultManager] requestImageDataForAsset:model.asset options:nil resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
                 if (model.type != TZAssetModelMediaTypeVideo) dataLength += imageData.length;
                 assetCount ++;
                 if (assetCount >= photos.count) {
@@ -439,7 +467,7 @@ static CGFloat TZScreenScale;
             CGFloat aspectRatio = phAsset.pixelWidth / (CGFloat)phAsset.pixelHeight;
             CGFloat pixelWidth = photoWidth * TZScreenScale * 1.5;
             // 超宽图片
-            if (aspectRatio > 1) {
+            if (aspectRatio > 1.8) {
                 pixelWidth = pixelWidth * aspectRatio;
             }
             // 超高图片
@@ -455,7 +483,7 @@ static CGFloat TZScreenScale;
         // 下面两行代码，来自hsjcom，他的github是：https://github.com/hsjcom 表示感谢
         PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
         option.resizeMode = PHImageRequestOptionsResizeModeFast;
-        int32_t imageRequestID = [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:imageSize contentMode:PHImageContentModeAspectFill options:option resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+        int32_t imageRequestID = [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:imageSize contentMode:PHImageContentModeAspectFill options:option resultHandler:^(UIImage *result, NSDictionary *info) {
             if (result) {
                 image = result;
             }
@@ -476,7 +504,7 @@ static CGFloat TZScreenScale;
                 };
                 options.networkAccessAllowed = YES;
                 options.resizeMode = PHImageRequestOptionsResizeModeFast;
-                [[PHImageManager defaultManager] requestImageDataForAsset:asset options:options resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+                [[PHImageManager defaultManager] requestImageDataForAsset:asset options:options resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
                     UIImage *resultImage = [UIImage imageWithData:imageData scale:0.1];
                     resultImage = [self scaleImage:resultImage toSize:imageSize];
                     if (!resultImage) {
@@ -544,7 +572,7 @@ static CGFloat TZScreenScale;
         PHImageRequestOptions *option = [[PHImageRequestOptions alloc]init];
         option.networkAccessAllowed = YES;
         option.resizeMode = PHImageRequestOptionsResizeModeFast;
-        [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFit options:option resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+        [[PHImageManager defaultManager] requestImageForAsset:asset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFit options:option resultHandler:^(UIImage *result, NSDictionary *info) {
             BOOL downloadFinined = (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey]);
             if (downloadFinined && result) {
                 result = [self fixOrientation:result];
@@ -572,7 +600,7 @@ static CGFloat TZScreenScale;
         PHImageRequestOptions *option = [[PHImageRequestOptions alloc] init];
         option.networkAccessAllowed = YES;
         option.resizeMode = PHImageRequestOptionsResizeModeFast;
-        [[PHImageManager defaultManager] requestImageDataForAsset:asset options:option resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+        [[PHImageManager defaultManager] requestImageDataForAsset:asset options:option resultHandler:^(NSData *imageData, NSString *dataUTI, UIImageOrientation orientation, NSDictionary *info) {
             BOOL downloadFinined = (![[info objectForKey:PHImageCancelledKey] boolValue] && ![info objectForKey:PHImageErrorKey]);
             if (downloadFinined && imageData) {
                 if (completion) completion(imageData,info,NO);
@@ -606,7 +634,7 @@ static CGFloat TZScreenScale;
                 request.location = location;
             }
             request.creationDate = [NSDate date];
-        } completionHandler:^(BOOL success, NSError * _Nullable error) {
+        } completionHandler:^(BOOL success, NSError *error) {
             dispatch_sync(dispatch_get_main_queue(), ^{
                 if (success && completion) {
                     completion(nil);
@@ -640,11 +668,11 @@ static CGFloat TZScreenScale;
 #pragma mark - Get Video
 
 /// Get Video / 获取视频
-- (void)getVideoWithAsset:(id)asset completion:(void (^)(AVPlayerItem * _Nullable, NSDictionary * _Nullable))completion {
+- (void)getVideoWithAsset:(id)asset completion:(void (^)(AVPlayerItem *, NSDictionary *))completion {
     [self getVideoWithAsset:asset progressHandler:nil completion:completion];
 }
 
-- (void)getVideoWithAsset:(id)asset progressHandler:(void (^)(double progress, NSError *error, BOOL *stop, NSDictionary *info))progressHandler completion:(void (^)(AVPlayerItem * _Nullable, NSDictionary * _Nullable))completion {
+- (void)getVideoWithAsset:(id)asset progressHandler:(void (^)(double progress, NSError *error, BOOL *stop, NSDictionary *info))progressHandler completion:(void (^)(AVPlayerItem *, NSDictionary *))completion {
     if ([asset isKindOfClass:[PHAsset class]]) {
         PHVideoRequestOptions *option = [[PHVideoRequestOptions alloc] init];
         option.networkAccessAllowed = YES;
@@ -655,7 +683,7 @@ static CGFloat TZScreenScale;
                 }
             });
         };
-        [[PHImageManager defaultManager] requestPlayerItemForVideo:asset options:option resultHandler:^(AVPlayerItem * _Nullable playerItem, NSDictionary * _Nullable info) {
+        [[PHImageManager defaultManager] requestPlayerItemForVideo:asset options:option resultHandler:^(AVPlayerItem *playerItem, NSDictionary *info) {
             if (completion) completion(playerItem,info);
         }];
     } else if ([asset isKindOfClass:[ALAsset class]]) {
@@ -993,6 +1021,7 @@ static CGFloat TZScreenScale;
     CGImageRelease(cgimg);
     return img;
 }
+
 #pragma clang diagnostic pop
 
 @end

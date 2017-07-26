@@ -3,9 +3,9 @@
 // Copyright (c) 2016 成都晟堃科技有限责任公司. All rights reserved.
 //
 
+#import "YunImgDef.h"
 #import <Mantle/Mantle.h>
 #import "UIKit/UIKit.h"
-#import "YunImgDef.h"
 
 @interface YunImgData : MTLModel <MTLJSONSerializing, NSCopying>
 

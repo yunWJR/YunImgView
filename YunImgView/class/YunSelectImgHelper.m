@@ -61,16 +61,24 @@
                                                               message:@"是否允许使用相册？"
                                                               denyBtn:@"取消"
                                                              grantBtn:@"允许"
-                                                           cmpHandler:^(BOOL hasPmsAb, YunDgRst userDrAb, YunDgRst sysDrAb) {
+                                                           cmpHandler:^(BOOL hasPmsAb,
+                                                                        YunDgRst userDrAb,
+                                                                        YunDgRst sysDrAb) {
                                                                if (hasPmsAb) {
-                                                                   UIImagePickerController *imagePicker = [[UIImagePickerController alloc] init];
+                                                                   UIImagePickerController
+                                                                           *imagePicker =
+                                                                           [[UIImagePickerController alloc] init];
                                                                    imagePicker.delegate = self;
 
                                                                    imagePicker.allowsEditing = NO;
 
-                                                                   imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+                                                                   imagePicker.sourceType =
+                                                                           UIImagePickerControllerSourceTypeCamera;
 
-                                                                   [[self superVC] presentViewController:imagePicker animated:YES completion:nil];
+                                                                   [[self superVC]
+                                                                          presentViewController:imagePicker
+                                                                                       animated:YES
+                                                                                     completion:nil];
                                                                }
                                                                else {
                                                                    [self notiCmp:NO imgs:nil]; // todo 情况还应考虑
@@ -88,7 +96,9 @@
 }
 
 - (void)selByAlbum {
-    TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:(_maxCount - _curCount) delegate:self];
+    TZImagePickerController
+            *imagePickerVc =
+            [[TZImagePickerController alloc] initWithMaxImagesCount:(_maxCount - _curCount) delegate:self];
     imagePickerVc.allowPickingImage = YES;
     imagePickerVc.allowPickingVideo = NO;
     imagePickerVc.isSelectOriginalPhoto = NO;

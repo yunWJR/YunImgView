@@ -30,6 +30,12 @@
 // UIViewContentModeScaleAspectFill
 @property (nonatomic, assign) UIViewContentMode imgViewDefCtnMode;
 
+//
+@property (nonatomic, assign) NSInteger iconViewTagInImgView;
+
+// btn def hl color  nil=none
+@property (nonatomic, strong) UIColor *btnDefHlColor;
+
 // NO
 @property (nonatomic, assign) BOOL isDebugMode;
 

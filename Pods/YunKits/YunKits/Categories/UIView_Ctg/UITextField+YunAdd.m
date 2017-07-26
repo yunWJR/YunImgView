@@ -32,4 +32,21 @@
     }
 }
 
+- (void)setPhText:(NSString *)text
+              tAl:(NSTextAlignment)tAl
+             font:(UIFont *)font
+            color:(UIColor *)color {
+    NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
+    style.alignment = tAl;
+
+    NSAttributedString *at =
+            [[NSAttributedString alloc] initWithString:text
+                                            attributes:@{
+                                                    NSForegroundColorAttributeName : color,
+                                                    NSFontAttributeName            : font,
+                                                    NSParagraphStyleAttributeName  : style
+                                            }];
+    self.attributedPlaceholder = at;
+}
+
 @end

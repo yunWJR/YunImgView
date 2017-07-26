@@ -15,3 +15,6 @@ FOUNDATION_EXPORT double YunImgViewVersionNumber;
 FOUNDATION_EXPORT const unsigned char YunImgViewVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <YunImgView/PublicHeader.h>
+
+#import <class/YunImgData.h>
+#import <class/ImageEditView/YunImgListView.h>
