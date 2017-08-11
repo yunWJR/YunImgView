@@ -13,7 +13,7 @@
 
 - (void)didShowImg;
 
-- (YunSelectImgType)selectImgByType;
+- (void)selectImgByType:(void (^)(YunSelectImgType type))cmp;
 
 @end
 

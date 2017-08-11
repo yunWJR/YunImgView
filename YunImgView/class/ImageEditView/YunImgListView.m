@@ -613,12 +613,10 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     }
 }
 
-- (YunSelectImgType)selectImgByType {
-    if (_delegate && [_delegate respondsToSelector:@selector(selectImgByType)]) {
-        return [_delegate selectImgByType];
+- (void)selectImgByType:(void (^)(YunSelectImgType type))cmp {
+    if (_delegate && [_delegate respondsToSelector:@selector(selectImgByType:)]) {
+        return [_delegate selectImgByType:cmp];
     }
-
-    return YunImgSelUnknown;
 }
 
 #pragma mark - noti

@@ -22,16 +22,19 @@
 - (void)selectImg:(NSInteger)curCount {
     _curCount = curCount;
 
-    YunSelectImgType type = YunImgSelUnknown;
     if (_selType == YunImgSelByCameraAndPhotoAlbum) {
-        if (_delegate && [_delegate respondsToSelector:@selector(selectImgByType)]) {
-            type = [_delegate selectImgByType];
+        if (_delegate && [_delegate respondsToSelector:@selector(selectImgByType:)]) {
+            [_delegate selectImgByType:^(YunSelectImgType type) {
+                [self setletImgByType:type];
+            }];
         }
     }
     else {
-        type = _selType;
+        [self setletImgByType:_selType];
     }
+}
 
+- (void)setletImgByType:(YunSelectImgType)type {
     if (type == YunImgSelByCamera) {
         [self selByCamera];
 
