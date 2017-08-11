@@ -34,7 +34,13 @@
 
 @property (nonatomic, assign) BOOL hasAddBtn; // 是否默认有新增按钮
 
+@property (nonatomic, assign) BOOL isCompression;
+
+@property (nonatomic, assign) BOOL isZoom;
+
 @property (nonatomic, assign) YunSelectImgType selType; // 是否只能用相机
+
+@property (nonatomic, strong) UIColor *itemBgColor;
 
 - (instancetype)initWithRowNum:(NSInteger)rowNum;
 

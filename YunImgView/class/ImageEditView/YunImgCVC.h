@@ -14,6 +14,6 @@
 
 - (void)setAddItem:(UIView *)addView;
 
-- (void)setImgItem:(YunImgData *)imgData;
+- (void)setImgItem:(YunImgData *)imgData isZoom:(BOOL)isZoom;
 
 @end

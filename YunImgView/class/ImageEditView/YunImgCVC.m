@@ -7,6 +7,7 @@
 #import "YunImgData.h"
 #import <Masonry/Masonry.h>
 #import "YunUIImageViewFactory.h"
+#import "YunConfig.h"
 
 @implementation YunImgCVC {
     UIView *_addView;
@@ -41,7 +42,7 @@
     }
 }
 
-- (void)setImgItem:(YunImgData *)imgData {
+- (void)setImgItem:(YunImgData *)imgData isZoom:(BOOL)isZoom {
     if (_imgView == nil) {
         [self removeAllSubView];
 
@@ -56,7 +57,10 @@
         }];
     }
 
-    [imgData setImgInView:_imgView phImg:nil isZoom:NO];
+    [imgData setImgInView:_imgView
+                    phImg:[UIImage imageNamed:YunConfig.instance.imgViewHolderImgName]
+                failedImg:[UIImage imageNamed:YunConfig.instance.imgViewFailedImgName]
+                   isZoom:isZoom];
 }
 
 - (void)removeAllSubView {

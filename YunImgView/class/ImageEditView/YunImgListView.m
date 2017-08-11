@@ -66,6 +66,7 @@
     _imgDataList = [NSMutableArray new];
     _isEdit = YES;
     _hasAddBtn = YES;
+    _isZoom = YES;
 
     _selHelper = [YunSelectImgHelper new];
     _selHelper.delegate = self;
@@ -121,24 +122,26 @@
     NSInteger index = indexPath.item + indexPath.section * _rowNum;
 
     if (index == _imgDataList.count) { // 最后一个cell 新增
-        YunImgCVC *cell =
-                [collectionView dequeueReusableCellWithReuseIdentifier:YunImgCellId_AddItem forIndexPath:indexPath];
+        YunImgCVC *cell = [collectionView dequeueReusableCellWithReuseIdentifier:YunImgCellId_AddItem
+                                                                    forIndexPath:indexPath];
         if (!cell) {
             cell = [YunImgCVC new];
         }
 
         [cell setAddItem:_addView];
+        cell.backgroundColor = _itemBgColor;
 
         return cell;
     }
 
-    YunImgCVC *cell =
-            [collectionView dequeueReusableCellWithReuseIdentifier:YunImgCellId_ImgItem forIndexPath:indexPath];
+    YunImgCVC *cell = [collectionView dequeueReusableCellWithReuseIdentifier:YunImgCellId_ImgItem
+                                                                forIndexPath:indexPath];
     if (!cell) {
         cell = [YunImgCVC new];
     }
 
-    [cell setImgItem:_imgDataList[index]];
+    [cell setImgItem:_imgDataList[index] isZoom:_isZoom];
+    cell.backgroundColor = _itemBgColor;
 
     return cell;
 }
@@ -188,10 +191,10 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 - (void)selectImg:(void (^)(BOOL))cmp {
     _didCmp = cmp;
 
-    // todo
     _selHelper.superVC = [self superVC];
     _selHelper.selType = _selType;
     _selHelper.maxCount = _maxCount;
+    _selHelper.isCompression = _isCompression;
 
     [_selHelper selectImg:_imgDataList.count];
 }
