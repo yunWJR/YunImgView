@@ -8,8 +8,10 @@
 
 @protocol YunSelectImgDelegate <NSObject>
 
+@optional
 - (YunSelectImgType)selectImgByType;
 
+@required
 - (void)didCmp:(BOOL)cmp imgs:(NSArray<UIImage *> *)imgs selType:(YunSelectImgType)selType;
 
 @end

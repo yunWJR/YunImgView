@@ -8,6 +8,7 @@
 
 @protocol YunImgListViewDelegate <NSObject>
 
+@optional
 - (void)viewSizeChanged;
 
 - (void)didShowImg;
