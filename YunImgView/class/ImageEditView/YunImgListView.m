@@ -121,8 +121,7 @@
     NSInteger index = indexPath.item + indexPath.section * _rowNum;
 
     if (index == _imgDataList.count) { // 最后一个cell 新增
-        YunImgCVC
-                *cell =
+        YunImgCVC *cell =
                 [collectionView dequeueReusableCellWithReuseIdentifier:YunImgCellId_AddItem forIndexPath:indexPath];
         if (!cell) {
             cell = [YunImgCVC new];
@@ -133,8 +132,8 @@
         return cell;
     }
 
-    YunImgCVC
-            *cell = [collectionView dequeueReusableCellWithReuseIdentifier:YunImgCellId_ImgItem forIndexPath:indexPath];
+    YunImgCVC *cell =
+            [collectionView dequeueReusableCellWithReuseIdentifier:YunImgCellId_ImgItem forIndexPath:indexPath];
     if (!cell) {
         cell = [YunImgCVC new];
     }
@@ -167,8 +166,8 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 #pragma mark - UICollectionViewDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
-    if (_didShowImg) {
-        _didShowImg();
+    if (_delegate && [_delegate respondsToSelector:@selector(didShowImg)]) {
+        [_delegate didShowImg];
     }
 
     NSInteger index = indexPath.item + indexPath.section * _rowNum;
@@ -277,6 +276,12 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 - (void)resetImgByImgList:(NSArray<YunImgData *> *)imgList {
     [self removeAllImg];
     [self addImgByInfoList:imgList];
+}
+
+- (void)resetImgByImgUrlList:(NSArray *)imgList {
+    [self removeAllImg];
+
+    [self addImgByUrlStrsList:imgList];
 }
 
 - (void)addImgByImg:(UIImage *)image {
@@ -407,8 +412,8 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
     //[self layoutIfNeeded];
 
-    if (_viewChanged) {
-        _viewChanged();
+    if (_delegate && [_delegate respondsToSelector:@selector(viewSizeChanged)]) {
+        [_delegate viewSizeChanged];
     }
 }
 
@@ -592,7 +597,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     return [self superViewController];
 }
 
-#pragma mark - PpmSelectImageDelegate
+#pragma mark - YunSelectImgDelegate
 
 - (void)didCmp:(BOOL)cmp imgs:(NSArray<UIImage *> *)imgs selType:(YunSelectImgType)isCamera {
     [self notiCmp:cmp];
@@ -606,6 +611,14 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
             [self savedPhotosToAlbum:imgs[i]];
         }
     }
+}
+
+- (YunSelectImgType)selectImgByType {
+    if (_delegate && [_delegate respondsToSelector:@selector(selectImgByType)]) {
+        return [_delegate selectImgByType];
+    }
+
+    return YunImgSelUnknown;
 }
 
 #pragma mark - noti

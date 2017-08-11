@@ -22,30 +22,27 @@
 - (void)selectImg:(NSInteger)curCount {
     _curCount = curCount;
 
-    if (_selType == YunImgSelByCamera) {
+    YunSelectImgType type = YunImgSelUnknown;
+    if (_selType == YunImgSelByCameraAndPhotoAlbum) {
+        if (_delegate && [_delegate respondsToSelector:@selector(selectImgByType)]) {
+            type = [_delegate selectImgByType];
+        }
+    }
+    else {
+        type = _selType;
+    }
+
+    if (type == YunImgSelByCamera) {
         [self selByCamera];
 
         return;
     }
 
-    if (_selType == YunImgSelByPhotoAlbum) {
+    if (type == YunImgSelByPhotoAlbum) {
         [self selByAlbum];
 
         return;
     }
-
-    //[[PpmActionListHelper sharedInstance] showActionList:@[@"用相机拍照", @"相  册"]
-    //                                              result:^(NSInteger i) {
-    //                                                  if (i == 1) {
-    //                                                      [self selByCamera];
-    //                                                  }
-    //                                                  else if (i == 2) {
-    //                                                      [self selByAlbum];
-    //                                                  }
-    //                                                  else {
-    //                                                      [self notiCmp:NO imgs:nil isCamera:NO];
-    //                                                  }
-    //                                              }];
 }
 
 - (void)selByCamera {
@@ -96,8 +93,7 @@
 }
 
 - (void)selByAlbum {
-    TZImagePickerController
-            *imagePickerVc =
+    TZImagePickerController *imagePickerVc =
             [[TZImagePickerController alloc] initWithMaxImagesCount:(_maxCount - _curCount) delegate:self];
     imagePickerVc.allowPickingImage = YES;
     imagePickerVc.allowPickingVideo = NO;

@@ -6,13 +6,21 @@
 #import <UIKit/UIKit.h>
 #import "YunImgDef.h"
 
+@protocol YunImgListViewDelegate <NSObject>
+
+- (void)viewSizeChanged;
+
+- (void)didShowImg;
+
+- (YunSelectImgType)selectImgByType;
+
+@end
+
 @class YunImgData;
 
 @interface YunImgListView : UIView
 
-@property (nonatomic, copy) void (^viewChanged)();
-
-@property (nonatomic, copy) void (^didShowImg)();
+@property (nonatomic, weak) id <YunImgListViewDelegate> delegate;
 
 @property (nonatomic, assign) NSInteger maxCount;
 @property (nonatomic, assign) NSInteger rowNum;
@@ -34,6 +42,8 @@
 - (void)selectImg;
 
 - (void)resetImgByImgList:(NSArray<YunImgData *> *)imgList;
+
+- (void)resetImgByImgUrlList:(NSArray *)imgList;
 
 - (void)addImgByImg:(UIImage *)image;
 

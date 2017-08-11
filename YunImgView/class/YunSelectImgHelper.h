@@ -8,6 +8,8 @@
 
 @protocol YunSelectImgDelegate <NSObject>
 
+- (YunSelectImgType)selectImgByType;
+
 - (void)didCmp:(BOOL)cmp imgs:(NSArray<UIImage *> *)imgs selType:(YunSelectImgType)selType;
 
 @end
@@ -29,4 +31,5 @@
 - (void)selectImg:(NSInteger)curCount;
 
 - (void)notiCmp:(BOOL)hasImg imgs:(NSArray<UIImage *> *)imgs;
+
 @end
