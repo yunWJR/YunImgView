@@ -3,6 +3,7 @@
 // Copyright (c) 2016 成都晟堃科技有限责任公司. All rights reserved.
 //
 
+#import <YunKits/YunGlobalDefine.h>
 #import "YunQnHelper.h"
 #import "YunValueVerifier.h"
 
@@ -32,7 +33,7 @@
 
 - (NSURL *)zoomURL:(NSString *)url {
     if ([YunValueVerifier isValidStr:_zoomPara]) {
-        return [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", url, _zoomPara]];
+        return [self urlWithStr:FORMAT(@"%@%@", url, _zoomPara)];
     }
     else {
         return [self norURL:url];
@@ -40,7 +41,14 @@
 }
 
 - (NSURL *)norURL:(NSString *)url {
-    return [NSURL URLWithString:url];
+    return [self urlWithStr:url];
+}
+
+- (NSURL *)urlWithStr:(NSString *)urlStr {
+    NSString *newUrl = [urlStr stringByAddingPercentEncodingWithAllowedCharacters:
+                                       [NSCharacterSet URLQueryAllowedCharacterSet]];
+    NSURL *url = [NSURL URLWithString:newUrl];
+    return url;
 }
 
 @end
