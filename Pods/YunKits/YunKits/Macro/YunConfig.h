@@ -9,7 +9,10 @@
 
 + (YunConfig *)instance;
 
-// iconfont
+// app
+@property (nonatomic, copy) NSString *appId;
+
+// icon font
 @property (nonatomic, copy) NSString *iconFontName;
 
 // img_def_holder
@@ -37,9 +40,42 @@
 @property (nonatomic, strong) UIColor *btnDefHlColor;
 
 // NO
+@property (nonatomic, assign) BOOL btnHasHlColor;
+
+// NO
 @property (nonatomic, assign) BOOL isDebugMode;
 
 // NO
 @property (nonatomic, assign) BOOL isApnsDevMode;
+
+// yyyy-MM
+@property (nonatomic, copy) NSString *dateFmYm;
+
+// yyyy-MM-dd
+@property (nonatomic, copy) NSString *dateFmYmd;
+
+// yyyy-MM-dd hh:mm
+@property (nonatomic, copy) NSString *dateFmYmdHm;
+
+// hh:mm
+@property (nonatomic, copy) NSString *dateFmHm;
+
+// yyyy-MM
+@property (nonatomic, copy) NSString *dateFmYm_Server;
+
+// yyyy-MM-dd
+@property (nonatomic, copy) NSString *dateFmYmd_Server;
+
+// yyyy-MM-dd hh:mm
+@property (nonatomic, copy) NSString *dateFmYmdHm_Server;
+
+// hh:mm
+@property (nonatomic, copy) NSString *dateFmHm_Server;
+
+// def service phone
+@property (nonatomic, copy) NSString *servicePhone;
+
+// def imgview bg
+@property (nonatomic, strong) UIColor *imgViewBg;
 
 @end

@@ -284,7 +284,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 - (void)resetImgByImgUrlList:(NSArray *)imgList {
     [self removeAllImg];
 
-    [self addImgByUrlStrsList:imgList];
+    [self addImgByUrlStrList:imgList];
 }
 
 - (void)addImgByImg:(UIImage *)image {
@@ -327,19 +327,19 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 // url -> ImageData
-- (void)addImgByUrlTypeImg:(NSArray *)url {
-    if (url == nil) {
+- (void)addImgByUrlTypeImg:(NSArray *)urlList {
+    if (urlList == nil) {
         return;
     }
 
-    if ((_imgDataList.count + url.count) > _maxCount) {
+    if ((_imgDataList.count + urlList.count) > _maxCount) {
         [self showImageOutOfCount];
 
         return;
     }
 
-    for (int i = 0; i < url.count; ++i) {
-        id img = url[i];
+    for (int i = 0; i < urlList.count; ++i) {
+        id img = urlList[i];
         if ([img isKindOfClass:[YunImgData class]]) {
             [_imgDataList addObject:img];
         }
@@ -355,21 +355,21 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     [self reloadImgData];
 }
 
-- (void)addImgByUrlStrsList:(NSArray *)url {
-    if (url == nil) {
+- (void)addImgByUrlStrList:(NSArray *)urlList {
+    if (urlList == nil) {
         return;
     }
 
-    if ((_imgDataList.count + url.count) > _maxCount) {
+    if ((_imgDataList.count + urlList.count) > _maxCount) {
         [self showImageOutOfCount];
 
         return;
     }
 
-    for (int i = 0; i < url.count; ++i) {
+    for (int i = 0; i < urlList.count; ++i) {
         YunImgData *imgInfo = [YunImgData new];
         imgInfo.type = YunImgURLStr;
-        imgInfo.data = url[i];
+        imgInfo.data = urlList[i];
 
         [_imgDataList addObject:imgInfo];
     }
@@ -424,13 +424,13 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     return _imgDataList;
 }
 
-- (BOOL)isSameImgs:(NSArray<YunImgData *> *)imgs {
+- (BOOL)isSameImgs:(NSArray<YunImgData *> *)imgList {
     NSArray *curImgs = self.curImgList;
 
-    if (curImgs.count != imgs.count) {return NO;}
+    if (curImgs.count != imgList.count) {return NO;}
 
     for (int i = 0; i < curImgs.count; ++i) {
-        if (![curImgs[i] isSame:imgs[i]]) {return NO;}
+        if (![curImgs[i] isSame:imgList[i]]) {return NO;}
     }
 
     return YES;

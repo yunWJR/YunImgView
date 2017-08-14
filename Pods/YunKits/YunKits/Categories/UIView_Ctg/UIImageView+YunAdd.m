@@ -9,19 +9,20 @@
 #import "UIImageView+YunAdd.h"
 #import "YunValueVerifier.h"
 #import "YunConfig.h"
+#import "NSURL+YunAdd.h"
 
 @implementation UIImageView (YunAdd)
 
 - (void)setImgUrlStr:(NSString *)urlStr {
-    UIImage *placeholderImage = [UIImage imageNamed:YunConfig.instance.imgViewHolderImgName];
+    UIImage *phImg = [UIImage imageNamed:YunConfig.instance.imgViewHolderImgName];
 
     if ([YunValueVerifier isNilOrEmptyStr:urlStr]) {
-        self.image = placeholderImage;
+        self.image = phImg;
         return;
     }
 
-    [self sd_setImageWithURL:[NSURL URLWithString:urlStr]
-            placeholderImage:placeholderImage
+    [self sd_setImageWithURL:[NSURL urlWithStr:urlStr]
+            placeholderImage:phImg
                    completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                        if (!image) {
                            self.image = [UIImage imageNamed:YunConfig.instance.imgViewFailedImgName];
@@ -36,7 +37,7 @@
         return;
     }
 
-    [self sd_setImageWithURL:[NSURL URLWithString:urlStr]
+    [self sd_setImageWithURL:[NSURL urlWithStr:urlStr]
             placeholderImage:img
                    completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                        if (!image) {
@@ -46,15 +47,15 @@
 }
 
 - (void)setAvrImgUrlStr:(NSString *)urlStr {
-    UIImage *placeholderImage = [UIImage imageNamed:YunConfig.instance.imgViewAvrImgName];
+    UIImage *phImg = [UIImage imageNamed:YunConfig.instance.imgViewAvrImgName];
 
     if ([YunValueVerifier isNilOrEmptyStr:urlStr]) {
-        self.image = placeholderImage;
+        self.image = phImg;
         return;
     }
 
-    [self sd_setImageWithURL:[NSURL URLWithString:urlStr]
-            placeholderImage:placeholderImage
+    [self sd_setImageWithURL:[NSURL urlWithStr:urlStr]
+            placeholderImage:phImg
                    completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
                        if (!image) {
                            self.image = [UIImage imageNamed:YunConfig.instance.imgViewAvrImgName];

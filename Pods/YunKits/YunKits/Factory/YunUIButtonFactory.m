@@ -183,8 +183,10 @@
 + (UIButton *)setDefHlColor:(UIButton *)btn {
     if (!btn) {return btn;}
 
-    [btn setBackgroundImage:[UIImage imgWithColor:YunConfig.instance.btnDefHlColor]
-                   forState:UIControlStateHighlighted];
+    if (YunConfig.instance.btnDefHlColor && YunConfig.instance.btnHasHlColor) {
+        [btn setBackgroundImage:[UIImage imgWithColor:YunConfig.instance.btnDefHlColor]
+                       forState:UIControlStateHighlighted];
+    }
 
     return btn;
 }

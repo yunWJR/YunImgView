@@ -6,6 +6,7 @@
 #import "YunUILabelFactory.h"
 #import "UILabel+Style.h"
 #import "YunConfig.h"
+#import "UIView+YunAdd.h"
 
 @implementation YunUILabelFactory
 
@@ -50,8 +51,7 @@
                borderColor:(UIColor *)borderColor {
     UILabel *lbl = [self labelWithText:text font:font color:color
                                  align:align lines:lines adjust:adjust];
-
-    [lbl setRadius:radius width:width color:borderColor];
+    [lbl setViewRadius:radius width:width color:borderColor];
 
     return lbl;
 }

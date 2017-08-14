@@ -28,8 +28,8 @@ PODS:
   - SDWebImage (3.8.2):
     - SDWebImage/Core (= 3.8.2)
   - SDWebImage/Core (3.8.2)
-  - TZImagePickerController (1.8.5)
-  - YunKits (0.0.14):
+  - TZImagePickerController (1.8.8)
+  - YunKits (0.0.21):
     - AFNetworking
     - Masonry
     - SDWebImage
@@ -53,8 +53,8 @@ SPEC CHECKSUMS:
   MBProgressHUD: 1569cf7ace17a8bac47aabfbb8580a49690386d1
   MWPhotoBrowser: 5836d7aa041dc05a13de380c246826578adc5ea5
   SDWebImage: '098e97e6176540799c27e804c96653ee0833d13c'
-  TZImagePickerController: ca4110384c10e25925b9197db8b755da14ebf3db
-  YunKits: aae3ddeee05d8c717bdad6baabf69ad05a29f1a2
+  TZImagePickerController: 5d2085b9a749210c3552d35ebe17a6a679438708
+  YunKits: ec7f700f200dae5d9ed5999679bd85331479fd31
   YunPmsHelper: 8229bbfdb2f783cc2474d6497c5ab976b5cc19af
 
 PODFILE CHECKSUM: bc2e5ae2cc9b93b59b62cdc3f5ab57e7e182e0be

@@ -57,6 +57,9 @@ A：请参考issue481：https://github.com/banchichen/TZImagePickerController/is
  
 **Q：photos数组图片不是原图，如何获取原图？**        
 A：请参考issue457的解释：https://github.com/banchichen/TZImagePickerController/issues/457    
+
+**Q：系统语言是中文/英文，界面上却有部分相册名字、返回按钮显示成了英文/中文？**        
+A：请参考issue443的解释：https://github.com/banchichen/TZImagePickerController/issues/443
  
 **Q：预览界面能否支持传入NSURL、UIImage对象？**       
 A：排期中，优先级高   
@@ -76,7 +79,9 @@ A：1.8.4版本已支持
 **Q：可否增加微信编辑图片的功能？**           
 A：考虑下，优先级低  
 
-      最近更新
+      最近更新 
+1.8.8 修复一些细节   
+1.8.5 修复一些样式细节    
 1.8.4 加入横竖屏适配；支持视频/gif多选；支持视频和照片一起选    
 1.8.1 新增2个代理方法，支持由上层来决定相册/照片的显示与否     
 1.8.0 修复若干bug, 提升流畅度     

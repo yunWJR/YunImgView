@@ -26,11 +26,12 @@
 
         _hideBottomBar = YES;
 
-        _sideOff = 10;
+        _sideOff = 0;
+        _topOff = 0;
 
         _firstLoad = YES;
 
-        [self setHidesBottomBarWhenPushed:_hideBottomBar];
+        self.hidesBottomBarWhenPushed = _hideBottomBar;
     }
 
     return self;

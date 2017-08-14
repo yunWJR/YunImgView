@@ -4,6 +4,7 @@
 //
 
 #import "UITextField+YunAdd.h"
+#import "UIView+YunAdd.h"
 
 @implementation UITextField (YunAdd)
 
@@ -16,10 +17,7 @@
 }
 
 - (void)setRadius:(CGFloat)radius color:(UIColor *)color width:(CGFloat)width {
-    self.borderStyle = UITextBorderStyleNone;
-    self.layer.borderColor = color.CGColor;
-    self.layer.borderWidth = width;
-    self.layer.cornerRadius = radius;
+    [self setViewRadius:radius width:width color:color];
 }
 
 - (void)setPhColor:(UIColor *)phColor phFont:(UIFont *)phFont {
@@ -36,6 +34,8 @@
               tAl:(NSTextAlignment)tAl
              font:(UIFont *)font
             color:(UIColor *)color {
+    if (text == nil) {return;}
+
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle alloc] init];
     style.alignment = tAl;
 
@@ -47,6 +47,10 @@
                                                     NSParagraphStyleAttributeName  : style
                                             }];
     self.attributedPlaceholder = at;
+}
+
+- (void)addTextChangedNoti:(id)tg action:(SEL)action {
+    [self addTarget:tg action:action forControlEvents:UIControlEventEditingChanged];
 }
 
 @end

@@ -3,8 +3,8 @@
 //  Copyright © 2016年 成都晟堃科技有限责任公司. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
 #import "YunImgDef.h"
+#import <UIKit/UIKit.h>
 
 @protocol YunImgListViewDelegate <NSObject>
 
@@ -56,9 +56,9 @@
 
 - (void)addImgByInfoList:(NSArray<YunImgData *> *)imgList;
 
-- (void)addImgByUrlTypeImg:(NSArray *)url;
+- (void)addImgByUrlTypeImg:(NSArray *)urlList;
 
-- (void)addImgByUrlStrsList:(NSArray *)url;
+- (void)addImgByUrlStrList:(NSArray *)urlList;
 
 - (void)addImgDataByUrlStr:(NSString *)url;
 
@@ -68,7 +68,7 @@
 
 - (NSMutableArray<YunImgData *> *)curImgList;
 
-- (BOOL)isSameImgs:(NSArray<YunImgData *> *)imgs;
+- (BOOL)isSameImgs:(NSArray<YunImgData *> *)imgList;
 
 - (CGFloat)curHeight;
 

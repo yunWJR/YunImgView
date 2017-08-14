@@ -9,7 +9,7 @@
 @interface YunViewController : UIViewController
 
 // 返回视图,nil则返回上一级视图 // 默认nil
-@property (nonatomic, weak) UIViewController *backVC;
+@property (nonatomic, weak) YunViewController *backVC;
 
 // 导航栏隐藏属性 // 默认NO
 @property (nonatomic, assign) BOOL hideNagBar;
@@ -23,7 +23,10 @@
 // bottom bar隐藏属性 // 默认YES
 @property (nonatomic, assign) BOOL hideBottomBar;
 
-// 控件间距 // 默认10
+// 控件间距 // 默认0
+@property (nonatomic, assign) CGFloat topOff;
+
+// 控件间距 // 默认0
 @property (nonatomic, assign) CGFloat sideOff;
 
 // 第一次加载标识符 // 默认YES

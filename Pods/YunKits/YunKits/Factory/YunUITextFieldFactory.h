@@ -6,10 +6,9 @@
 #import <UIKit/UIKit.h>
 
 @interface YunUITextFieldFactory : NSObject {
-
 }
 
-- (UITextField *)tfWithPh:(NSString *)ph
++ (UITextField *)tfWithPh:(NSString *)ph
                      font:(UIFont *)font
                 textColor:(UIColor *)textColor
                     isSec:(BOOL)isSec

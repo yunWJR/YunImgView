@@ -6,6 +6,7 @@
 #import <YunKits/YunGlobalDefine.h>
 #import "YunQnHelper.h"
 #import "YunValueVerifier.h"
+#import "NSURL+YunAdd.h"
 
 @implementation YunQnHelper {
 }
@@ -33,7 +34,7 @@
 
 - (NSURL *)zoomURL:(NSString *)url {
     if ([YunValueVerifier isValidStr:_zoomPara]) {
-        return [self urlWithStr:FORMAT(@"%@%@", url, _zoomPara)];
+        return [NSURL urlWithStr:FORMAT(@"%@%@", url, _zoomPara)];
     }
     else {
         return [self norURL:url];
@@ -41,14 +42,7 @@
 }
 
 - (NSURL *)norURL:(NSString *)url {
-    return [self urlWithStr:url];
-}
-
-- (NSURL *)urlWithStr:(NSString *)urlStr {
-    NSString *newUrl = [urlStr stringByAddingPercentEncodingWithAllowedCharacters:
-                                       [NSCharacterSet URLQueryAllowedCharacterSet]];
-    NSURL *url = [NSURL URLWithString:newUrl];
-    return url;
+    return [NSURL urlWithStr:url];
 }
 
 @end
