@@ -6,6 +6,7 @@
 #import "YunImgData.h"
 #import "YunQnHelper.h"
 #import "UIImageView+WebCache.h"
+#import "UIViewYunAddHeader.h"
 
 @implementation YunImgData
 
@@ -55,7 +56,7 @@
     return imgList;
 }
 
-- (void)setImgInView:(UIImageView *)imgView phImg:(UIImage *)phImg failedImg:(UIImage *)failedImg isZoom:(BOOL)isZoom {
+- (void)setImgInView:(UIImageView *)imgView isZoom:(BOOL)isZoom {
     switch (_type) {
         case YunImgImage:
             [imgView setImage:_data];
@@ -65,13 +66,7 @@
                             [[YunQnHelper instance] zoomURL:_data] :
                             [[YunQnHelper instance] norURL:_data];
 
-            [imgView sd_setImageWithURL:imgUrl
-                       placeholderImage:phImg
-                              completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, NSURL *imageURL) {
-                                  if (!image) {
-                                      imgView.image = failedImg;
-                                  }
-                              }];
+            [imgView setImgUrlStr:[imgUrl absoluteString]];
         }
             break;
         default:

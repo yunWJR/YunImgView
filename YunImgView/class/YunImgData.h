@@ -21,7 +21,7 @@
 
 + (NSArray<YunImgData *> *)imgListByURLStrList:(NSArray<NSString *> *)urlList;
 
-- (void)setImgInView:(UIImageView *)imgView phImg:(UIImage *)phImg failedImg:(UIImage *)failedImg isZoom:(BOOL)isZoom;
+- (void)setImgInView:(UIImageView *)imgView isZoom:(BOOL)isZoom;
 
 - (BOOL)isSame:(YunImgData *)img;
 

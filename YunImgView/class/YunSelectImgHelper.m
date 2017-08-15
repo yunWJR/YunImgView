@@ -8,7 +8,7 @@
 #import "UIImage+YunAdd.h"
 #import "YunPmsHlp.h"
 
-#define img_size 150
+#define img_size 150 // kb
 
 @interface YunSelectImgHelper () <UIImagePickerControllerDelegate,
         TZImagePickerControllerDelegate, UINavigationControllerDelegate> {

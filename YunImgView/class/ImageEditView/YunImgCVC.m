@@ -5,7 +5,6 @@
 
 #import "YunImgCVC.h"
 #import "YunImgData.h"
-#import "YunConfig.h"
 #import "YunUIImageViewFactory.h"
 #import <Masonry/Masonry.h>
 
@@ -57,10 +56,7 @@
         }];
     }
 
-    [imgData setImgInView:_imgView
-                    phImg:[UIImage imageNamed:YunConfig.instance.imgViewHolderImgName]
-                failedImg:[UIImage imageNamed:YunConfig.instance.imgViewFailedImgName]
-                   isZoom:isZoom];
+    [imgData setImgInView:_imgView isZoom:isZoom];
 }
 
 - (void)removeAllSubView {
