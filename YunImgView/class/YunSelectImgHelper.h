@@ -26,9 +26,14 @@
 
 @property (nonatomic, assign) NSInteger curCount;
 
-@property (nonatomic) NSInteger maxCount;
+@property (nonatomic, assign) NSInteger maxCount;
 
 @property (nonatomic, assign) BOOL isCompression;
+
+// def = 150 kb
+@property (nonatomic, assign) NSInteger compressSize;
+
+@property (nonatomic, assign) BOOL disAmt;
 
 - (void)selectImg:(NSInteger)curCount;
 

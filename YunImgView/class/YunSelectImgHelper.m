@@ -8,8 +8,6 @@
 #import "UIImage+YunAdd.h"
 #import "YunPmsHlp.h"
 
-#define img_size 150 // kb
-
 @interface YunSelectImgHelper () <UIImagePickerControllerDelegate,
         TZImagePickerControllerDelegate, UINavigationControllerDelegate> {
 }
@@ -19,22 +17,32 @@
 @implementation YunSelectImgHelper {
 }
 
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.disAmt = YES;
+        self.compressSize = 150;
+    }
+
+    return self;
+}
+
 - (void)selectImg:(NSInteger)curCount {
     _curCount = curCount;
 
     if (_selType == YunImgSelByCameraAndPhotoAlbum) {
         if (_delegate && [_delegate respondsToSelector:@selector(selectImgByType:)]) {
             [_delegate selectImgByType:^(YunSelectImgType type) {
-                [self setletImgByType:type];
+                [self selectImgByType:type];
             }];
         }
     }
     else {
-        [self setletImgByType:_selType];
+        [self selectImgByType:_selType];
     }
 }
 
-- (void)setletImgByType:(YunSelectImgType)type {
+- (void)selectImgByType:(YunSelectImgType)type {
     if (type == YunImgSelByCamera) {
         [self selByCamera];
 
@@ -101,6 +109,7 @@
     imagePickerVc.allowPickingImage = YES;
     imagePickerVc.allowPickingVideo = NO;
     imagePickerVc.isSelectOriginalPhoto = NO;
+    imagePickerVc.autoDismiss = NO;
 
     //imagePickerVc.navigationBar.barTintColor = PpmTheme.colorHl;
     // imagePickerVc.oKButtonTitleColorDisabled = [UIColor lightGrayColor];
@@ -131,10 +140,18 @@
         isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
     NSMutableArray *newPhotos = [NSMutableArray new];
     for (int i = 0; i < photos.count; ++i) {
-        [newPhotos addObject:_isCompression ? [photos[i] resizeWithSize:img_size] : photos[i]];
+        [newPhotos addObject:_isCompression ? [photos[i] resizeWithSize:self.compressSize] : photos[i]];
     }
 
+    [picker dismissViewControllerAnimated:_disAmt completion:nil];
+
     [self notiCmp:YES imgs:newPhotos];
+}
+
+- (void)tz_imagePickerControllerDidCancel:(TZImagePickerController *)picker {
+    [picker dismissViewControllerAnimated:_disAmt completion:nil];
+
+    [self notiCmp:NO imgs:nil];
 }
 
 #pragma mark - UIImagePickerControllerDelegate
@@ -147,14 +164,14 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
         return;
     }
 
-    [picker dismissViewControllerAnimated:YES completion:nil];
+    [picker dismissViewControllerAnimated:_disAmt completion:nil];
 
-    UIImage *newImg = _isCompression ? [image resizeWithSize:img_size] : image;
+    UIImage *newImg = _isCompression ? [image resizeWithSize:self.compressSize] : image;
     [self notiCmp:YES imgs:@[newImg]];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
-    [picker dismissViewControllerAnimated:YES completion:^{
+    [picker dismissViewControllerAnimated:_disAmt completion:^{
 
     }];
 
