@@ -20,8 +20,8 @@
                           action:(SEL _Nullable)action;
 
 + (UIButton *_Nonnull)btnWithTitle:(NSString *_Nonnull)title
-                        titleColor:(UIColor *_Nonnull)titleColor
                          titleFont:(UIFont *_Nonnull)titleFont
+                        titleColor:(UIColor *_Nonnull)titleColor
                            bgColor:(UIColor *_Nonnull)bgColor
                             radius:(CGFloat)radius
                             border:(CGFloat)border
@@ -32,6 +32,12 @@
 + (UIButton *_Nonnull)btnWithTitle:(NSString *_Nonnull)title
                          titleFont:(UIFont *_Nonnull)titleFont
                         titleColor:(UIColor *_Nonnull)titleColor
+                            target:(id _Nullable)target
+                            action:(SEL _Nullable)action;
+
++ (UIButton *_Nonnull)btnWithTitle:(NSString *_Nonnull)title
+                        titleColor:(UIColor *_Nonnull)titleColor
+                           bgColor:(UIColor *_Nonnull)bgColor
                             target:(id _Nullable)target
                             action:(SEL _Nullable)action;
 

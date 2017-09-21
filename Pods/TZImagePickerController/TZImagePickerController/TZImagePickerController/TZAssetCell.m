@@ -99,7 +99,7 @@
         self.videoImgView.hidden = NO;
         _timeLength.tz_left = self.videoImgView.tz_right;
         _timeLength.textAlignment = NSTextAlignmentRight;
-    } else if (type == TZAssetCellTypePhotoGif) {
+    } else if (type == TZAssetCellTypePhotoGif && self.allowPickingGif) {
         self.bottomView.hidden = NO;
         self.timeLength.text = @"GIF";
         self.videoImgView.hidden = YES;
@@ -230,7 +230,11 @@
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    _selectPhotoButton.frame = CGRectMake(self.tz_width - 44, 0, 44, 44);
+    if (self.allowPreview) {
+        _selectPhotoButton.frame = CGRectMake(self.tz_width - 44, 0, 44, 44);
+    } else {
+        _selectPhotoButton.frame = self.bounds;
+    }
     _selectImageView.frame = CGRectMake(self.tz_width - 27, 0, 27, 27);
     _imageView.frame = CGRectMake(0, 0, self.tz_width, self.tz_height);
     

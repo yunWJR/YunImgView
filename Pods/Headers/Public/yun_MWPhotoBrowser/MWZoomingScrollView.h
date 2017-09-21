@@ -1,0 +1,1 @@
+../../../yun_MWPhotoBrowser/Pod/Classes/MWZoomingScrollView.h

@@ -78,4 +78,13 @@
 // def imgview bg
 @property (nonatomic, strong) UIColor *imgViewBg;
 
+// 水平空白 6
+@property (nonatomic, assign) CGFloat ctnHlOff;
+
+// 垂直空白 16
+@property (nonatomic, assign) CGFloat ctnVtOff;
+
+// font 空白 系数 0.4f
+@property (nonatomic, assign) CGFloat fontBlankCoefficient;
+
 @end

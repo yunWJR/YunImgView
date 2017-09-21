@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "YunImgView"
-  s.version      = "0.0.8"
+  s.version      = "0.0.9"
   s.summary      = "yun's img list view for iOS"
 
   # This description is used to generate tags and improve search results.
@@ -136,7 +136,7 @@ Pod::Spec.new do |s|
   s.dependency "YunKits"
   s.dependency "Masonry"
   s.dependency "YunPmsHelper"
-  s.dependency "MWPhotoBrowser"
+  s.dependency "yun_MWPhotoBrowser", "2.1.2-1.0"
   s.dependency "Mantle"
   s.dependency "TZImagePickerController"
 

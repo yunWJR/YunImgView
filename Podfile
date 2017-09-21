@@ -11,7 +11,7 @@ target 'YunImgView' do
   # Pods for YunImgView
   pod 'Masonry'
   pod 'YunPmsHelper'
-  pod 'MWPhotoBrowser'
+  pod 'yun_MWPhotoBrowser', '2.1.2-1.0'
   pod 'Mantle'
   pod 'YunKits'
   pod 'TZImagePickerController'

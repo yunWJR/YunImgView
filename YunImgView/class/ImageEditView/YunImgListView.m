@@ -15,6 +15,7 @@
 #import "YunValueHelper.h"
 #import "YunUILabelFactory.h"
 #import "YunGlobalDefine.h"
+#import "UIColor+YunAdd.h"
 
 @interface YunImgListView () <UICollectionViewDataSource, UICollectionViewDelegate,
         UICollectionViewDelegateFlowLayout, MWPhotoBrowserDelegate,
@@ -255,7 +256,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
 - (UIView *)createAddView {
     UIView *view = [UIView new];
-    [view setViewRadius:0 width:0.5f color:UIColor.lightGrayColor];
+    [view setViewRadius:0 width:0.5f color:[UIColor hexColor:0xE6E6E6]];
 
     UILabel *icon = [YunUILabelFactory labelWithText:@"+"
                                                 font:[UIFont boldSystemFontOfSize:30]
