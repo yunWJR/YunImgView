@@ -5,7 +5,6 @@
 
 #import "YunImgData.h"
 #import "YunQnHelper.h"
-#import "UIImageView+WebCache.h"
 #import "UIViewYunAddHeader.h"
 
 @implementation YunImgData
@@ -76,6 +75,8 @@
 }
 
 - (BOOL)isSame:(YunImgData *)img {
+    if (img == nil) {return NO;}
+
     if (self.type == img.type) {
         if ([self.data isEqual:img.data]) {return YES;} //todo
     }

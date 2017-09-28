@@ -29,11 +29,9 @@
 
     BOOL _isEdit;
 
-    void (^_didCmp)(BOOL);
+    void (^_didCmp)(BOOL changed);
 
     YunSelectImgHelper *_selHelper;
-
-    UIView *_addView;
 
     CGFloat _lastWidth;
 }
@@ -69,6 +67,9 @@
     _hasAddBtn = YES;
     _isZoom = YES;
 
+    _rowNum = rowNum;
+    _maxCount = 9;
+
     _selHelper = [YunSelectImgHelper new];
     _selHelper.delegate = self;
 
@@ -94,9 +95,6 @@
         make.left.equalTo(@0);
         make.size.equalTo(self);
     }];
-
-    // other
-    _addView = [self createAddView];
 }
 
 - (void)dealloc {
@@ -129,7 +127,7 @@
             cell = [YunImgCVC new];
         }
 
-        [cell setAddItem:_addView];
+        [cell setAddItem:self.getAddItemView];
         cell.backgroundColor = _itemBgColor;
 
         return cell;
@@ -254,7 +252,11 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     return count;
 }
 
-- (UIView *)createAddView {
+- (UIView *)getAddItemView {
+    if (_cstAddView) {
+        return _cstAddView;
+    }
+
     UIView *view = [UIView new];
     [view setViewRadius:0 width:0.5f color:[UIColor hexColor:0xE6E6E6]];
 
@@ -272,6 +274,8 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
         make.height.equalTo(view);
     }];
 
+    _cstAddView = view;
+
     return view;
 }
 
@@ -279,6 +283,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
 - (void)resetImgByImgList:(NSArray<YunImgData *> *)imgList {
     [self removeAllImg];
+
     [self addImgByInfoList:imgList];
 }
 
@@ -323,7 +328,6 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
         }
     }
 
-    //[_ctnCV reloadData];
     [self reloadImgData];
 }
 
@@ -340,15 +344,15 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     }
 
     for (int i = 0; i < urlList.count; ++i) {
-        id img = urlList[i];
-        if ([img isKindOfClass:[YunImgData class]]) {
-            [_imgDataList addObject:img];
+        id item = urlList[i];
+        if ([item isKindOfClass:[YunImgData class]]) {
+            [_imgDataList addObject:item];
         }
-        else if ([img isKindOfClass:[NSString class]]) {
-            [self addImgDataByUrlStr:img];
+        else if ([item isKindOfClass:[NSString class]]) {
+            [self addImgDataByUrlStr:item];
         }
-        else if ([img isKindOfClass:[NSMutableString class]]) {
-            NSString *imgStr = img;
+        else if ([item isKindOfClass:[NSMutableString class]]) {
+            NSString *imgStr = item;
             [self addImgDataByUrlStr:imgStr];
         }
     }
@@ -390,9 +394,6 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     imgInfo.data = url;
 
     [_imgDataList addObject:imgInfo];
-
-//    [_imageCV reloadData];
-//    [self updateViewConstraints];
 }
 
 - (void)removeAllImg {
@@ -413,8 +414,6 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     [self mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.equalTo(@([self curHeight]));
     }];
-
-    //[self layoutIfNeeded];
 
     if (_delegate && [_delegate respondsToSelector:@selector(viewSizeChanged)]) {
         [_delegate viewSizeChanged];
@@ -520,7 +519,6 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
-    //NSLog(@"image = %@, error = %@, contextInfo = %@", image, error, contextInfo);
 }
 
 #pragma mark - UIAlertViewDelegate
@@ -575,12 +573,10 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
         switch (img.type) {
             case YunImgImage:
                 return [MWPhoto photoWithImage:img.data];
-                break;
             case YunImgURLStr:
                 return [MWPhoto photoWithURL:[NSURL URLWithString:img.data]];
-                break;
             default:
-                NSLog(@"ImageSrcUnkonw");
+                NSLog(@"ImageSrcUnknown");
                 break;
         }
     }

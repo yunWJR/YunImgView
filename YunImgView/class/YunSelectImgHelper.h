@@ -28,15 +28,15 @@
 
 @property (nonatomic, assign) NSInteger maxCount;
 
+// 是否压缩图片-NO
 @property (nonatomic, assign) BOOL isCompression;
 
-// def = 150 kb
+// 压缩大小-150 kb
 @property (nonatomic, assign) NSInteger compressSize;
 
+// 消失动画-YES
 @property (nonatomic, assign) BOOL disAmt;
 
 - (void)selectImg:(NSInteger)curCount;
-
-- (void)notiCmp:(BOOL)hasImg imgs:(NSArray<UIImage *> *)imgs;
 
 @end

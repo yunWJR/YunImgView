@@ -23,13 +23,20 @@
 
 @property (nonatomic, weak) id <YunImgListViewDelegate> delegate;
 
-@property (nonatomic, assign) NSInteger maxCount;
+// 3
 @property (nonatomic, assign) NSInteger rowNum;
+
+// 9
+@property (nonatomic, assign) NSInteger maxCount;
+
 @property (nonatomic, assign) CGFloat sideOff;
 @property (nonatomic, assign) CGFloat interval;
 @property (nonatomic, assign) CGSize cellSize;
 
+// NO
 @property (nonatomic, assign) BOOL shouldStoreImg; // 是否存储照片
+
+// NO
 @property (nonatomic, assign) BOOL forceDel; // 没有编辑，也可以删除照片
 
 @property (nonatomic, assign) BOOL hasAddBtn; // 是否默认有新增按钮
@@ -42,9 +49,11 @@
 
 @property (nonatomic, strong) UIColor *itemBgColor;
 
+@property (nonatomic, strong) UIView *cstAddView;
+
 - (instancetype)initWithRowNum:(NSInteger)rowNum;
 
-- (void)selectImg:(void (^)(BOOL))cmp;
+- (void)selectImg:(void (^)(BOOL changed))cmp;
 
 - (void)selectImg;
 
