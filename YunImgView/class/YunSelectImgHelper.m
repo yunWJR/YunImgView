@@ -8,6 +8,7 @@
 #import "TZImagePickerController.h"
 #import "UIImage+YunAdd.h"
 #import "YunPmsHlp.h"
+#import "YunImgViewConfig.h"
 
 @interface YunSelectImgHelper () <UIImagePickerControllerDelegate,
         TZImagePickerControllerDelegate, UINavigationControllerDelegate> {
@@ -22,7 +23,7 @@
     self = [super init];
     if (self) {
         self.disAmt = YES;
-        self.compressSize = 300;
+        self.compressSize = YunImgViewConfig.instance.compressSize;
     }
 
     return self;
