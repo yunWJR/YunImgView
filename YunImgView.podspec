@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "YunImgView"
-  s.version      = "0.0.11"
+  s.version      = "0.0.12"
   s.summary      = "yun's img list view for iOS"
 
   # This description is used to generate tags and improve search results.

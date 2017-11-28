@@ -28,6 +28,8 @@
 
 @property (nonatomic, assign) NSInteger maxCount;
 
+@property (nonatomic, assign) BOOL editImg;
+
 // 是否压缩图片-NO
 @property (nonatomic, assign) BOOL isCompression;
 

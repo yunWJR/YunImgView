@@ -89,13 +89,28 @@
     UIImagePickerController *imgPk = [[UIImagePickerController alloc] init];
     imgPk.delegate = self;
 
-    imgPk.allowsEditing = NO;
+    imgPk.allowsEditing = _editImg;
     imgPk.sourceType = UIImagePickerControllerSourceTypeCamera;
 
     [self.superVC presentViewController:imgPk animated:YES completion:nil];
 }
 
+- (void)openPhotoLib {
+    UIImagePickerController *imgPk = [[UIImagePickerController alloc] init];
+    imgPk.delegate = self;
+
+    imgPk.allowsEditing = _editImg;
+    imgPk.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+
+    [self.superVC presentViewController:imgPk animated:YES completion:nil];
+}
+
 - (void)selByAlbum {
+    if (self.maxCount == 1) {
+        [self openPhotoLib];
+        return;
+    }
+
     TZImagePickerController *imgPk = [[TZImagePickerController alloc] initWithMaxImagesCount:(_maxCount - _curCount)
                                                                                     delegate:self];
     imgPk.allowPickingImage = YES;
@@ -152,6 +167,10 @@
 didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
     UIImage *image = info[UIImagePickerControllerOriginalImage];
     if (image == nil) {
+        image = info[UIImagePickerControllerEditedImage]; // 编辑后的
+    }
+
+    if (image == nil) {
         [self notiCmp:NO imgs:nil];
         return;
     }
@@ -164,7 +183,6 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     [picker dismissViewControllerAnimated:_disAmt completion:^{
-
     }];
 
     [self notiCmp:NO imgs:nil];
