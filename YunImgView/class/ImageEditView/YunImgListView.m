@@ -599,7 +599,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
 #pragma mark - YunSelectImgDelegate
 
-- (void)didCmp:(BOOL)cmp imgs:(NSArray<UIImage *> *)imgs selType:(YunSelectImgType)isCamera {
+- (void)didCmp:(BOOL)cmp imgs:(NSArray<UIImage *> *)imgs selType:(YunSelectImgType)selType {
     [self notiCmp:cmp];
 
     if (imgs == nil || imgs.count == 0) {return;}
@@ -607,7 +607,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     for (int i = 0; i < imgs.count; ++i) {
         [self addImage:imgs[i]];
 
-        if (_shouldStoreImg && isCamera) {
+        if (_shouldStoreImg && selType != YunImgSelByPhotoAlbum) {
             [self savedPhotosToAlbum:imgs[i]];
         }
     }

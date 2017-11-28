@@ -24,6 +24,6 @@
 
 - (void)setImgInView:(UIImageView *)imgView isZoom:(BOOL)isZoom;
 
-- (BOOL)isSame:(YunImgData *)img;
+- (BOOL)isSame:(YunImgData *)item;
 
 @end

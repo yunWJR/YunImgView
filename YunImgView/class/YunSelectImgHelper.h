@@ -31,7 +31,7 @@
 // 是否压缩图片-NO
 @property (nonatomic, assign) BOOL isCompression;
 
-// 压缩大小-150 kb
+// 压缩大小-300 kb
 @property (nonatomic, assign) NSInteger compressSize;
 
 // 消失动画-YES

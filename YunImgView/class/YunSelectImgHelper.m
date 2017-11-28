@@ -3,6 +3,7 @@
 // Copyright (c) 2017 skkj. All rights reserved.
 //
 
+#import <YunKits/YunGlobalDefine.h>
 #import "YunSelectImgHelper.h"
 #import "TZImagePickerController.h"
 #import "UIImage+YunAdd.h"
@@ -21,7 +22,7 @@
     self = [super init];
     if (self) {
         self.disAmt = YES;
-        self.compressSize = 150;
+        self.compressSize = 300;
     }
 
     return self;
@@ -33,7 +34,8 @@
     if (_selType == YunImgSelByCameraAndPhotoAlbum) {
         if (_delegate && [_delegate respondsToSelector:@selector(selectImgByType:)]) {
             [_delegate selectImgByType:^(YunSelectImgType type) {
-                [self selectImgByType:type];
+                _selType = type;
+                [self selectImgByType:_selType];
             }];
         }
     }
@@ -57,73 +59,62 @@
 }
 
 - (void)selByCamera {
-    [[YunPmsHlp instance]
-                showCameraPmsWithTitle:@"是否允许使用相机？"
-                               message:@"是否允许使用相机？"
-                               denyBtn:@"取消"
-                              grantBtn:@"允许"
-                            cmpHandler:^(BOOL hasPms, YunDgRst userDr, YunDgRst sysDr) {
-                                if (hasPms) {
-                                    [[YunPmsHlp instance]
-                                                showPhotoPmsWithTitle:@"是否允许使用相册？"
-                                                              message:@"是否允许使用相册？"
-                                                              denyBtn:@"取消"
-                                                             grantBtn:@"允许"
-                                                           cmpHandler:^(BOOL hasPmsAb,
-                                                                        YunDgRst userDrAb,
-                                                                        YunDgRst sysDrAb) {
-                                                               if (hasPmsAb) {
-                                                                   UIImagePickerController
-                                                                           *imagePicker =
-                                                                           [[UIImagePickerController alloc] init];
-                                                                   imagePicker.delegate = self;
+    WEAK_SELF
+    [[YunPmsHlp instance] showCameraPmsWithTitle:@"是否允许使用相机？"
+                                         message:@"是否允许使用相机？"
+                                         denyBtn:@"取消"
+                                        grantBtn:@"允许" cmpHandler:^(BOOL hasPms, YunDgRst userDr, YunDgRst sysDr) {
+         if (hasPms) {
+             [[YunPmsHlp instance] showPhotoPmsWithTitle:@"是否允许使用相册？"
+                                                 message:@"是否允许使用相册？"
+                                                 denyBtn:@"取消"
+                                                grantBtn:@"允许"
+                                              cmpHandler:^(BOOL hasPmsAb, YunDgRst userDrAb, YunDgRst sysDrAb) {
+                                                  if (hasPmsAb) {
+                                                      [weakSelf openCamera];
+                                                  }
+                                                  else {
+                                                      [weakSelf notiCmp:NO imgs:nil]; // todo 情况还应考虑
+                                                  }
+                                              }];
+         }
+         else {
+             [weakSelf notiCmp:NO imgs:nil]; // todo 情况还应考虑
+         }
+     }];
+}
 
-                                                                   imagePicker.allowsEditing = NO;
+- (void)openCamera {
+    UIImagePickerController *imgPk = [[UIImagePickerController alloc] init];
+    imgPk.delegate = self;
 
-                                                                   imagePicker.sourceType =
-                                                                           UIImagePickerControllerSourceTypeCamera;
+    imgPk.allowsEditing = NO;
+    imgPk.sourceType = UIImagePickerControllerSourceTypeCamera;
 
-                                                                   [[self superVC]
-                                                                          presentViewController:imagePicker
-                                                                                       animated:YES
-                                                                                     completion:nil];
-                                                               }
-                                                               else {
-                                                                   [self notiCmp:NO imgs:nil]; // todo 情况还应考虑
-
-                                                                   return;
-                                                               }
-                                                           }];
-                                }
-                                else {
-                                    [self notiCmp:NO imgs:nil]; // todo 情况还应考虑
-
-                                    return;
-                                }
-                            }];
+    [self.superVC presentViewController:imgPk animated:YES completion:nil];
 }
 
 - (void)selByAlbum {
-    TZImagePickerController *imagePickerVc =
-            [[TZImagePickerController alloc] initWithMaxImagesCount:(_maxCount - _curCount) delegate:self];
-    imagePickerVc.allowPickingImage = YES;
-    imagePickerVc.allowPickingVideo = NO;
-    imagePickerVc.isSelectOriginalPhoto = NO;
-    imagePickerVc.autoDismiss = NO;
+    TZImagePickerController *imgPk = [[TZImagePickerController alloc] initWithMaxImagesCount:(_maxCount - _curCount)
+                                                                                    delegate:self];
+    imgPk.allowPickingImage = YES;
+    imgPk.allowPickingVideo = NO;
+    imgPk.isSelectOriginalPhoto = NO;
+    imgPk.autoDismiss = NO;
 
-    //imagePickerVc.navigationBar.barTintColor = PpmTheme.colorHl;
-    // imagePickerVc.oKButtonTitleColorDisabled = [UIColor lightGrayColor];
-    // imagePickerVc.oKButtonTitleColorNormal = [UIColor greenColor];
+    //imgPk.navigationBar.barTintColor = PpmTheme.colorHl;
+    // imgPk.oKButtonTitleColorDisabled = [UIColor lightGrayColor];
+    // imgPk.oKButtonTitleColorNormal = [UIColor greenColor];
 
-    imagePickerVc.sortAscendingByModificationDate = YES;
+    imgPk.sortAscendingByModificationDate = YES;
 
-    imagePickerVc.allowTakePicture = NO; // 在内部显示拍照按钮
+    imgPk.allowTakePicture = NO; // 在内部显示拍照按钮
 
-    imagePickerVc.imagePickerControllerDidCancelHandle = ^() {
+    imgPk.imagePickerControllerDidCancelHandle = ^() {
         [self notiCmp:NO imgs:nil];
     };
 
-    [[self superVC] presentViewController:imagePickerVc animated:YES completion:nil];
+    [self.superVC presentViewController:imgPk animated:YES completion:nil];
 }
 
 - (void)notiCmp:(BOOL)hasImg imgs:(NSArray<UIImage *> *)imgs {

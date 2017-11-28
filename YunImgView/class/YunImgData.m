@@ -5,7 +5,8 @@
 
 #import "YunImgData.h"
 #import "YunQnHelper.h"
-#import "UIViewYunAddHeader.h"
+#import "UIImageView+YunAdd.h"
+#import "NSObject+YunAdd.h"
 
 @implementation YunImgData
 
@@ -15,11 +16,7 @@
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-    YunImgData *copy = [[YunImgData allocWithZone:zone] init];
-
-    copy.data = [self.data copy];
-
-    copy.type = self.type;
+    YunImgData *copy = self.yunDeepCopy;
 
     return copy;
 }
@@ -74,11 +71,28 @@
     }
 }
 
-- (BOOL)isSame:(YunImgData *)img {
-    if (img == nil) {return NO;}
+- (BOOL)isSame:(YunImgData *)item {
+    if (item == nil) {return NO;}
 
-    if (self.type == img.type) {
-        if ([self.data isEqual:img.data]) {return YES;} //todo
+    if (self.type == item.type) {
+        if (self.type == YunImgURLStr || self.type == YunImgSrcName) {
+            return [self.data isEqualToString:item.data];
+        }
+        else {
+            if ([self.data isKindOfClass:UIImage.class]) {
+                NSData *imgD1 = UIImagePNGRepresentation(self.data);
+                NSData *imgD2 = UIImagePNGRepresentation(item.data);
+
+                return [imgD1 isEqual:imgD2];
+            }
+
+            if ([self.data isKindOfClass:NSData.class]) {
+                return [self.data isEqual:item.data];
+            }
+
+            NSLog(@"unknown img data");
+            return NO;
+        }
     }
 
     return NO;
