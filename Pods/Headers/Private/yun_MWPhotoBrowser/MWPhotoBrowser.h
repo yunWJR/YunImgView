@@ -1,1 +1,0 @@
-../../../yun_MWPhotoBrowser/Pod/Classes/MWPhotoBrowser.h

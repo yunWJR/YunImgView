@@ -20,16 +20,16 @@ PODS:
     - Mantle/extobjc (= 2.1.0)
   - Mantle/extobjc (2.1.0)
   - Masonry (1.1.0)
-  - MBProgressHUD (1.0.0)
-  - SDWebImage (4.1.0):
-    - SDWebImage/Core (= 4.1.0)
-  - SDWebImage/Core (4.1.0)
-  - TZImagePickerController (1.9.3)
-  - yun_MWPhotoBrowser (2.1.2-1.0):
+  - MBProgressHUD (1.1.0)
+  - SDWebImage (4.2.2):
+    - SDWebImage/Core (= 4.2.2)
+  - SDWebImage/Core (4.2.2)
+  - TZImagePickerController (1.9.6)
+  - YunImageBrowser (0.0.1):
     - DACircularProgress
     - MBProgressHUD
     - SDWebImage
-  - YunKits (0.0.32):
+  - YunKits (0.0.35):
     - AFNetworking
     - Masonry
     - SDWebImage
@@ -40,7 +40,7 @@ DEPENDENCIES:
   - Mantle
   - Masonry
   - TZImagePickerController
-  - yun_MWPhotoBrowser (= 2.1.2-1.0)
+  - YunImageBrowser
   - YunKits
   - YunPmsHelper
 
@@ -50,13 +50,13 @@ SPEC CHECKSUMS:
   DACircularProgress: 4dd437c0fc3da5161cb289e07ac449493d41db71
   Mantle: 2fa750afa478cd625a94230fbf1c13462f29395b
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
-  MBProgressHUD: 4890f671c94e8a0f3cf959aa731e9de2f036d71a
-  SDWebImage: 0e435c14e402a6730315a0fb79f95e68654d55a4
-  TZImagePickerController: 079ab986018c22793462e531045a75e366b18252
-  yun_MWPhotoBrowser: b309d603c6510c2bab8627258d257dd9bab995fe
-  YunKits: 1c776f1048aff458fe497d308eff54f6972a785c
+  MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
+  SDWebImage: 89a9d32cd520bbb46eb14e541d5109b3564af198
+  TZImagePickerController: 276dc7c0cc70da9ee354046474b405d87ef81c89
+  YunImageBrowser: 1c3ac48c8b9f973290d30620a17a9d0f3cb49178
+  YunKits: f4b6df86bb0f4f5f4cafcb4e53e1bebed91f541f
   YunPmsHelper: 8229bbfdb2f783cc2474d6497c5ab976b5cc19af
 
-PODFILE CHECKSUM: 59beeeca05556cf4f66fe9b6d579943971d30487
+PODFILE CHECKSUM: b4307f8401d85ce70f1e0ec65a2b97a83db9c048
 
 COCOAPODS: 1.4.0.beta.1

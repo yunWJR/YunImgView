@@ -9,11 +9,11 @@ target 'YunImgView' do
   # use_frameworks!
 
   # Pods for YunImgView
-  pod 'Masonry'
   pod 'YunPmsHelper'
-  pod 'yun_MWPhotoBrowser', '2.1.2-1.0'
-  pod 'Mantle'
   pod 'YunKits'
+  pod 'YunImageBrowser'
+  pod 'Masonry'
+  pod 'Mantle'
   pod 'TZImagePickerController'
 
 end

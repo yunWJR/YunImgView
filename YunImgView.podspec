@@ -136,7 +136,7 @@ Pod::Spec.new do |s|
   s.dependency "YunKits"
   s.dependency "Masonry"
   s.dependency "YunPmsHelper"
-  s.dependency "yun_MWPhotoBrowser", "2.1.2-1.0"
+  s.dependency "yun_MWPhotoBrowser"
   s.dependency "Mantle"
   s.dependency "TZImagePickerController"
 
