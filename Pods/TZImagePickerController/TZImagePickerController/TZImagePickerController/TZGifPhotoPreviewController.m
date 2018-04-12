@@ -56,7 +56,8 @@
     _previewView.model = self.model;
     __weak typeof(self) weakSelf = self;
     [_previewView setSingleTapGestureBlock:^{
-        [weakSelf signleTapAction];
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf signleTapAction];
     }];
     [self.view addSubview:_previewView];
 }
@@ -108,10 +109,11 @@
 - (void)signleTapAction {
     _toolBar.hidden = !_toolBar.isHidden;
     [self.navigationController setNavigationBarHidden:_toolBar.isHidden];
+    TZImagePickerController *tzImagePickerVc = (TZImagePickerController *)self.navigationController;
     if (iOS7Later) {
         if (_toolBar.isHidden) {
             [UIApplication sharedApplication].statusBarHidden = YES;
-        } else if (TZ_showStatusBarInitial) {
+        } else if (tzImagePickerVc.needShowStatusBar) {
             [UIApplication sharedApplication].statusBarHidden = NO;
         }
     }

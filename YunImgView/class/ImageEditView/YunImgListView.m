@@ -477,17 +477,9 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
 - (void)showImageAtIndex:(NSInteger)index {
     _imgBrowser = [[MWPhotoBrowser alloc] initWithDelegate:self];
-    if (_isEdit || _forceDel) {
-        UIBarButtonItem *saveBtn = [[UIBarButtonItem alloc] initWithTitle:@"删除"
-                                                                    style:UIBarButtonItemStyleDone
-                                                                   target:self
-                                                                   action:@selector(deleteImage:)];
-        saveBtn.tintColor = [UIColor whiteColor];
-        [_imgBrowser.navigationItem setRightBarButtonItem:saveBtn];
-    }
 
     _imgBrowser.displayActionButton = NO;
-    _imgBrowser.displayNavArrows = YES;
+    _imgBrowser.displayNavArrows = NO;
     _imgBrowser.displaySelectionButtons = NO;
     _imgBrowser.alwaysShowControls = NO;
     _imgBrowser.zoomPhotosToFill = YES;
@@ -496,9 +488,38 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     _imgBrowser.enableSwipeToDismiss = NO;
     _imgBrowser.autoPlayOnAppear = YES;
     _imgBrowser.delegate = self;
+
+    _imgBrowser.hideNagItemDone = YES;
+
     [_imgBrowser setCurrentPhotoIndex:index];
 
-    [[self superVC].navigationController pushViewController:_imgBrowser animated:YES];
+    UINavigationController *ng = [[UINavigationController alloc] initWithRootViewController:_imgBrowser];
+
+    UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]
+                                                  initWithBarButtonSystemItem:UIBarButtonSystemItemStop
+                                                                       target:self
+                                                                       action:@selector(didPBBack)];
+
+    _imgBrowser.navigationItem.leftBarButtonItem = leftItem;
+
+    if (_isEdit || _forceDel) {
+        UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithTitle:@"删除"
+                                                                      style:UIBarButtonItemStyleDone
+                                                                     target:self
+                                                                     action:@selector(deleteImage:)];
+
+        _imgBrowser.navigationItem.rightBarButtonItem = rightItem;
+    }
+    else {
+        _imgBrowser.navigationItem.rightBarButtonItem = nil;
+    }
+
+    [[self superVC] presentViewController:ng animated:YES completion:^{
+    }];
+}
+
+- (void)didPBBack {
+    [_imgBrowser dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)deleteImage:(id)deleteImage {
@@ -533,7 +554,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
         if (_imgDataList.count == 0) {
             [self reloadImgData];
-            [_imgBrowser.navigationController popViewControllerAnimated:YES];
+            [self didPBBack];
             return;
         }
 
