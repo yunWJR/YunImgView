@@ -2,12 +2,15 @@
 //  YunNetworkHelper.m
 //  Report
 //
-//  Created by 王健 on 16/4/20.
-//  Copyright © 2016年 成都晟堃科技有限责任公司. All rights reserved.
+// Created by yun on 2017/6/29.
+// Copyright (c) 2017 yun. All rights reserved.
 //
 
+#import "YunGlobalDefine.h"
 #import "YunNetworkHelper.h"
 #import "AFNetworkReachabilityManager.h"
+
+NSString *const yun_network_status_changed_key = @"yun_network_status_changed_key";
 
 @interface YunNetworkHelper () {
     BOOL _started;
@@ -39,35 +42,32 @@
 
 - (void)startMonitor {
     // 网络状态检测
+    WEAK_SELF
     [[AFNetworkReachabilityManager sharedManager]
                                    setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
-                                       _started = YES;
-                                       NSLog(@"Reachability: %@", AFStringFromNetworkReachabilityStatus(status));
-
-                                       if (_didStatusChanged) {
-                                           _didStatusChanged(self.isNetworkAvailable);
-                                       }
-
-                                       [[NSNotificationCenter defaultCenter]
-                                                              postNotificationName:NETWORK_STATUS_NOTI_STR
-                                                                            object:nil
-                                                                          userInfo:@{@"status" : @(self.isNetworkAvailable)}];
+                                       [weakSelf handleStatusChanged:status];
                                    }];
 
     [[AFNetworkReachabilityManager sharedManager] startMonitoring];
 }
 
-- (void)isNetworkReachable:(void (^)(BOOL))result {
-    result([AFNetworkReachabilityManager sharedManager].isReachable);
+- (void)handleStatusChanged:(AFNetworkReachabilityStatus)status {
+    _started = YES;
 
-    //return;
-    //dispatch_async(dispatch_queue_create("background", 0), ^{
-    //    while (true) { // todo 死循环
-    //        if (_started) {break;}
-    //    }
-    //
-    //    result([AFNetworkReachabilityManager sharedManager].isReachable);
-    //});
+    if (_didStatusChanged) {
+        _didStatusChanged(self.isNetworkAvailable);
+    }
+
+    [[NSNotificationCenter defaultCenter]
+                           postNotificationName:yun_network_status_changed_key
+                                         object:nil
+                                       userInfo:@{@"status" : @(self.isNetworkAvailable)}];
+}
+
+- (void)isNetworkReachable:(void (^)(BOOL))result {
+    if (result) {
+        result(self.isNetworkAvailable);
+    }
 }
 
 - (BOOL)isNetworkAvailable {

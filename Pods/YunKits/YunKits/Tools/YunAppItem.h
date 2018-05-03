@@ -1,6 +1,6 @@
 //
 // Created by yun on 2017/4/25.
-// Copyright (c) 2017 成都晟堃科技有限责任公司. All rights reserved.
+// Copyright (c) 2017 yun. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -13,6 +13,9 @@
 
 // 禁止手机睡眠
 + (void)stopIdle;
+
+// 可以打开设置页面
++ (BOOL)canOpenSystemSetting;
 
 // 跳进app设置
 + (void)gotoSettingView;

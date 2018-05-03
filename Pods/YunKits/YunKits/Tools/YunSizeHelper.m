@@ -1,6 +1,6 @@
 //
-//  Created by 王健 on 16/4/20.
-//  Copyright © 2016年 成都晟堃科技有限责任公司. All rights reserved.
+// Created by yun on 2017/6/29.
+// Copyright (c) 2017 yun. All rights reserved.
 //
 
 #import "YunSizeHelper.h"
@@ -8,7 +8,9 @@
 @implementation YunSizeHelper
 
 + (CGFloat)statusBarHeight { //
-    return [UIApplication sharedApplication].statusBarFrame.size.height;
+    CGFloat sBar = [UIApplication sharedApplication].statusBarFrame.size.height;
+
+    return sBar; // def = 20pt iPhoneX=44pt
 }
 
 // 该高度有可能有误差
@@ -21,7 +23,7 @@
 }
 
 + (CGFloat)tabBarHeight {
-    return 49;
+    return 49 + self.btmSafeOff;
 }
 
 + (CGFloat)screenWidth {
@@ -38,6 +40,16 @@
 
 + (CGFloat)heightOn2x:(CGFloat)height {
     return self.screenHeight * height / 667.00f;
+}
+
++ (CGFloat)btmSafeOff {
+    return self.isIPhoneX ? 34.0f : 0.0f;
+}
+
++ (BOOL)isIPhoneX {
+    BOOL iPhoneX = self.screenWidth == 375.0f && self.screenHeight == 812.0f;
+
+    return iPhoneX;
 }
 
 @end

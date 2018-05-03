@@ -1,13 +1,16 @@
 //
-//  Created by 王健 on 16/9/18.
-//  Copyright © 2016年 成都晟堃科技有限责任公司. All rights reserved.
+// Created by yun on 16/12/1.
+// Copyright (c) 2017 yun. All rights reserved.
 //
 
 #import "YunViewController.h"
+#import "YunValueVerifier.h"
 
 @interface YunViewController () {
-    UIImageView *_navBarHairlineImageView;
+    UIImageView *_nagBtmLine;
 }
+
+@property (nonatomic, strong) UIBarButtonItem *noneLeftItem;
 
 @end
 
@@ -21,15 +24,11 @@
         _hideNagBarBtmLine = NO;
         _hideNagBarBackItem = NO;
 
-        _needUpdateData = NO;
-        _forceNoUpdate = NO;
-
         _hideBottomBar = YES;
 
         _sideOff = 0;
         _topOff = 0;
 
-        _firstLoad = YES;
         _isAppear = NO;
 
         self.hidesBottomBarWhenPushed = _hideBottomBar;
@@ -40,73 +39,68 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+}
 
-    [self setAutomaticallyAdjustsScrollViewInsets:NO];
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
 
-    // 不延伸
-    [self setEdgesForExtendedLayout:UIRectEdgeNone];
-    self.navigationController.navigationBar.translucent = NO; // 不延伸时，导航栏设为不透明，不然为灰色
+    [self updateNagHideState];
 
-    _navBarHairlineImageView = [self findHairlineImageViewUnder:self.navigationController.navigationBar];
+    if (!_hideNagBar) {
+        if (_hideNagBarBackItem) {
+            if (_noneLeftItem == nil) {
+                _noneLeftItem = [[UIBarButtonItem alloc] initWithCustomView:[UIButton new]];
+            }
+
+            self.leftNagItem = _noneLeftItem;
+            self.navigationItem.leftBarButtonItem = _noneLeftItem;
+        }
+        else {
+            [self.navigationItem.backBarButtonItem setTarget:self];
+            [self.navigationItem.backBarButtonItem setAction:@selector(didClickNagLeftItem)];
+        }
+
+        [self updateNagBtmLineState];
+    }
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+
+    _isAppear = YES;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+
+    [self updateNagHideState];
+
+    if (!_hideNagBar) {
+        //[self updateNagBtmLineState];
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+
+    _isAppear = NO;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-
-    if (_hideNagBar) {
-        [self.navigationController setNavigationBarHidden:YES animated:YES];
-    }
-    else {
-        [self.navigationController setNavigationBarHidden:NO animated:YES];
-
-        if (_hideNagBarBackItem) {
-            UIBarButtonItem *noneItem = [[UIBarButtonItem alloc] initWithCustomView:[UIButton new]];
-
-            self.navigationItem.leftBarButtonItem = noneItem;
-        }
-        else {
-            [self.navigationItem.backBarButtonItem setTarget:self];
-            [self.navigationItem.backBarButtonItem setAction:@selector(didClickNagLeftItem)];
-        }
-    }
-
-    [self setNagBottomLineHideStatus:_hideNagBarBtmLine];
-}
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-
-    self.isAppear = YES;
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-
-    [self.navigationController setNavigationBarHidden:_hideNagBar animated:YES];
-
-    [self setNagBottomLineHideStatus:_hideNagBarBtmLine];
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-
-    self.isAppear = NO;
-}
-
 #pragma mark - handles
 
 - (void)didClickNagLeftItem {
     if (self.isModalVc) {
-        [self dismissViewControllerAnimated:YES completion:nil];
+        [self dismissViewControllerAnimated:YES completion:nil]; // completion
         return;
     }
 
     if (_backVC) {
         [self.navigationController popToViewController:_backVC animated:YES];
+        _backVC = nil;
     }
     else {
         [self.navigationController popViewControllerAnimated:YES];
@@ -116,16 +110,10 @@
 - (void)didClickNagRightItem {
 }
 
-- (void)setBackVcNeedUpdate {
-    if (self.backVC) {
-        self.backVC.needUpdateData = YES;
-    }
-}
-
 #pragma mark - public functions
 
-- (void)setRightBarItemByNormalImg:(NSString *)norImg highLightImg:(NSString *)highImg {
-    UIBarButtonItem *rBtnItem = [self createBarItemByImg:norImg action:@selector(didClickNagRightItem)];
+- (void)setRightBarItemByImg:(NSString *)img {
+    UIBarButtonItem *rBtnItem = [self createBarItemByImg:img action:@selector(didClickNagRightItem)];
 
     self.navigationItem.rightBarButtonItem = rBtnItem;
 
@@ -133,7 +121,7 @@
 }
 
 - (void)setRightBarItemName:(NSString *)name font:(UIFont *)font color:(UIColor *)color {
-    if (name == nil) {
+    if ([YunValueVerifier isInvalidStr:name]) {
         return;
     }
 
@@ -156,7 +144,7 @@
 }
 
 - (void)setLeftBarItemName:(NSString *)name font:(UIFont *)font color:(UIColor *)color {
-    if (name == nil) {
+    if ([YunValueVerifier isInvalidStr:name]) {
         return;
     }
 
@@ -184,9 +172,13 @@
                                    color:(UIColor *)color
                                   action:(nullable SEL)action {
     UIBarButtonItem *btnItem = [[UIBarButtonItem alloc] initWithTitle:name
-                                                                style:UIBarButtonItemStyleDone
+                                                                style:UIBarButtonItemStylePlain
                                                                target:self
                                                                action:action];
+    //UIBarButtonItemStylePlain        默认按钮风格；按下时会闪动
+    //UIBarButtonItemStyleBordered     与UIBarButtonItemStylePlain相同，但显示的按钮有边框(已废弃)
+    //UIBarButtonItemStyleDone         显示一个蓝色按钮，提醒用户编辑完毕时应该点触（tap）该按钮。
+
     [btnItem setTitleTextAttributes:
                      @{
                              NSFontAttributeName            : font,
@@ -194,8 +186,15 @@
                      }
                            forState:UIControlStateNormal];
 
-    return btnItem;
+    // 防止按下变色
+    [btnItem setTitleTextAttributes:
+                     @{
+                             NSFontAttributeName            : font,
+                             NSForegroundColorAttributeName : color
+                     }
+                           forState:UIControlStateHighlighted];
 
+    return btnItem;
 }
 
 #pragma mark - setter getter
@@ -203,28 +202,60 @@
 - (void)setHideNagBarBtmLine:(BOOL)hideNagBarBtmLine {
     _hideNagBarBtmLine = hideNagBarBtmLine;
 
-    [self setNagBottomLineHideStatus:_hideNagBarBtmLine];
+    [self updateNagBtmLineState];
+}
+
+- (void)setHideBottomBar:(BOOL)hideBottomBar {
+    _hideBottomBar = hideBottomBar;
+
+    self.hidesBottomBarWhenPushed = _hideBottomBar;
+}
+
+- (YunViewController *)yunBackVC {
+    if (_backVC) {
+        if ([_backVC isKindOfClass:YunViewController.class]) {
+            return (YunViewController *) _backVC;
+        }
+        else {
+            return nil;
+        }
+    }
+
+    return nil;
 }
 
 #pragma mark - private functions
 
+- (void)updateNagBtmLineState {
+    [self setNagBottomLineHideStatus:_hideNagBarBtmLine];
+}
+
 - (void)setNagBottomLineHideStatus:(BOOL)hide {
-    if (_navBarHairlineImageView) {
-        _navBarHairlineImageView.hidden = hide;
+    if (_nagBtmLine == nil) {
+        _nagBtmLine = [self findNagBtmLine:self.navigationController.navigationBar];
+    }
+
+    if (_nagBtmLine) {
+        _nagBtmLine.hidden = hide;
     }
 }
 
-- (UIImageView *)findHairlineImageViewUnder:(UIView *)view {
+- (UIImageView *)findNagBtmLine:(UIView *)view {
     if ([view isKindOfClass:UIImageView.class] && view.bounds.size.height <= 1.0) {
         return (UIImageView *) view;
     }
     for (UIView *subview in view.subviews) {
-        UIImageView *imageView = [self findHairlineImageViewUnder:subview];
+        UIImageView *imageView = [self findNagBtmLine:subview];
         if (imageView) {
             return imageView;
         }
     }
     return nil;
+}
+
+- (void)updateNagHideState {
+    // animated=YES 防止侧滑 黑条
+    [self.navigationController setNavigationBarHidden:_hideNagBar animated:YES];
 }
 
 #pragma mark - protocol

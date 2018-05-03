@@ -7,6 +7,4 @@
 #import "NSObject+YunAdd.h"
 #import "NSString+YunAdd.h"
 #import "NSURL+YunAdd.h"
-#import "UIColor+YunAdd.h"
-#import "UIImage+YunAdd.h"
-#import "UIFont+YunAdd.h"
+#import "NSTimer+YunAdd.h"

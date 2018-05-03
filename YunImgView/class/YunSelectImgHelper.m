@@ -6,7 +6,6 @@
 #import <YunKits/YunGlobalDefine.h>
 #import "YunSelectImgHelper.h"
 #import "TZImagePickerController.h"
-#import "UIImage+YunAdd.h"
 #import "YunPmsHlp.h"
 #import "YunImgViewConfig.h"
 
@@ -23,7 +22,7 @@
     self = [super init];
     if (self) {
         self.disAmt = YES;
-        self.compressSize = YunImgViewConfig.instance.compressSize;
+        self.compressSize = YunImgViewConfig.instance.maxImgLength;
     }
 
     return self;
@@ -133,7 +132,7 @@
     [self.superVC presentViewController:imgPk animated:YES completion:nil];
 }
 
-- (void)notiCmp:(BOOL)hasImg imgs:(NSArray<UIImage *> *)imgs {
+- (void)notiCmp:(BOOL)hasImg imgs:(NSArray *)imgs {
     if (_delegate && [_delegate respondsToSelector:@selector(didCmp:imgs:selType:)]) {
         [_delegate didCmp:hasImg imgs:imgs selType:_selType];
     }
@@ -147,7 +146,15 @@
         isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
     NSMutableArray *newPhotos = [NSMutableArray new];
     for (int i = 0; i < photos.count; ++i) {
-        [newPhotos addObject:_isCompression ? [photos[i] resizeWithSize:self.compressSize] : photos[i]];
+        UIImage *img = photos[i];
+        if (_isCompression) {
+            NSData *imgData = [img resizeToData:YunImgViewConfig.instance.maxImgBoundary
+                                         andCmp:YunImgViewConfig.instance.maxImgLength];
+            [newPhotos addObject:imgData];
+        }
+        else {
+            [newPhotos addObject:img];
+        }
     }
 
     [picker dismissViewControllerAnimated:_disAmt completion:nil];
@@ -177,8 +184,17 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
 
     [picker dismissViewControllerAnimated:_disAmt completion:nil];
 
-    UIImage *newImg = _isCompression ? [image resizeWithSize:self.compressSize] : image;
-    [self notiCmp:YES imgs:@[newImg]];
+    NSArray *imgL = nil;
+    if (_isCompression) {
+        NSData *imgData = [image resizeToData:YunImgViewConfig.instance.maxImgBoundary
+                                       andCmp:YunImgViewConfig.instance.maxImgLength];
+        imgL = @[imgData];
+    }
+    else {
+        imgL = @[image];
+    }
+
+    [self notiCmp:YES imgs:imgL];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {

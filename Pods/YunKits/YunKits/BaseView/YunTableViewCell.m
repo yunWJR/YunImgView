@@ -1,6 +1,6 @@
 //
 // Created by yun on 16/12/1.
-// Copyright (c) 2016 成都晟堃科技有限责任公司. All rights reserved.
+// Copyright (c) 2017 yun. All rights reserved.
 //
 
 #import "YunTableViewCell.h"
@@ -28,7 +28,7 @@
 }
 
 - (instancetype)initWithConfig {
-    //self = [super init];
+    //self = [super init]; // 不需调用[super init];
     if (self) {
         _heightDic = [NSMutableDictionary new];
     }
@@ -52,21 +52,30 @@
     _ctnIntervalV = _allSideOff;
 }
 
-- (void)setItemHeight:(NSString *)itemId height:(CGFloat)height {
-    if ([YunValueVerifier isInvalidStr:itemId]) {return;}
+- (void)setCellHeight:(NSString *)cellId height:(CGFloat)height {
+    if ([YunValueVerifier isInvalidStr:cellId]) {return;}
 
-    [_heightDic setValue:@(height) forKey:itemId];
+    [_heightDic setValue:@(height) forKey:cellId];
 }
 
-- (CGFloat)getItemHeight:(NSString *)itemId {
-    if ([YunValueVerifier isInvalidStr:itemId]) {return 0;}
+// cell 高度设置
+- (void)setItemHeight:(NSString *)itemId height:(CGFloat)height {
+    [self setCellHeight:itemId height:height];
+}
 
-    NSNumber *h = [_heightDic valueForKey:itemId];
+- (CGFloat)getCellHeight:(NSString *)cellId {
+    if ([YunValueVerifier isInvalidStr:cellId]) {return 0;}
+
+    NSNumber *h = [_heightDic valueForKey:cellId];
     if (h != nil) {
         return h.floatValue;
     }
 
     return 0;
+}
+
+- (CGFloat)getItemHeight:(NSString *)itemId {
+    return [self getCellHeight:itemId];
 }
 
 @end

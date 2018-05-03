@@ -27,7 +27,8 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _compressSize = 300;
+        _maxImgLength = 300;
+        _maxImgBoundary = 1280;
     }
 
     return self;

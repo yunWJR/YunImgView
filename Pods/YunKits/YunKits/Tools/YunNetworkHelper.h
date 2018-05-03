@@ -2,13 +2,13 @@
 //  YunNetworkHelper.h
 //  Report
 //
-//  Created by 王健 on 16/4/20.
-//  Copyright © 2016年 成都晟堃科技有限责任公司. All rights reserved.
+// Created by yun on 2017/6/29.
+// Copyright (c) 2017 yun. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
 
-#define NETWORK_STATUS_NOTI_STR @"NETWORK_STATUS_NOTI_STR"
+extern NSString *const yun_network_status_changed_key;
 
 @interface YunNetworkHelper : NSObject
 

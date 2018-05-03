@@ -1,6 +1,6 @@
 //
-// Created by 王健 on 16/9/18.
-// Copyright (c) 2016 成都晟堃科技有限责任公司. All rights reserved.
+// Created by yun on 16/9/18.
+// Copyright (c) 2017 yun. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
@@ -20,6 +20,6 @@
 
 - (void)setBg:(UIColor *)color height:(CGFloat)height;
 
-- (void)setBg:(UIColor *)color height:(CGFloat)height filedBgImg:(NSString *)img;
+- (void)setBg:(UIColor *)color height:(CGFloat)height fieldImg:(NSString *)img;
 
 @end

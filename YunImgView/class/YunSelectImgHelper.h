@@ -12,7 +12,7 @@
 - (void)selectImgByType:(void (^)(YunSelectImgType type))cmp;
 
 @required
-- (void)didCmp:(BOOL)cmp imgs:(NSArray<UIImage *> *)imgs selType:(YunSelectImgType)selType;
+- (void)didCmp:(BOOL)cmp imgs:(NSArray *)imgs selType:(YunSelectImgType)selType;
 
 @end
 

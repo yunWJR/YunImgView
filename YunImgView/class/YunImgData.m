@@ -65,6 +65,18 @@
             [imgView setImgUrlStr:[imgUrl absoluteString]];
         }
             break;
+        case YunImgImgData: {
+            if (isZoom) {
+                UIImage *img = [UIImage imageWithData:_data];
+                NSData *imgD = UIImageJPEGRepresentation(img, 0.01);
+
+                [imgView setImage:[UIImage imageWithData:imgD]];
+            }
+            else {
+                [imgView setImage:[UIImage imageWithData:_data]];
+            }
+        }
+            break;
         default:
             NSLog(@"ImageSrcUnknown");
             break;

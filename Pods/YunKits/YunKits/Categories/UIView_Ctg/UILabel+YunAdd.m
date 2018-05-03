@@ -1,14 +1,18 @@
 //
 //  UILabel+YunAdd.m
 //
-//  Created by yun on 16/5/8.
-//  Copyright © 2016年 成都晟堃科技有限责任公司. All rights reserved.
+// Created by yun on 16/5/8.
+// Copyright (c) 2017 yun. All rights reserved.
 //
 
 #import "UILabel+YunAdd.h"
 #import "YunConfig.h"
+#import "YunValueVerifier.h"
+#import "UIFont+YunAdd.h"
 
 @implementation UILabel (YunAdd)
+
+#pragma mark - 类方法
 
 + (CGFloat)calHeightByWidth:(CGFloat)width text:(NSString *)text font:(UIFont *)font {
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, width, 0)];
@@ -21,7 +25,7 @@
 }
 
 + (CGFloat)calOneLineHeight:(UIFont *)font {
-    return [self calHeightByWidth:100 text:@"字" font:font];
+    return font.lineHeight;
 }
 
 + (CGFloat)calWidthWithText:(NSString *)text font:(UIFont *)font {
@@ -39,21 +43,47 @@
     return [label getTextWidth];
 }
 
+#pragma mark - 实例方法
+
 - (CGFloat)getTextHeightByWidth:(CGFloat)width {
+    if (self.hasAt) {
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, width, 0)];
+        label.attributedText = self.attributedText;
+        label.numberOfLines = 0;
+        [label sizeToFit];
+
+        return label.frame.size.height;
+    }
+
     return [UILabel calHeightByWidth:width text:self.text font:self.font];
 }
 
 - (CGFloat)getOneLineHeight {
-    return [UILabel calHeightByWidth:100 text:@"字" font:self.font];
+    if (self.hasAt) {
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGFLOAT_MAX, 0)];
+        label.attributedText = self.attributedText;
+
+        // 修正无内容时，高度为0
+        if (self.text.length == 0) {
+            label.text = @"一";
+        }
+        label.numberOfLines = 1;
+
+        [label sizeToFit];
+
+        return label.frame.size.height;
+    }
+
+    return self.font.lineHeight;
 }
 
-- (CGFloat)getOneLineHeightOff {
-    return self.getOneLineHeight + YunConfig.instance.ctnVtOff;
+- (CGFloat)getOneLineHeightWithoutOffV {
+    return self.getOneLineHeight - self.font.lineItv;
 }
 
 - (CGFloat)getTextWidth {
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, CGFLOAT_MAX, 0)];
-    if (self.attributedText) {
+    if (self.hasAt) {
         label.attributedText = self.attributedText;
     }
     else {
@@ -84,7 +114,7 @@
 }
 
 - (void)setText:(NSString *)text lineInner:(CGFloat)inner {
-    if (self == nil || text == nil) {
+    if ([YunValueVerifier isInvalidStr:text]) {
         return;
     }
 
@@ -106,6 +136,16 @@
                   range:NSMakeRange(0, text.length)];
 
     self.attributedText = atStr;
+}
+
+// 是否设置了attributedText
+- (BOOL)hasAt {
+    if (self.attributedText.length > 0 &&
+        self.attributedText.length > self.attributedText.string.length) {
+        return YES;
+    }
+
+    return NO;
 }
 
 @end

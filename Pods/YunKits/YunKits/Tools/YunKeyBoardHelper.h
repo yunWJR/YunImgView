@@ -1,15 +1,19 @@
 //
 // Created by yun on 2017/6/29.
-// Copyright (c) 2017 skkj. All rights reserved.
+// Copyright (c) 2017 yun. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
 @protocol YunKeyBoardDelegate <NSObject>
 
+@optional
+
 - (void)kbWillShow:(CGSize)size antDur:(double)antDur;
 
 - (void)kbWillHide:(double)antDur;
+
+- (void)kbFrameChanged:(CGSize)size;
 
 @end
 

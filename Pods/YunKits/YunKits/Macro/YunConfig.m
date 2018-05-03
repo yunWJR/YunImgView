@@ -28,6 +28,8 @@
 
         _imgViewHolderImgName = @"img_def_holder";
         _imgViewFailedImgName = @"img_def_failed";
+        _imgViewLostImgName = @"img_def_lost";
+
         _imgViewAvrImgName = @"img_def_avr";
         _imgViewNoCtnImgName = @"img_def_no_ctn";
         _imgViewNoNetName = @"img_def_no_net";
@@ -45,7 +47,7 @@
         _iconViewTagInImgView = 99999;
 
         _dateFmYm = @"yyyy-MM";
-        _dateFmYmd = @"yyyy-MM-dd";
+        _dateFmYmd = @"yyyy-MM-dd"; // DD - 今年的第几天
         _dateFmYmdHm = @"yyyy-MM-dd HH:mm"; // HH - 默认24小时制
         _dateFmHm = @"HH:mm";
 

@@ -294,6 +294,10 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 }
 
 - (void)addImgByImg:(UIImage *)image {
+    if (image == nil) {
+        return;
+    }
+
     if (_imgDataList.count >= _maxCount) {
         [self showImageOutOfCount];
         return;
@@ -302,6 +306,25 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     YunImgData *imgInfo = [YunImgData new];
     imgInfo.type = YunImgImage;
     imgInfo.data = image;
+
+    [_imgDataList addObject:imgInfo];
+
+    [self reloadImgData];
+}
+
+- (void)addImgByImgData:(NSData *)data {
+    if (data == nil) {
+        return;
+    }
+
+    if (_imgDataList.count >= _maxCount) {
+        [self showImageOutOfCount];
+        return;
+    }
+
+    YunImgData *imgInfo = [YunImgData new];
+    imgInfo.type = YunImgImgData;
+    imgInfo.data = data;
 
     [_imgDataList addObject:imgInfo];
 
@@ -596,6 +619,8 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
                 return [MWPhoto photoWithImage:img.data];
             case YunImgURLStr:
                 return [MWPhoto photoWithURL:[NSURL URLWithString:img.data]];
+            case YunImgImgData:
+                return [MWPhoto photoWithImage:[UIImage imageWithData:img.data]];
             default:
                 NSLog(@"ImageSrcUnknown");
                 break;
@@ -620,16 +645,26 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
 #pragma mark - YunSelectImgDelegate
 
-- (void)didCmp:(BOOL)cmp imgs:(NSArray<UIImage *> *)imgs selType:(YunSelectImgType)selType {
+- (void)didCmp:(BOOL)cmp imgs:(NSArray *)imgs selType:(YunSelectImgType)selType {
     [self notiCmp:cmp];
 
     if (imgs == nil || imgs.count == 0) {return;}
 
     for (int i = 0; i < imgs.count; ++i) {
-        [self addImage:imgs[i]];
+        UIImage *img = nil;
+        if ([imgs[i] isKindOfClass:UIImage.class]) {
+            [self addImgByImg:imgs[i]];
 
-        if (_shouldStoreImg && selType != YunImgSelByPhotoAlbum) {
-            [self savedPhotosToAlbum:imgs[i]];
+            img = imgs[i];
+        }
+        else if ([imgs[i] isKindOfClass:NSData.class]) {
+            [self addImgByImgData:imgs[i]];
+
+            img = [UIImage imageWithData:imgs[i]];
+        }
+
+        if (_shouldStoreImg && selType != YunImgSelByPhotoAlbum && img) {
+            [self savedPhotosToAlbum:img];
         }
     }
 }
