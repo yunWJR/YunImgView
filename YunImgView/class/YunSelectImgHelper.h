@@ -12,6 +12,7 @@
 - (void)selectImgByType:(void (^)(YunSelectImgType type))cmp;
 
 @required
+// imgs 压缩时，返回DSData、不压缩时，返回 UIImage
 - (void)didCmp:(BOOL)cmp imgs:(NSArray *)imgs selType:(YunSelectImgType)selType;
 
 @end
@@ -33,8 +34,11 @@
 // 是否压缩图片-NO
 @property (nonatomic, assign) BOOL isCompression;
 
-// 压缩大小-300 kb
-@property (nonatomic, assign) NSInteger compressSize;
+// 最大大小 默认：300kb
+@property (nonatomic, assign) NSInteger imgLength;
+
+// 最大尺寸边 默认：1280
+@property (nonatomic, assign) CGFloat imgBoundary;
 
 // 消失动画-YES
 @property (nonatomic, assign) BOOL disAmt;

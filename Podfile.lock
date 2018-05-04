@@ -29,7 +29,7 @@ PODS:
     - DACircularProgress
     - MBProgressHUD
     - SDWebImage
-  - YunKits (0.0.45):
+  - YunKits (0.0.46):
     - AFNetworking
     - Masonry
     - SDWebImage
@@ -68,7 +68,7 @@ SPEC CHECKSUMS:
   SDWebImage: de4d90b5bff3571eae7bd16202b1f43135409fa5
   TZImagePickerController: 0fbbb79c74cfad5afda2df606605ab05bede78f2
   YunImageBrowser: 52098e2785fc2a73f20c1687d448b441128444ba
-  YunKits: 3ed06ba7b68154d72514a31a36738d10dd9dda4a
+  YunKits: b58278642e8d127e94baca2eb3570205b799409b
   YunPmsHelper: 8229bbfdb2f783cc2474d6497c5ab976b5cc19af
 
 PODFILE CHECKSUM: 17739af2171f4d3add23e556c0435719229719c0

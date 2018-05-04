@@ -8,6 +8,7 @@
 #import "TZImagePickerController.h"
 #import "YunPmsHlp.h"
 #import "YunImgViewConfig.h"
+#import "UIImage+YunAdd.h"
 
 @interface YunSelectImgHelper () <UIImagePickerControllerDelegate,
         TZImagePickerControllerDelegate, UINavigationControllerDelegate> {
@@ -22,7 +23,8 @@
     self = [super init];
     if (self) {
         self.disAmt = YES;
-        self.compressSize = YunImgViewConfig.instance.maxImgLength;
+        self.imgLength = YunImgViewConfig.instance.maxImgLength;
+        self.imgBoundary = YunImgViewConfig.instance.maxImgBoundary;
     }
 
     return self;
@@ -47,14 +49,9 @@
 - (void)selectImgByType:(YunSelectImgType)type {
     if (type == YunImgSelByCamera) {
         [self selByCamera];
-
-        return;
     }
-
-    if (type == YunImgSelByPhotoAlbum) {
+    else if (type == YunImgSelByPhotoAlbum) {
         [self selByAlbum];
-
-        return;
     }
 }
 
@@ -63,25 +60,29 @@
     [[YunPmsHlp instance] showCameraPmsWithTitle:@"是否允许使用相机？"
                                          message:@"是否允许使用相机？"
                                          denyBtn:@"取消"
-                                        grantBtn:@"允许" cmpHandler:^(BOOL hasPms, YunDgRst userDr, YunDgRst sysDr) {
-         if (hasPms) {
-             [[YunPmsHlp instance] showPhotoPmsWithTitle:@"是否允许使用相册？"
-                                                 message:@"是否允许使用相册？"
-                                                 denyBtn:@"取消"
-                                                grantBtn:@"允许"
-                                              cmpHandler:^(BOOL hasPmsAb, YunDgRst userDrAb, YunDgRst sysDrAb) {
-                                                  if (hasPmsAb) {
-                                                      [weakSelf openCamera];
-                                                  }
-                                                  else {
-                                                      [weakSelf notiCmp:NO imgs:nil]; // todo 情况还应考虑
-                                                  }
-                                              }];
-         }
-         else {
-             [weakSelf notiCmp:NO imgs:nil]; // todo 情况还应考虑
-         }
-     }];
+                                        grantBtn:@"允许"
+                                      cmpHandler:^(BOOL hasPms, YunDgRst userDr, YunDgRst sysDr) {
+                                          if (hasPms) {
+                                              [[YunPmsHlp instance] showPhotoPmsWithTitle:@"是否允许使用相册？"
+                                                                                  message:@"是否允许使用相册？"
+                                                                                  denyBtn:@"取消"
+                                                                                 grantBtn:@"允许"
+                                                                               cmpHandler:^(BOOL hasPmsAb,
+                                                                                            YunDgRst userDrAb,
+                                                                                            YunDgRst sysDrAb) {
+                                                                                   if (hasPmsAb) {
+                                                                                       [weakSelf openCamera];
+                                                                                   }
+                                                                                   else {
+                                                                                       [weakSelf notiCmp:NO
+                                                                                                    imgs:nil]; // todo 情况还应考虑
+                                                                                   }
+                                                                               }];
+                                          }
+                                          else {
+                                              [weakSelf notiCmp:NO imgs:nil]; // todo 情况还应考虑
+                                          }
+                                      }];
 }
 
 - (void)openCamera {
@@ -110,8 +111,9 @@
         return;
     }
 
-    TZImagePickerController *imgPk = [[TZImagePickerController alloc] initWithMaxImagesCount:(_maxCount - _curCount)
-                                                                                    delegate:self];
+    TZImagePickerController *imgPk =
+            [[TZImagePickerController alloc] initWithMaxImagesCount:(_maxCount - _curCount)
+                                                           delegate:self];
     imgPk.allowPickingImage = YES;
     imgPk.allowPickingVideo = NO;
     imgPk.isSelectOriginalPhoto = NO;
@@ -144,22 +146,22 @@
        didFinishPickingPhotos:(NSArray<UIImage *> *)photos
                  sourceAssets:(NSArray *)assets
         isSelectOriginalPhoto:(BOOL)isSelectOriginalPhoto {
-    NSMutableArray *newPhotos = [NSMutableArray new];
+    NSMutableArray *imgList = [NSMutableArray new];
     for (int i = 0; i < photos.count; ++i) {
         UIImage *img = photos[i];
         if (_isCompression) {
-            NSData *imgData = [img resizeToData:YunImgViewConfig.instance.maxImgBoundary
-                                         andCmp:YunImgViewConfig.instance.maxImgLength];
-            [newPhotos addObject:imgData];
+            NSData *imgData = [img resizeToData:self.imgBoundary
+                                         andCmp:self.imgLength];
+            [imgList addObject:imgData];
         }
         else {
-            [newPhotos addObject:img];
+            [imgList addObject:img];
         }
     }
 
     [picker dismissViewControllerAnimated:_disAmt completion:nil];
 
-    [self notiCmp:YES imgs:newPhotos];
+    [self notiCmp:YES imgs:imgList];
 }
 
 - (void)tz_imagePickerControllerDidCancel:(TZImagePickerController *)picker {
@@ -172,29 +174,29 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker
 didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
-    UIImage *image = info[UIImagePickerControllerOriginalImage];
-    if (image == nil) {
-        image = info[UIImagePickerControllerEditedImage]; // 编辑后的
+    UIImage *img = info[UIImagePickerControllerOriginalImage];
+    if (img == nil) {
+        img = info[UIImagePickerControllerEditedImage]; // 编辑后的
     }
 
-    if (image == nil) {
+    if (img == nil) {
         [self notiCmp:NO imgs:nil];
         return;
     }
 
     [picker dismissViewControllerAnimated:_disAmt completion:nil];
 
-    NSArray *imgL = nil;
+    NSArray *imgList = nil;
     if (_isCompression) {
-        NSData *imgData = [image resizeToData:YunImgViewConfig.instance.maxImgBoundary
-                                       andCmp:YunImgViewConfig.instance.maxImgLength];
-        imgL = @[imgData];
+        NSData *imgData = [img resizeToData:self.imgBoundary
+                                     andCmp:self.imgLength];
+        imgList = @[imgData];
     }
     else {
-        imgL = @[image];
+        imgList = @[img];
     }
 
-    [self notiCmp:YES imgs:imgL];
+    [self notiCmp:YES imgs:imgList];
 }
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {

@@ -6,10 +6,10 @@
 #import <Foundation/Foundation.h>
 
 typedef enum : NSInteger {
-    YunImgSelUnknown,
-    YunImgSelByCamera, //
-    YunImgSelByPhotoAlbum, //
-    YunImgSelByCameraAndPhotoAlbum, //
+    YunImgSelUnknown               =0,
+    YunImgSelByCamera              =1, //
+    YunImgSelByPhotoAlbum          =2, //
+    YunImgSelByCameraAndPhotoAlbum =3 //
 } YunSelectImgType;
 
 typedef enum : NSInteger {
@@ -17,5 +17,5 @@ typedef enum : NSInteger {
     YunImgImage   = 1, // image对象
     YunImgURLStr  = 2, // url 地址
     YunImgSrcName = 3, // image名称
-    YunImgImgData = 4, // image data
+    YunImgImgData = 4  // image data
 } YunImgType;
