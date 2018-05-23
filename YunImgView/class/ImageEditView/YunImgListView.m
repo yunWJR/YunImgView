@@ -52,20 +52,24 @@
 - (instancetype)initWithRowNum:(NSInteger)rowNum {
     self = [super init];
     if (self) {
+        [self initData];
         [self initSubView:rowNum];
     }
 
     return self;
 }
 
-- (void)initSubView:(NSInteger)rowNum {
+- (void)initData {
     [self addObserver:self forKeyPath:@"bounds" options:NSKeyValueObservingOptionNew context:nil];
+}
 
+- (void)initSubView:(NSInteger)rowNum {
     _viewWidth = YunSizeHelper.screenWidth;
     _imgDataList = [NSMutableArray new];
     _isEdit = YES;
     _hasAddBtn = YES;
     _isZoom = YES;
+    _selType = YunImgSelByCameraAndPhotoAlbum;
 
     _rowNum = rowNum;
     _maxCount = 9;
@@ -77,15 +81,15 @@
 
     [self setDefaultLayout:rowNum];
 
-    UICollectionViewFlowLayout *flowLayout = [UICollectionViewFlowLayout new];
-    [flowLayout setScrollDirection:UICollectionViewScrollDirectionVertical];
+    UICollectionViewFlowLayout *fl = [UICollectionViewFlowLayout new];
+    [fl setScrollDirection:UICollectionViewScrollDirectionVertical];
 
-    _ctnCV = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, _viewWidth, 0) collectionViewLayout:flowLayout];
+    _ctnCV = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, _viewWidth, 0) collectionViewLayout:fl];
     _ctnCV.delegate = self;
     _ctnCV.dataSource = self;
     _ctnCV.backgroundColor = [UIColor clearColor];
-    [_ctnCV registerClass:[YunImgCVC class] forCellWithReuseIdentifier:YunImgCellId_ImgItem];
-    [_ctnCV registerClass:[YunImgCVC class] forCellWithReuseIdentifier:YunImgCellId_AddItem];
+    [_ctnCV registerClass:YunImgCVC.class forCellWithReuseIdentifier:c_YunImgCellId_ImgItem];
+    [_ctnCV registerClass:YunImgCVC.class forCellWithReuseIdentifier:c_YunImgCellId_AddItem];
     _ctnCV.showsVerticalScrollIndicator = NO;
 
     [self addSubview:_ctnCV];
@@ -121,26 +125,30 @@
     NSInteger index = indexPath.item + indexPath.section * _rowNum;
 
     if (index == _imgDataList.count) { // 最后一个cell 新增
-        YunImgCVC *cell = [collectionView dequeueReusableCellWithReuseIdentifier:YunImgCellId_AddItem
+        YunImgCVC *cell = [collectionView dequeueReusableCellWithReuseIdentifier:c_YunImgCellId_AddItem
                                                                     forIndexPath:indexPath];
         if (!cell) {
             cell = [YunImgCVC new];
         }
 
         [cell setAddItem:self.getAddItemView];
-        cell.backgroundColor = _itemBgColor;
+        if (_itemBgColor) {
+            cell.backgroundColor = _itemBgColor;
+        }
 
         return cell;
     }
 
-    YunImgCVC *cell = [collectionView dequeueReusableCellWithReuseIdentifier:YunImgCellId_ImgItem
+    YunImgCVC *cell = [collectionView dequeueReusableCellWithReuseIdentifier:c_YunImgCellId_ImgItem
                                                                 forIndexPath:indexPath];
     if (!cell) {
         cell = [YunImgCVC new];
     }
 
     [cell setImgItem:_imgDataList[index] isZoom:_isZoom];
-    cell.backgroundColor = _itemBgColor;
+    if (_itemBgColor) {
+        cell.backgroundColor = _itemBgColor;
+    }
 
     return cell;
 }
@@ -174,7 +182,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
     NSInteger index = indexPath.item + indexPath.section * _rowNum;
     if (index == _imgDataList.count) { // 最后一个cell 新增
-        [self selectImg];
+        [self selectImg:nil];
         return;
     }
 
@@ -204,10 +212,6 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
         _didCmp = nil;
     }
-}
-
-- (void)selectImg {
-    [self selectImg:nil];
 }
 
 - (void)addImage:(UIImage *)img {

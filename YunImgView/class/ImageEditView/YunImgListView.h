@@ -9,6 +9,7 @@
 @protocol YunImgListViewDelegate <NSObject>
 
 @optional
+
 - (void)viewSizeChanged;
 
 - (void)didShowImg;
@@ -23,43 +24,52 @@
 
 @property (nonatomic, weak) id <YunImgListViewDelegate> delegate;
 
-// 3
+// 默认：3
 @property (nonatomic, assign) NSInteger rowNum;
 
-// 9
+// 默认：9
 @property (nonatomic, assign) NSInteger maxCount;
 
+// 布局
 @property (nonatomic, assign) CGFloat sideOff;
 @property (nonatomic, assign) CGFloat interval;
 @property (nonatomic, assign) CGSize cellSize;
 
-// NO
-@property (nonatomic, assign) BOOL shouldStoreImg; // 是否存储照片
+// 照相的时候，保存照片，默认：NO
+@property (nonatomic, assign) BOOL shouldStoreImg;
 
-// NO
-@property (nonatomic, assign) BOOL forceDel; // 没有编辑，也可以删除照片
+// 不是编辑状态，也可以删除照片，默认：NO
+@property (nonatomic, assign) BOOL forceDel;
 
-@property (nonatomic, assign) BOOL hasAddBtn; // 是否默认有新增按钮
+// 是否显示新增按钮，默认：YES
+@property (nonatomic, assign) BOOL hasAddBtn;
 
+// 自定义新增按钮
+@property (nonatomic, strong) UIView *cstAddView;
+
+// 添加图片时，是否压缩，默认：NO
 @property (nonatomic, assign) BOOL isCompression;
 
+// 各单元格显示图压缩片，默认：YES。（建议YES）
 @property (nonatomic, assign) BOOL isZoom;
 
-@property (nonatomic, assign) YunSelectImgType selType; // 是否只能用相机
+// 是否只能用相机，默认：YunImgSelByCameraAndPhotoAlbum
+@property (nonatomic, assign) YunSelectImgType selType;
 
+// 设定单元格背景色
 @property (nonatomic, strong) UIColor *itemBgColor;
-
-@property (nonatomic, strong) UIView *cstAddView;
 
 - (instancetype)initWithRowNum:(NSInteger)rowNum;
 
-- (void)selectImg:(void (^)(BOOL changed))cmp;
+// get
 
-- (void)selectImg;
+- (NSMutableArray<YunImgData *> *)curImgList;
 
-- (void)resetImgByImgList:(NSArray<YunImgData *> *)imgList;
+- (BOOL)isSameImgs:(NSArray<YunImgData *> *)imgList;
 
-- (void)resetImgByImgUrlList:(NSArray *)imgList;
+- (CGFloat)curHeight;
+
+// add
 
 - (void)addImgByImg:(UIImage *)image;
 
@@ -71,15 +81,21 @@
 
 - (void)addImgDataByUrlStr:(NSString *)url;
 
+// reset
+
+- (void)resetImgByImgList:(NSArray<YunImgData *> *)imgList;
+
+- (void)resetImgByImgUrlList:(NSArray *)imgList;
+
 - (void)removeAllImg;
 
+// select
+
+- (void)selectImg:(void (^)(BOOL changed))cmp;
+
+// other
+
 - (void)reloadImgData;
-
-- (NSMutableArray<YunImgData *> *)curImgList;
-
-- (BOOL)isSameImgs:(NSArray<YunImgData *> *)imgList;
-
-- (CGFloat)curHeight;
 
 - (void)setViewWidth:(CGFloat)width refresh:(BOOL)refresh;
 

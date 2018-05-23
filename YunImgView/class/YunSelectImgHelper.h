@@ -9,21 +9,23 @@
 @protocol YunSelectImgDelegate <NSObject>
 
 @optional
+
 - (void)selectImgByType:(void (^)(YunSelectImgType type))cmp;
 
 @required
-// imgs 压缩时，返回DSData、不压缩时，返回 UIImage
+
+// 注意：imgs:压缩时，返回NSData、不压缩时，返回UIImage
 - (void)didCmp:(BOOL)cmp imgs:(NSArray *)imgs selType:(YunSelectImgType)selType;
 
 @end
 
 @interface YunSelectImgHelper : NSObject
 
+@property (nonatomic, weak) UIViewController *superVC;
+
 @property (nonatomic, weak) id <YunSelectImgDelegate> delegate;
 
 @property (nonatomic, assign) YunSelectImgType selType;
-
-@property (nonatomic, weak) UIViewController *superVC;
 
 @property (nonatomic, assign) NSInteger curCount;
 

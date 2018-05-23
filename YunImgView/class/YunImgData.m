@@ -3,12 +3,17 @@
 // Copyright (c) 2016 成都晟堃科技有限责任公司. All rights reserved.
 //
 
+#import <YunKits/YunConfig.h>
+#import <YunKits/UIImage+YunAdd.h>
 #import "YunImgData.h"
 #import "YunQnHelper.h"
 #import "UIImageView+YunAdd.h"
 #import "NSObject+YunAdd.h"
+#import "YunSizeHelper.h"
 
-@implementation YunImgData
+@implementation YunImgData {
+    UIImage *_zoomImg;
+}
 
 + (NSDictionary *)JSONKeyPathsByPropertyKey {
     NSMutableDictionary *mapping = [[NSDictionary mtl_identityPropertyMapWithModel:self] mutableCopy];
@@ -66,14 +71,19 @@
         }
             break;
         case YunImgImgData: {
-            if (isZoom) {
-                UIImage *img = [UIImage imageWithData:_data];
-                NSData *imgD = UIImageJPEGRepresentation(img, 0.01);
-
-                [imgView setImage:[UIImage imageWithData:imgD]];
+            if (isZoom && _zoomImg && imgView.image == _zoomImg) { // 是缩略图
+                return;
             }
-            else {
-                [imgView setImage:[UIImage imageWithData:_data]];
+
+            if (imgView.image == nil) {
+                UIImage *phImg = [UIImage imageNamed:YunConfig.instance.imgViewHolderImgName];
+                imgView.image = phImg;
+            }
+
+            imgView.image = [self getImg:isZoom data:_data];
+
+            if (isZoom) {
+                _zoomImg = imgView.image;
             }
         }
             break;
@@ -108,6 +118,46 @@
     }
 
     return NO;
+}
+
+- (UIImage *)getImg:(BOOL)isZoom data:(id)data {
+    UIImage *img0 = nil;
+
+    if (isZoom) {
+        UIImage *img = [UIImage imageWithData:data];
+
+        NSData *imgD = UIImageJPEGRepresentation(img, 0.01);
+
+        img0 = [UIImage imageWithData:imgD];
+
+        img0 = [img0 resizeByMaxBd:YunSizeHelper.screenWidth * 0.5f];
+    }
+    else {
+        img0 = [UIImage imageWithData:data];
+    }
+
+    return img0;
+}
+
+- (void)getZoomImg:(BOOL)isZoom data:(id)data rst:(void (^)(UIImage *img))rst {
+    UIImage *img0 = nil;
+
+    if (isZoom) {
+        UIImage *img = [UIImage imageWithData:data];
+
+        NSData *imgD = UIImageJPEGRepresentation(img, 0.01);
+
+        img0 = [UIImage imageWithData:imgD];
+
+        img0 = [img0 resizeByMaxBd:YunSizeHelper.screenWidth * 0.3f];
+    }
+    else {
+        img0 = [UIImage imageWithData:data];
+    }
+
+    if (rst) {
+        rst(img0);
+    }
 }
 
 @end
