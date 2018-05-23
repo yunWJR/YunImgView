@@ -7,8 +7,8 @@
 
 @class YunImgData;
 
-NSString *const c_YunImgCellId_ImgItem = @"YunImgCellId_ImgItem";
-NSString *const c_YunImgCellId_AddItem = @"YunImgCellId_AddItem";
+extern NSString *const c_YunImgCellId_ImgItem;
+extern NSString *const c_YunImgCellId_AddItem;
 
 @interface YunImgCVC : UICollectionViewCell
 

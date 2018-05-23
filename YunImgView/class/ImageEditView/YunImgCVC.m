@@ -8,6 +8,9 @@
 #import "YunUIImageViewFactory.h"
 #import <Masonry/Masonry.h>
 
+NSString *const c_YunImgCellId_ImgItem = @"YunImgCellId_ImgItem";
+NSString *const c_YunImgCellId_AddItem = @"YunImgCellId_AddItem";
+
 @implementation YunImgCVC {
     UIView *_addView;
     UIImageView *_imgView;
