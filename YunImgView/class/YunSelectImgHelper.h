@@ -45,6 +45,9 @@
 // 消失动画-YES
 @property (nonatomic, assign) BOOL disAmt;
 
+// 照相的时候，保存照片，默认：NO
+@property (nonatomic, assign) BOOL shouldStoreImg;
+
 - (void)selectImg:(NSInteger)curCount;
 
 @end

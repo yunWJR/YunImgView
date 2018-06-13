@@ -202,6 +202,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     _selHelper.selType = _selType;
     _selHelper.maxCount = _maxCount;
     _selHelper.isCompression = _isCompression;
+    _selHelper.shouldStoreImg = _shouldStoreImg;
 
     [_selHelper selectImg:_imgDataList.count];
 }
@@ -655,20 +656,11 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     if (imgs == nil || imgs.count == 0) {return;}
 
     for (int i = 0; i < imgs.count; ++i) {
-        UIImage *img = nil;
         if ([imgs[i] isKindOfClass:UIImage.class]) {
             [self addImgByImg:imgs[i]];
-
-            img = imgs[i];
         }
         else if ([imgs[i] isKindOfClass:NSData.class]) {
             [self addImgByImgData:imgs[i]];
-
-            img = [UIImage imageWithData:imgs[i]];
-        }
-
-        if (_shouldStoreImg && selType != YunImgSelByPhotoAlbum && img) {
-            [self savedPhotosToAlbum:img];
         }
     }
 }

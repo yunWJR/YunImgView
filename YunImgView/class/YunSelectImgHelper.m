@@ -138,6 +138,22 @@
     if (_delegate && [_delegate respondsToSelector:@selector(didCmp:imgs:selType:)]) {
         [_delegate didCmp:hasImg imgs:imgs selType:_selType];
     }
+
+    if (_shouldStoreImg && _selType != YunImgSelByPhotoAlbum && imgs.count == 1) {
+        UIImage *image = [UIImage imgWithObj:imgs[0]];
+
+        if (image) {
+            [self savedPhotosToAlbum:image];
+        }
+    }
+}
+
+// 保存到相册
+- (void)savedPhotosToAlbum:(UIImage *)image {
+    UIImageWriteToSavedPhotosAlbum(image,
+                                   self,
+                                   @selector(image:didFinishSavingWithError:contextInfo:),
+                                   (__bridge void *) self);
 }
 
 #pragma mark - TZImagePickerControllerDelegate
