@@ -156,6 +156,9 @@
                                    (__bridge void *) self);
 }
 
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
+}
+
 #pragma mark - TZImagePickerControllerDelegate
 
 - (void)imagePickerController:(TZImagePickerController *)picker
@@ -190,7 +193,14 @@
 
 - (void)imagePickerController:(UIImagePickerController *)picker
 didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
-    UIImage *img = info[UIImagePickerControllerOriginalImage];
+    UIImage *img = nil;
+    if (self.maxCount == 1 && self.editImg) {
+        img = info[UIImagePickerControllerEditedImage]; // 编辑后的
+    }
+    else {
+        img = info[UIImagePickerControllerOriginalImage]; // 原始图片
+    }
+
     if (img == nil) {
         img = info[UIImagePickerControllerEditedImage]; // 编辑后的
     }

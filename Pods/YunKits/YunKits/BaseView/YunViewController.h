@@ -47,6 +47,8 @@
 
 - (void)setRightBarItemName:(NSString *)name font:(UIFont *)font color:(UIColor *)color;
 
+- (void)setRightBarItem:(UIBarButtonItem *)item;
+
 - (void)setLeftBarItemByImg:(NSString *)img;
 
 - (void)setLeftBarItemName:(NSString *)name font:(UIFont *)font color:(UIColor *)color;
@@ -56,5 +58,7 @@
 - (void)didClickNagRightItem;
 
 - (YunViewController *)yunBackVC;
+
+- (void)updateNagHideState;
 
 @end

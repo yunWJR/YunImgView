@@ -63,7 +63,9 @@
                                     completionHandler:^(BOOL hasPermission,
                                                         ClusterDialogResult userDialogResult,
                                                         ClusterDialogResult systemDialogResult) {
-                                        cmpHandler(hasPermission, (YunDgRst) userDialogResult, (YunDgRst) systemDialogResult);
+                                        cmpHandler(hasPermission,
+                                                   (YunDgRst) userDialogResult,
+                                                   (YunDgRst) systemDialogResult);
                                     }];
 
 }
@@ -81,7 +83,9 @@
                                          completionHandler:^(BOOL hasPermission,
                                                              ClusterDialogResult userDialogResult,
                                                              ClusterDialogResult systemDialogResult) {
-                                             cmpHandler(hasPermission, (YunDgRst) userDialogResult, (YunDgRst) systemDialogResult);
+                                             cmpHandler(hasPermission,
+                                                        (YunDgRst) userDialogResult,
+                                                        (YunDgRst) systemDialogResult);
                                          }];
 }
 
@@ -98,7 +102,9 @@
                                              completionHandler:^(BOOL hasPermission,
                                                                  ClusterDialogResult userDialogResult,
                                                                  ClusterDialogResult systemDialogResult) {
-                                                 cmpHandler(hasPermission, (YunDgRst) userDialogResult, (YunDgRst) systemDialogResult);
+                                                 cmpHandler(hasPermission,
+                                                            (YunDgRst) userDialogResult,
+                                                            (YunDgRst) systemDialogResult);
                                              }];
 }
 
@@ -115,7 +121,9 @@
                                         completionHandler:^(BOOL hasPermission,
                                                             ClusterDialogResult userDialogResult,
                                                             ClusterDialogResult systemDialogResult) {
-                                            cmpHandler(hasPermission, (YunDgRst) userDialogResult, (YunDgRst) systemDialogResult);
+                                            cmpHandler(hasPermission,
+                                                       (YunDgRst) userDialogResult,
+                                                       (YunDgRst) systemDialogResult);
                                         }];
 }
 
@@ -132,7 +140,9 @@
                                            completionHandler:^(BOOL hasPermission,
                                                                ClusterDialogResult userDialogResult,
                                                                ClusterDialogResult systemDialogResult) {
-                                               cmpHandler(hasPermission, (YunDgRst) userDialogResult, (YunDgRst) systemDialogResult);
+                                               cmpHandler(hasPermission,
+                                                          (YunDgRst) userDialogResult,
+                                                          (YunDgRst) systemDialogResult);
                                            }];
 }
 
@@ -151,7 +161,9 @@
                                        completionHandler:^(BOOL hasPermission,
                                                            ClusterDialogResult userDialogResult,
                                                            ClusterDialogResult systemDialogResult) {
-                                           cmpHandler(hasPermission, (YunDgRst) userDialogResult, (YunDgRst) systemDialogResult);
+                                           cmpHandler(hasPermission,
+                                                      (YunDgRst) userDialogResult,
+                                                      (YunDgRst) systemDialogResult);
                                        }];
 }
 
@@ -168,7 +180,9 @@
                                            completionHandler:^(BOOL hasPermission,
                                                                ClusterDialogResult userDialogResult,
                                                                ClusterDialogResult systemDialogResult) {
-                                               cmpHandler(hasPermission, (YunDgRst) userDialogResult, (YunDgRst) systemDialogResult);
+                                               cmpHandler(hasPermission,
+                                                          (YunDgRst) userDialogResult,
+                                                          (YunDgRst) systemDialogResult);
                                            }];
 }
 
@@ -187,7 +201,9 @@
                                                       completionHandler:^(BOOL hasPermission,
                                                                           ClusterDialogResult userDialogResult,
                                                                           ClusterDialogResult systemDialogResult) {
-                                                          cmpHandler(hasPermission, (YunDgRst) userDialogResult, (YunDgRst) systemDialogResult);
+                                                          cmpHandler(hasPermission,
+                                                                     (YunDgRst) userDialogResult,
+                                                                     (YunDgRst) systemDialogResult);
                                                       }];
 }
 
@@ -206,7 +222,9 @@
                                                   completionHandler:^(BOOL hasPermission,
                                                                       ClusterDialogResult userDialogResult,
                                                                       ClusterDialogResult systemDialogResult) {
-                                                      cmpHandler(hasPermission, (YunDgRst) userDialogResult, (YunDgRst) systemDialogResult);
+                                                      cmpHandler(hasPermission,
+                                                                 (YunDgRst) userDialogResult,
+                                                                 (YunDgRst) systemDialogResult);
                                                   }];
 }
 

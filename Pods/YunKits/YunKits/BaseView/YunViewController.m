@@ -135,6 +135,12 @@
     self.rightNagItem = rBtnItem;
 }
 
+- (void)setRightBarItem:(UIBarButtonItem *)item {
+    self.navigationItem.rightBarButtonItem = item;
+
+    self.rightNagItem = item;
+}
+
 - (void)setLeftBarItemByImg:(NSString *)img {
     UIBarButtonItem *lBtnItem = [self createBarItemByImg:img action:@selector(didClickNagLeftItem)];
 
