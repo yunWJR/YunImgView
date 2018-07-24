@@ -40,6 +40,13 @@
                 [self selectImgByType:_selType];
             }];
         }
+        else if (YunImgViewConfig.instance.delegate &&
+                 [YunImgViewConfig.instance.delegate respondsToSelector:@selector(selectImgByType:)]) {
+            [YunImgViewConfig.instance.delegate selectImgByType:^(YunSelectImgType type) {
+                _selType = type;
+                [self selectImgByType:_selType];
+            }];
+        }
     }
     else {
         [self selectImgByType:_selType];
@@ -137,6 +144,10 @@
 - (void)notiCmp:(BOOL)hasImg imgs:(NSArray *)imgs {
     if (_delegate && [_delegate respondsToSelector:@selector(didCmp:imgs:selType:)]) {
         [_delegate didCmp:hasImg imgs:imgs selType:_selType];
+    }
+    else if (YunImgViewConfig.instance.delegate &&
+             [YunImgViewConfig.instance.delegate respondsToSelector:@selector(didCmp:imgs:selType:)]) {
+        [YunImgViewConfig.instance.delegate didCmp:hasImg imgs:imgs selType:_selType];
     }
 
     if (_shouldStoreImg && _selType != YunImgSelByPhotoAlbum && imgs.count == 1) {

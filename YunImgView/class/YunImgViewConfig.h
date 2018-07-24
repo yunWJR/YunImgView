@@ -5,6 +5,8 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol YunSelectImgDelegate;
+
 @interface YunImgViewConfig : NSObject
 
 // 默认300kb
@@ -12,6 +14,8 @@
 
 // 默认1280
 @property (nonatomic, assign) CGFloat maxImgBoundary;
+
+@property (nonatomic, weak) id <YunSelectImgDelegate> delegate;
 
 + (YunImgViewConfig *)instance;
 
