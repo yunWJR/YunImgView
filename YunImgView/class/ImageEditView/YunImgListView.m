@@ -34,6 +34,8 @@
     YunSelectImgHelper *_selHelper;
 
     CGFloat _lastWidth;
+
+    BOOL _hasAddObserver;
 }
 
 @end
@@ -52,15 +54,10 @@
 - (instancetype)initWithRowNum:(NSInteger)rowNum {
     self = [super init];
     if (self) {
-        [self initData];
         [self initSubView:rowNum];
     }
 
     return self;
-}
-
-- (void)initData {
-    [self addObserver:self forKeyPath:@"bounds" options:NSKeyValueObservingOptionNew context:nil];
 }
 
 - (void)initSubView:(NSInteger)rowNum {
@@ -99,10 +96,23 @@
         make.left.equalTo(@0);
         make.size.equalTo(self);
     }];
+
+    [self initObserver];
+}
+
+- (void)initObserver {
+    if (!_hasAddObserver) {
+        [self addObserver:self forKeyPath:@"bounds" options:NSKeyValueObservingOptionNew context:nil];
+        _hasAddObserver = YES;
+    }
 }
 
 - (void)dealloc {
-    [self removeObserver:self forKeyPath:@"bounds"];
+    if (_hasAddObserver) {
+        [self removeObserver:self forKeyPath:@"bounds"];
+
+        _hasAddObserver = NO;
+    }
 }
 
 #pragma mark - UICollectionViewDataSource
