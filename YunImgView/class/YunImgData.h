@@ -14,16 +14,22 @@
 
 @property (nonatomic, strong) id data;
 
+@property (nonatomic, strong) id thumbData;
+
 + (instancetype)itemWithType:(YunImgType)type data:(id)data;
 
 + (instancetype)itemWithImg:(UIImage *)img;
 
 + (instancetype)itemWithUrlStr:(NSString *)url;
 
++ (instancetype)itemWithVideoUrlStr:(NSString *)videoUrl thumb:(NSString *)thumb;
+
 + (NSArray<YunImgData *> *)imgListByURLStrList:(NSArray<NSString *> *)urlList;
 
 - (void)setImgInView:(UIImageView *)imgView isZoom:(BOOL)isZoom;
 
 - (BOOL)isSame:(YunImgData *)item;
+
+- (BOOL)isVideoItem;
 
 @end

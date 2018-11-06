@@ -41,11 +41,17 @@
 // 不是编辑状态，也可以删除照片，默认：NO
 @property (nonatomic, assign) BOOL forceDel;
 
+// 可以选择视频
+@property (nonatomic, assign) BOOL selVideo;
+
 // 是否显示新增按钮，默认：YES
 @property (nonatomic, assign) BOOL hasAddBtn;
 
 // 自定义新增按钮
 @property (nonatomic, strong) UIView *cstAddView;
+
+// 视频 coverView
+@property (nonatomic, strong) UIView *videoCoverView;
 
 // 添加图片时，是否压缩，默认：NO
 @property (nonatomic, assign) BOOL isCompression;

@@ -3,6 +3,7 @@
 //  Copyright © 2016年 成都晟堃科技有限责任公司. All rights reserved.
 //
 
+#import <YunImgView/YunImgViewConfig.h>
 #import "YunImgListView.h"
 #import "YunImgCVC.h"
 #import "Masonry.h"
@@ -16,6 +17,7 @@
 #import "YunUILabelFactory.h"
 #import "YunGlobalDefine.h"
 #import "UIColor+YunAdd.h"
+#import "YunLogHelper.h"
 
 @interface YunImgListView () <UICollectionViewDataSource, UICollectionViewDelegate,
         UICollectionViewDelegateFlowLayout, MWPhotoBrowserDelegate,
@@ -73,6 +75,8 @@
 
     _selHelper = [YunSelectImgHelper new];
     _selHelper.delegate = self;
+
+    _selVideo = NO;
 
     self.backgroundColor = [UIColor clearColor];
 
@@ -159,6 +163,8 @@
     if (_itemBgColor) {
         cell.backgroundColor = _itemBgColor;
     }
+
+    [cell setCoverView:_imgDataList[index].isVideoItem ? _videoCoverView : nil];
 
     return cell;
 }
@@ -636,11 +642,25 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
                 return [MWPhoto photoWithURL:[NSURL URLWithString:img.data]];
             case YunImgImgData:
                 return [MWPhoto photoWithImage:[UIImage imageWithData:img.data]];
+            case YunImgSrcName:
+                return [MWPhoto photoWithImage:[UIImage imageNamed:img.data]];
+            case YunImgVideoURLStr: {
+                MWPhoto *video = [MWPhoto photoWithURL:[NSURL URLWithString:img.thumbData]];
+                video.videoURL = [NSURL URLWithString:img.data];
+
+                return video;
+            }
+                return [MWPhoto videoWithURL:[NSURL URLWithString:img.data]];
+            case YunImgVideoData:
+                break;
             default:
-                NSLog(@"ImageSrcUnknown");
+                break;
+            case YunImgUnknown:
                 break;
         }
     }
+
+    [YunLogHelper logMsg:@"ImageSrcUnknown"];
 
     return nil;
 }
@@ -678,6 +698,10 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 - (void)selectImgByType:(void (^)(YunSelectImgType type))cmp {
     if (_delegate && [_delegate respondsToSelector:@selector(selectImgByType:)]) {
         return [_delegate selectImgByType:cmp];
+    }
+    else if (YunImgViewConfig.instance.delegate &&
+             [YunImgViewConfig.instance.delegate respondsToSelector:@selector(selectImgByType:)]) {
+        return [YunImgViewConfig.instance.delegate selectImgByType:cmp];
     }
 }
 

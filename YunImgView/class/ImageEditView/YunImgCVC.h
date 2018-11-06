@@ -12,6 +12,8 @@ extern NSString *const c_YunImgCellId_AddItem;
 
 @interface YunImgCVC : UICollectionViewCell
 
+- (void)setCoverView:(UIView *)coverView;
+
 - (void)setAddItem:(UIView *)addView;
 
 - (void)setImgItem:(YunImgData *)imgData isZoom:(BOOL)isZoom;
