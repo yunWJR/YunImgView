@@ -17,11 +17,12 @@ typedef enum : NSInteger {
 } YunSelectImgType;
 
 typedef enum : NSInteger {
-    YunImgUnknown      = 0,
-    YunImgImage        = 1, // image对象
-    YunImgURLStr       = 2, // url 地址
-    YunImgSrcName      = 3, // image名称
-    YunImgImgData      = 4,  // image data
-    YunImgVideoURLStr  = 5, // url 地址
-    YunImgVideoData    = 6, // url 地址
+    YunImgUnknown          = 0,
+    YunImgImage            = 1, // image对象
+    YunImgURLStr           = 2, // url 地址
+    YunImgSrcName          = 3, // image名称
+    YunImgImgData          = 4, // image data
+    YunImgVideoURLStr      = 5, // url 地址
+    YunImgVideoFilePath    = 6, // url 地址
+    YunImgVideoPHAsset     = 7, // url 地址
 } YunImgType;

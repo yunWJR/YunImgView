@@ -10,7 +10,6 @@
 #import "UIImageView+YunAdd.h"
 #import "NSObject+YunAdd.h"
 #import "YunSizeHelper.h"
-#import "YunLogHelper.h"
 
 @implementation YunImgData {
     UIImage *_zoomImg;
@@ -96,16 +95,18 @@
         }
             break;
         case YunImgUnknown:
-            [YunLogHelper logMsg:@"ImageSrcUnknown"];
+            //[YunLogHelper logMsg:@"ImageSrcUnknown"];
             break;
         case YunImgSrcName:
             imgView.image = [UIImage imageNamed:_data];
             break;
         case YunImgVideoURLStr:
-            [imgView setImgUrlStr:_thumbData]; // todo
+            //[imgView setImgUrlStr:_thumbData]; // todo
             break;
-        case YunImgVideoData:
-            [imgView setImgUrlStr:_thumbData]; // todo
+        case YunImgVideoFilePath:
+            //[imgView setImgUrlStr:_thumbData]; // todo
+            break;
+        case YunImgVideoPHAsset:
             break;
         default:
             break;

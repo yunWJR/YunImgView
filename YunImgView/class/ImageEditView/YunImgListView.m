@@ -3,7 +3,6 @@
 //  Copyright © 2016年 成都晟堃科技有限责任公司. All rights reserved.
 //
 
-#import <YunImgView/YunImgViewConfig.h>
 #import "YunImgListView.h"
 #import "YunImgCVC.h"
 #import "Masonry.h"
@@ -17,7 +16,7 @@
 #import "YunUILabelFactory.h"
 #import "YunGlobalDefine.h"
 #import "UIColor+YunAdd.h"
-#import "YunLogHelper.h"
+#import "YunImgViewConfig.h"
 
 @interface YunImgListView () <UICollectionViewDataSource, UICollectionViewDelegate,
         UICollectionViewDelegateFlowLayout, MWPhotoBrowserDelegate,
@@ -164,7 +163,7 @@
         cell.backgroundColor = _itemBgColor;
     }
 
-    [cell setCoverView:_imgDataList[index].isVideoItem ? _videoCoverView : nil];
+    [cell setCoverImg:_imgDataList[index].isVideoItem ? _videoCoverImg : nil];
 
     return cell;
 }
@@ -440,6 +439,18 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     [_imgDataList addObject:imgInfo];
 }
 
+- (void)addVideoByVideoItem:(YunImgData *)videoItem {
+    if (_imgDataList.count >= _maxCount) {
+        [self showImageOutOfCount];
+
+        return;
+    }
+
+    [_imgDataList addObject:videoItem];
+
+    [self reloadImgData];
+}
+
 - (void)removeAllImg {
     [_imgDataList removeAllObjects];
 
@@ -645,24 +656,69 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
             case YunImgSrcName:
                 return [MWPhoto photoWithImage:[UIImage imageNamed:img.data]];
             case YunImgVideoURLStr: {
-                MWPhoto *video = [MWPhoto photoWithURL:[NSURL URLWithString:img.thumbData]];
-                video.videoURL = [NSURL URLWithString:img.data];
-
-                return video;
+                return [self getMwVideo:img];
             }
-                return [MWPhoto videoWithURL:[NSURL URLWithString:img.data]];
-            case YunImgVideoData:
-                break;
+            case YunImgVideoFilePath: {
+                return [self getMwVideo:img];
+            }
+            case YunImgVideoPHAsset: {
+                return [self getMwVideo:img];
+            }
             default:
                 break;
             case YunImgUnknown:
                 break;
+
         }
     }
 
-    [YunLogHelper logMsg:@"ImageSrcUnknown"];
+    //[YunLogHelper logMsg:@"ImageSrcUnknown"];
 
     return nil;
+}
+
+- (MWPhoto *)getMwVideo:(YunImgData *)img {
+    MWPhoto *video;
+
+    switch (img.thumbData.type) {
+        case YunImgUnknown:
+            break;
+        case YunImgImage:
+            video = [MWPhoto photoWithImage:img.thumbData.data];
+            break;
+        case YunImgURLStr:
+            video = [MWPhoto photoWithURL:[NSURL URLWithString:img.thumbData.data]];
+            break;
+        case YunImgSrcName:
+            video = [MWPhoto photoWithImage:[UIImage imageNamed:img.thumbData.data]];
+            break;
+        case YunImgImgData:
+            video = [MWPhoto photoWithImage:[UIImage imageWithData:img.thumbData.data]];
+            break;
+        case YunImgVideoURLStr:
+            break;
+        case YunImgVideoFilePath:
+            break;
+        case YunImgVideoPHAsset:
+            break;
+    }
+
+    if (video == nil) {
+        video = [MWPhoto new];
+        video.isVideo = YES;
+    }
+
+    if (img.type == YunImgVideoURLStr) {
+        video.videoURL = [NSURL URLWithString:img.data];
+    }
+    else if (img.type == YunImgVideoFilePath) {
+        video.videoURL = [NSURL fileURLWithPath:img.data];
+    }
+    else if (img.type == YunImgVideoPHAsset) {
+        video = [MWPhoto photoWithAsset:img.data targetSize:[UIScreen mainScreen].bounds.size];
+    }
+
+    return video;
 }
 
 - (void)showImageOutOfCount {
@@ -686,6 +742,12 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     if (imgs == nil || imgs.count == 0) {return;}
 
     for (int i = 0; i < imgs.count; ++i) {
+        if (selType == YunVideoSelByCamera || selType == YunVideoSelByPhotoAlbum) {
+
+            [self addVideoByVideoItem:imgs[i]];
+            continue;
+        }
+
         if ([imgs[i] isKindOfClass:UIImage.class]) {
             [self addImgByImg:imgs[i]];
         }
@@ -695,13 +757,23 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     }
 }
 
-- (void)selectImgByType:(void (^)(YunSelectImgType type))cmp {
-    if (_delegate && [_delegate respondsToSelector:@selector(selectImgByType:)]) {
-        return [_delegate selectImgByType:cmp];
+//- (void)selectImgByType:(void (^)(YunSelectImgType type))cmp {
+//    if (_delegate && [_delegate respondsToSelector:@selector(selectImgByType:)]) {
+//        return [_delegate selectImgByType:cmp];
+//    }
+//    else if (YunImgViewConfig.instance.delegate &&
+//             [YunImgViewConfig.instance.delegate respondsToSelector:@selector(selectImgByType:)]) {
+//        return [YunImgViewConfig.instance.delegate selectImgByType:cmp];
+//    }
+//}
+
+- (void)selectItemByType:(YunSelectImgType)type cmp:(void (^)(YunSelectImgType type))cmp {
+    if (_delegate && [_delegate respondsToSelector:@selector(selectItemByType:cmp:)]) {
+        [_delegate selectItemByType:type cmp:cmp];
     }
     else if (YunImgViewConfig.instance.delegate &&
-             [YunImgViewConfig.instance.delegate respondsToSelector:@selector(selectImgByType:)]) {
-        return [YunImgViewConfig.instance.delegate selectImgByType:cmp];
+             [YunImgViewConfig.instance.delegate respondsToSelector:@selector(selectItemByType:cmp:)]) {
+        [YunImgViewConfig.instance.delegate selectItemByType:type cmp:cmp];
     }
 }
 

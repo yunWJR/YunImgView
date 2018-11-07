@@ -14,7 +14,7 @@ NSString *const c_YunImgCellId_AddItem = @"YunImgCellId_AddItem";
 @implementation YunImgCVC {
     UIView *_addView;
     UIImageView *_imgView;
-    UIView *_coverView;
+    UIImageView *_coverView;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -29,8 +29,8 @@ NSString *const c_YunImgCellId_AddItem = @"YunImgCellId_AddItem";
 
 #pragma mark - public functions
 
-- (void)setCoverView:(UIView *)coverView {
-    if (coverView == nil) {
+- (void)setCoverImg:(UIImage *)coverImg {
+    if (coverImg == nil) {
         if (_coverView) {
             _coverView.hidden = YES;
         }
@@ -38,7 +38,7 @@ NSString *const c_YunImgCellId_AddItem = @"YunImgCellId_AddItem";
     }
 
     if (_coverView == nil) {
-        _coverView = coverView;
+        _coverView = [YunUIImageViewFactory imgViewWithImgName:@"" mode:UIViewContentModeScaleAspectFill];
 
         [self addSubview:_coverView];
 
@@ -48,6 +48,8 @@ NSString *const c_YunImgCellId_AddItem = @"YunImgCellId_AddItem";
             make.size.equalTo(self);
         }];
     }
+
+    _coverView.image = coverImg;
 
     [self bringSubviewToFront:_coverView];
 

@@ -16,6 +16,8 @@
 
 - (void)selectImgByType:(void (^)(YunSelectImgType type))cmp;
 
+- (void)selectItemByType:(YunSelectImgType)type cmp:(void (^)(YunSelectImgType type))cmp;
+
 @end
 
 @class YunImgData;
@@ -51,7 +53,7 @@
 @property (nonatomic, strong) UIView *cstAddView;
 
 // 视频 coverView
-@property (nonatomic, strong) UIView *videoCoverView;
+@property (nonatomic, strong) UIImage *videoCoverImg;
 
 // 添加图片时，是否压缩，默认：NO
 @property (nonatomic, assign) BOOL isCompression;

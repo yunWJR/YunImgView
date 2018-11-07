@@ -12,9 +12,11 @@
 
 - (void)selectImgByType:(void (^)(YunSelectImgType type))cmp;
 
+- (void)selectItemByType:(YunSelectImgType)type cmp:(void (^)(YunSelectImgType type))cmp;
+
 @required
 
-// 注意：imgs:压缩时，返回NSData、不压缩时，返回UIImage
+// 注意：imgs:压缩时，返回NSData、不压缩时，返回UIImage todo 应该返回错误信息
 - (void)didCmp:(BOOL)cmp imgs:(NSArray *)imgs selType:(YunSelectImgType)selType;
 
 @end
@@ -32,6 +34,9 @@
 @property (nonatomic, assign) NSInteger maxCount;
 
 @property (nonatomic, assign) BOOL editImg;
+
+// 默认10s
+@property (nonatomic, assign) NSTimeInterval videoMaxTime;
 
 // 是否压缩图片-NO
 @property (nonatomic, assign) BOOL isCompression;

@@ -12,7 +12,7 @@ extern NSString *const c_YunImgCellId_AddItem;
 
 @interface YunImgCVC : UICollectionViewCell
 
-- (void)setCoverView:(UIView *)coverView;
+- (void)setCoverImg:(UIImage *)coverImg;
 
 - (void)setAddItem:(UIView *)addView;
 

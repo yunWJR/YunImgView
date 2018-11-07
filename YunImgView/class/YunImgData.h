@@ -14,7 +14,7 @@
 
 @property (nonatomic, strong) id data;
 
-@property (nonatomic, strong) id thumbData;
+@property (nonatomic, strong) YunImgData *thumbData;
 
 + (instancetype)itemWithType:(YunImgType)type data:(id)data;
 
