@@ -29,6 +29,10 @@
     if (self) {
         _maxImgLength = 300;
         _maxImgBoundary = 1280;
+
+        _videoLength = -1;
+        _videoMaxDuration = 10;
+        _videoQuality = UIImagePickerControllerQualityTypeHigh;
     }
 
     return self;

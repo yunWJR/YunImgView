@@ -9,13 +9,22 @@
 
 @interface YunImgViewConfig : NSObject
 
+@property (nonatomic, weak) id <YunSelectImgDelegate> delegate;
+
 // 默认300kb
 @property (nonatomic, assign) NSInteger maxImgLength;
 
 // 默认1280
 @property (nonatomic, assign) CGFloat maxImgBoundary;
 
-@property (nonatomic, weak) id <YunSelectImgDelegate> delegate;
+// 单位：kb 默认-1（无限制）
+@property (nonatomic, assign) NSInteger videoLength;
+
+// 默认10s
+@property (nonatomic, assign) NSTimeInterval videoMaxDuration;
+
+// 默认：UIImagePickerControllerQualityTypeHigh
+@property (nonatomic, assign) UIImagePickerControllerQualityType videoQuality;
 
 + (YunImgViewConfig *)instance;
 

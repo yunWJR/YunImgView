@@ -219,7 +219,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     _selHelper.isCompression = _isCompression;
     _selHelper.shouldStoreImg = _shouldStoreImg;
 
-    [_selHelper selectImg:_imgDataList.count];
+    [_selHelper selectItem:_imgDataList.count];
 }
 
 - (void)notiCmp:(BOOL)changed {
@@ -672,8 +672,6 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
         }
     }
 
-    //[YunLogHelper logMsg:@"ImageSrcUnknown"];
-
     return nil;
 }
 
@@ -736,36 +734,26 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
 #pragma mark - YunSelectImgDelegate
 
-- (void)didCmp:(BOOL)cmp imgs:(NSArray *)imgs selType:(YunSelectImgType)selType {
-    [self notiCmp:cmp];
+- (void)didCmpWithItems:(NSArray *)items error:(NSError *)error selType:(YunSelectImgType)selType {
+    if (items == nil || items.count == 0) {return;}
 
-    if (imgs == nil || imgs.count == 0) {return;}
+    [self notiCmp:YES];
 
-    for (int i = 0; i < imgs.count; ++i) {
+    for (int i = 0; i < items.count; ++i) {
         if (selType == YunVideoSelByCamera || selType == YunVideoSelByPhotoAlbum) {
 
-            [self addVideoByVideoItem:imgs[i]];
+            [self addVideoByVideoItem:items[i]];
             continue;
         }
 
-        if ([imgs[i] isKindOfClass:UIImage.class]) {
-            [self addImgByImg:imgs[i]];
+        if ([items[i] isKindOfClass:UIImage.class]) {
+            [self addImgByImg:items[i]];
         }
-        else if ([imgs[i] isKindOfClass:NSData.class]) {
-            [self addImgByImgData:imgs[i]];
+        else if ([items[i] isKindOfClass:NSData.class]) {
+            [self addImgByImgData:items[i]];
         }
     }
 }
-
-//- (void)selectImgByType:(void (^)(YunSelectImgType type))cmp {
-//    if (_delegate && [_delegate respondsToSelector:@selector(selectImgByType:)]) {
-//        return [_delegate selectImgByType:cmp];
-//    }
-//    else if (YunImgViewConfig.instance.delegate &&
-//             [YunImgViewConfig.instance.delegate respondsToSelector:@selector(selectImgByType:)]) {
-//        return [YunImgViewConfig.instance.delegate selectImgByType:cmp];
-//    }
-//}
 
 - (void)selectItemByType:(YunSelectImgType)type cmp:(void (^)(YunSelectImgType type))cmp {
     if (_delegate && [_delegate respondsToSelector:@selector(selectItemByType:cmp:)]) {

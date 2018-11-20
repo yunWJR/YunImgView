@@ -10,14 +10,20 @@
 
 @optional
 
-- (void)selectImgByType:(void (^)(YunSelectImgType type))cmp;
+- (void)selectImgByType:(void (^)(YunSelectImgType type))cmp
+__deprecated_msg("已过期, 请使用- (void)selectItemByType:(YunSelectImgType)type cmp:(void (^)(YunSelectImgType type))cmp");
 
 - (void)selectItemByType:(YunSelectImgType)type cmp:(void (^)(YunSelectImgType type))cmp;
 
 @required
 
-// 注意：imgs:压缩时，返回NSData、不压缩时，返回UIImage todo 应该返回错误信息
-- (void)didCmp:(BOOL)cmp imgs:(NSArray *)imgs selType:(YunSelectImgType)selType;
+// 注意：imgs:压缩时，返回NSData、不压缩时，返回UIImage
+- (void)didCmp:(BOOL)cmp imgs:(NSArray *)imgs selType:(YunSelectImgType)selType
+__deprecated_msg(
+        "已过期, 请使用- (void)didCmpWithItems:(NSArray *)items error:(NSError *)error selType:(YunSelectImgType)selType");
+
+// 注意：imgs:压缩时，返回NSData、不压缩时，返回UIImage
+- (void)didCmpWithItems:(NSArray *)items error:(NSError *)error selType:(YunSelectImgType)selType;
 
 @end
 
@@ -29,14 +35,18 @@
 
 @property (nonatomic, assign) YunSelectImgType selType;
 
+// 消失动画-YES
+@property (nonatomic, assign) BOOL disAmt;
+
+// image param--------
 @property (nonatomic, assign) NSInteger curCount;
 
 @property (nonatomic, assign) NSInteger maxCount;
 
 @property (nonatomic, assign) BOOL editImg;
 
-// 默认10s
-@property (nonatomic, assign) NSTimeInterval videoMaxTime;
+// 照相的时候，保存照片，默认：NO
+@property (nonatomic, assign) BOOL shouldStoreImg;
 
 // 是否压缩图片-NO
 @property (nonatomic, assign) BOOL isCompression;
@@ -47,12 +57,20 @@
 // 最大尺寸边 默认：1280
 @property (nonatomic, assign) CGFloat imgBoundary;
 
-// 消失动画-YES
-@property (nonatomic, assign) BOOL disAmt;
+// video param--------
 
-// 照相的时候，保存照片，默认：NO
-@property (nonatomic, assign) BOOL shouldStoreImg;
+// 视频最大时长：默认10s
+@property (nonatomic, assign) NSTimeInterval videoMaxDuration;
 
-- (void)selectImg:(NSInteger)curCount;
+// 视频最大大小：单位：kb 默认-1（无限制）
+@property (nonatomic, assign) NSInteger videoLength;
+
+// 视频录制质量：默认：UIImagePickerControllerQualityTypeHigh
+@property (nonatomic, assign) UIImagePickerControllerQualityType videoQuality;
+
+- (void)selectImg:(NSInteger)curCount
+__deprecated_msg("已过期, 请使用- (void)selectItem:(NSInteger)curCount");
+
+- (void)selectItem:(NSInteger)curCount;
 
 @end
