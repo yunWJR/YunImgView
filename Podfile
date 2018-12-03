@@ -10,6 +10,7 @@ target 'YunImgView' do
 
   # Pods for YunImgView
   pod 'YunPmsHelper'
+  pod 'YunBaseApp'
   pod 'YunKits'
   pod 'YunImageBrowser'
   pod 'Masonry'

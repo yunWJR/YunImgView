@@ -29,7 +29,6 @@
             @"hh"    : [NSString stringWithFormat:@"%tu", [ary2[0] integerValue]],
             @"mm"    : ary2[1]
     };
-
 }
 
 /**
@@ -54,7 +53,6 @@
             @"hh"    : [NSString stringWithFormat:@"%tu", [ary2[0] integerValue]],
             @"mm"    : ary2[1]
     };
-
 }
 
 /**

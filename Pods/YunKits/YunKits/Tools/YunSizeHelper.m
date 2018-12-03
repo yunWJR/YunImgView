@@ -4,10 +4,11 @@
 //
 
 #import "YunSizeHelper.h"
+#import "YunTypeDefine.h"
 
 @implementation YunSizeHelper
 
-+ (CGFloat)statusBarHeight { //
++ (CGFloat)statusBarHeight {
     CGFloat sBar = [UIApplication sharedApplication].statusBarFrame.size.height;
 
     return sBar; // def = 20pt iPhoneX=44pt
@@ -16,6 +17,9 @@
 // 该高度有可能有误差
 + (CGFloat)navigationBarHeight {
     return 44;
+
+    // 都是44
+    return YunTypeDefine.isIPhoneXAndOn ? 88.0f : 64.0f - self.statusBarHeight;
 }
 
 + (CGFloat)statusAndNagBarHeight {
@@ -42,14 +46,9 @@
     return self.screenHeight * height / 667.00f;
 }
 
+// iphoneX 下方的安全距离
 + (CGFloat)btmSafeOff {
-    return self.isIPhoneX ? 34.0f : 0.0f;
-}
-
-+ (BOOL)isIPhoneX {
-    BOOL iPhoneX = self.screenWidth == 375.0f && self.screenHeight == 812.0f;
-
-    return iPhoneX;
+    return YunTypeDefine.isIPhoneXAndOn ? 34.0f : 0.0f;
 }
 
 @end

@@ -26,6 +26,4 @@
 
 + (CGFloat)btmSafeOff;
 
-+ (BOOL)isIPhoneX;
-
 @end

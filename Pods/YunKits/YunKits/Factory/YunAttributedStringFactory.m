@@ -12,42 +12,23 @@
                                            iconSize:(CGFloat)iconSize
                                               title:(NSString *_Nonnull)title
                                           titleFont:(UIFont *_Nonnull)titleFont
-                                           forColor:(UIColor *_Nonnull)forColor
+                                         titleColor:(UIColor *_Nonnull)titleColor
                                              isHori:(BOOL)isHori {
-    NSString *str;
-    if (isHori) {
-        str = [NSString stringWithFormat:@"%@%@", icon, title];
-    }
-    else {
-        str = [NSString stringWithFormat:@"%@\n%@", icon, title];
-    }
-
-    NSMutableAttributedString *atStr = [[NSMutableAttributedString alloc] initWithString:str];
-    [atStr addAttribute:NSFontAttributeName
-                  value:[UIFont fontWithName:YunConfig.instance.iconFontName size:iconSize]
-                  range:NSMakeRange(0, str.length - title.length)];
-
-    [atStr addAttribute:NSForegroundColorAttributeName
-                  value:forColor
-                  range:NSMakeRange(0, str.length - title.length)];
-
-    [atStr addAttribute:NSFontAttributeName
-                  value:titleFont
-                  range:NSMakeRange(str.length - title.length, title.length)];
-
-    [atStr addAttribute:NSForegroundColorAttributeName
-                  value:forColor
-                  range:NSMakeRange(str.length - title.length, title.length)];
-
-    return atStr;
+    return [self aStrWithIcon:icon
+                    iconColor:titleColor
+                     iconSize:iconSize
+                        title:title
+                    titleFont:titleFont
+                   titleColor:titleColor
+                       isHori:isHori];
 }
 
 + (NSMutableAttributedString *_Nonnull)aStrWithIcon:(NSString *_Nonnull)icon
                                           iconColor:(UIColor *_Nonnull)iconColor
                                            iconSize:(CGFloat)iconSize
                                               title:(NSString *_Nonnull)title
-                                         titleColor:(UIColor *_Nonnull)titleColor
                                           titleFont:(UIFont *_Nonnull)titleFont
+                                         titleColor:(UIColor *_Nonnull)titleColor
                                              isHori:(BOOL)isHori {
     NSString *str;
     if (isHori) {
@@ -123,8 +104,8 @@
 }
 
 + (NSMutableAttributedString *_Nonnull)aStrWithTitle:(NSString *_Nonnull)title
-                                          titleColor:(UIColor *_Nonnull)titleColor
                                            titleFont:(UIFont *_Nonnull)titleFont
+                                          titleColor:(UIColor *_Nonnull)titleColor
                                           hasDelLine:(BOOL)hasDelLine {
     if (title == nil) {
         return nil;
@@ -154,8 +135,8 @@
 }
 
 + (NSMutableAttributedString *_Nonnull)aStrWithTitle:(NSString *_Nonnull)title
-                                          titleColor:(UIColor *_Nonnull)titleColor
                                            titleFont:(UIFont *_Nonnull)titleFont
+                                          titleColor:(UIColor *_Nonnull)titleColor
                                         hasUnderLine:(BOOL)hasUnderLine {
     if (title == nil) {
         return nil;
@@ -183,5 +164,56 @@
 
     return atStr;
 }
+
++ (NSMutableAttributedString *_Nonnull)aStrWithIcon:(NSString *_Nonnull)icon
+                                           iconSize:(CGFloat)iconSize
+                                              title:(NSString *_Nonnull)title
+                                          titleFont:(UIFont *_Nonnull)titleFont
+                                           forColor:(UIColor *_Nonnull)forColor
+                                             isHori:(BOOL)isHori {
+    return [self aStrWithIcon:icon
+                     iconSize:iconSize
+                        title:title
+                    titleFont:titleFont
+                   titleColor:forColor
+                       isHori:isHori];
+}
+
++ (NSMutableAttributedString *_Nonnull)aStrWithIcon:(NSString *_Nonnull)icon
+                                          iconColor:(UIColor *_Nonnull)iconColor
+                                           iconSize:(CGFloat)iconSize
+                                              title:(NSString *_Nonnull)title
+                                         titleColor:(UIColor *_Nonnull)titleColor
+                                          titleFont:(UIFont *_Nonnull)titleFont
+                                             isHori:(BOOL)isHori {
+    return [self aStrWithIcon:icon
+                    iconColor:iconColor
+                     iconSize:iconSize
+                        title:title
+                    titleFont:titleFont
+                   titleColor:titleColor
+                       isHori:isHori];
+}
+
++ (NSMutableAttributedString *_Nonnull)aStrWithTitle:(NSString *_Nonnull)title
+                                          titleColor:(UIColor *_Nonnull)titleColor
+                                           titleFont:(UIFont *_Nonnull)titleFont
+                                          hasDelLine:(BOOL)hasDelLine {
+    return [self aStrWithTitle:title
+                     titleFont:titleFont
+                    titleColor:titleColor
+                    hasDelLine:hasDelLine];
+}
+
++ (NSMutableAttributedString *_Nonnull)aStrWithTitle:(NSString *_Nonnull)title
+                                          titleColor:(UIColor *_Nonnull)titleColor
+                                           titleFont:(UIFont *_Nonnull)titleFont
+                                        hasUnderLine:(BOOL)hasUnderLine {
+    return [self aStrWithTitle:title
+                     titleFont:titleFont
+                    titleColor:titleColor
+                  hasUnderLine:hasUnderLine];
+}
+
 
 @end

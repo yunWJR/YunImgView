@@ -15,15 +15,33 @@
 
 - (void)kbFrameChanged:(CGSize)size;
 
+- (void)didAddKbNtf;
+
+- (void)didRemoveKbNtf;
+
+@end
+
+@protocol YunKeyBoardGlobleDelegate <NSObject>
+
+@optional
+
+- (void)didAddKbNtf;
+
+- (void)didRemoveKbNtf;
+
 @end
 
 @interface YunKeyBoardHelper : NSObject
+
+@property (nonatomic, weak) id <YunKeyBoardGlobleDelegate> globleDelegate;
 
 @property (nonatomic, weak) id <YunKeyBoardDelegate> delegate;
 
 @property (nonatomic, assign) BOOL kbIsOn;
 
 + (instancetype)kbHelper:(id)target;
+
++ (instancetype)instance;
 
 - (void)addKbNtf;
 

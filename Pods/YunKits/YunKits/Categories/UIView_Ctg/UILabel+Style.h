@@ -11,7 +11,6 @@
 
 - (void)setAlign:(NSTextAlignment)align lines:(NSInteger)lines adjust:(BOOL)adjust;
 
-// 使用 setViewRadius
 - (void)setRadius:(CGFloat)radius width:(CGFloat)width color:(UIColor *)color
 __deprecated_msg("已过期, 请使用setViewRadius");
 

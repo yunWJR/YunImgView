@@ -8,9 +8,20 @@
 @implementation YunKeyBoardHelper {
 }
 
++ (instancetype)instance {
+    static id _sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _sharedInstance = [[self alloc] init];
+    });
+
+    return _sharedInstance;
+}
+
 + (instancetype)kbHelper:(id)target {
     YunKeyBoardHelper *hp = [YunKeyBoardHelper new];
     hp.delegate = target;
+    hp.globleDelegate = YunKeyBoardHelper.instance.globleDelegate;
 
     return hp;
 }
@@ -42,6 +53,14 @@
                                              selector:@selector(keyboardFrameChanged:)
                                                  name:UIKeyboardDidChangeFrameNotification
                                                object:nil];
+
+    if (_delegate && [_delegate respondsToSelector:@selector(didAddKbNtf)]) {
+        [_delegate didAddKbNtf];
+    }
+
+    if (_globleDelegate && [_globleDelegate respondsToSelector:@selector(didAddKbNtf)]) {
+        [_globleDelegate didAddKbNtf];
+    }
 }
 
 - (void)removeKbNtf {
@@ -50,6 +69,14 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidChangeFrameNotification object:nil];
+
+    if (_delegate && [_delegate respondsToSelector:@selector(didRemoveKbNtf)]) {
+        [_delegate didRemoveKbNtf];
+    }
+
+    if (_globleDelegate && [_globleDelegate respondsToSelector:@selector(didRemoveKbNtf)]) {
+        [_globleDelegate didRemoveKbNtf];
+    }
 }
 
 - (void)keyboardWillShow:(NSNotification *)noti {

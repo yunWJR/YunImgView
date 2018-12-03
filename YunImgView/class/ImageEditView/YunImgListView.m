@@ -17,6 +17,8 @@
 #import "YunGlobalDefine.h"
 #import "UIColor+YunAdd.h"
 #import "YunImgViewConfig.h"
+#import "NSError+YunAdd.h"
+#import "YunAlertViewHelper.h"
 
 @interface YunImgListView () <UICollectionViewDataSource, UICollectionViewDelegate,
         UICollectionViewDelegateFlowLayout, MWPhotoBrowserDelegate,
@@ -735,6 +737,12 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 #pragma mark - YunSelectImgDelegate
 
 - (void)didCmpWithItems:(NSArray *)items error:(NSError *)error selType:(YunSelectImgType)selType {
+    if (error) {
+        [YunAlertViewHelper.instance showYes:error.getErrorMsg];
+
+        return;
+    }
+
     if (items == nil || items.count == 0) {return;}
 
     [self notiCmp:YES];

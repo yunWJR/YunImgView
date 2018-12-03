@@ -8,7 +8,8 @@
 
 @interface YunView : UIView
 
-// 边距定义，都是属性变量，用于布局的时候。
+/// --->边距定义:都是属性变量，用于布局的时候。
+
 @property (nonatomic, assign) CGFloat allOff;
 
 @property (nonatomic, assign) CGFloat sideOff;
@@ -21,12 +22,17 @@
 
 @property (nonatomic, assign) CGFloat bottomOff;
 
-// 内容间距，都是属性变量，用于布局的时候。
+/// <---边距定义
+
+/// --->内容间距:都是属性变量，用于布局的时候。
+
 @property (nonatomic, assign) CGFloat allInterval;
 
 @property (nonatomic, assign) CGFloat ctnIntervalV;
 
 @property (nonatomic, assign) CGFloat ctnIntervalH;
+
+///<---内容间距
 
 + (instancetype)viewWithAllOff:(CGFloat)off andInterval:(CGFloat)interval;
 
@@ -35,5 +41,7 @@
 - (void)setOffTop:(CGFloat)top left:(CGFloat)left right:(CGFloat)right bottom:(CGFloat)bottom;
 
 - (void)setIntervalV:(CGFloat)iV h:(CGFloat)iH;
+
+- (CGFloat)twoSideOff;
 
 @end

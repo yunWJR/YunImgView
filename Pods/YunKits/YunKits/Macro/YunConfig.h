@@ -9,6 +9,7 @@
 
 + (YunConfig *)instance;
 
+
 // app
 @property (nonatomic, copy) NSString *appId;
 

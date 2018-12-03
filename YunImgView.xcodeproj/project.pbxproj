@@ -222,7 +222,7 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-YunImgView/Pods-YunImgView-resources.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-YunImgView/Pods-YunImgView-resources.sh",
 				"${PODS_ROOT}/TZImagePickerController/TZImagePickerController/TZImagePickerController/TZImagePickerController.bundle",
 				"${PODS_ROOT}/YunImageBrowser/YunImageBrowser/YunImageBrowser/Assets/ImageError.png",
 				"${PODS_ROOT}/YunImageBrowser/YunImageBrowser/YunImageBrowser/Assets/ImageError@2x.png",
@@ -297,7 +297,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-YunImgView/Pods-YunImgView-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-YunImgView/Pods-YunImgView-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		BF32EF8C90D2C962FF8390A5 /* [CP] Check Pods Manifest.lock */ = {

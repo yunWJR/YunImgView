@@ -92,13 +92,15 @@
                             }
 
                             if (YunConfig.instance.isLogMode) {
-                                NSLog(@"【3】苹果服务器返回的检测结果：\n appId = %@ \n bundleId = %@ \n 开发账号名字 = %@ \n 商店版本号 = %@ \n 应用名称 = %@ \n 打开连接 = %@",
-                                      appInfoDic[@"results"][0][@"artistId"],
-                                      appInfoDic[@"results"][0][@"bundleId"],
-                                      appInfoDic[@"results"][0][@"artistName"],
-                                      appInfoDic[@"results"][0][@"version"],
-                                      appInfoDic[@"results"][0][@"trackName"],
-                                      appInfoDic[@"results"][0][@"trackViewUrl"]);
+                                if (YunConfig.instance.isLogMode) {
+                                    NSLog(@"【3】苹果服务器返回的检测结果：\n appId = %@ \n bundleId = %@ \n 开发账号名字 = %@ \n 商店版本号 = %@ \n 应用名称 = %@ \n 打开连接 = %@",
+                                          appInfoDic[@"results"][0][@"artistId"],
+                                          appInfoDic[@"results"][0][@"bundleId"],
+                                          appInfoDic[@"results"][0][@"artistName"],
+                                          appInfoDic[@"results"][0][@"version"],
+                                          appInfoDic[@"results"][0][@"trackName"],
+                                          appInfoDic[@"results"][0][@"trackViewUrl"]);
+                                }
                             }
 
                             NSString *appStoreVer = appInfoDic[@"results"][0][@"version"];

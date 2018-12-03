@@ -41,18 +41,11 @@
                            scale:(CGFloat)scale
                           target:(id _Nullable)target
                           action:(SEL _Nullable)action {
-    UIButton *btn = [self btnWithTarget:target action:action];
-
-    UIImageView *imgView = [YunUIImageViewFactory imgViewWithImgName:bgImg];
-    [btn addSubview:imgView];
-
-    [imgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerX.equalTo(btn);
-        make.centerY.equalTo(btn);
-        make.size.equalTo(btn).multipliedBy(scale);
-    }];
-
-    return btn;
+    return [self btnWithImg:bgImg
+                       mode:YunConfig.instance.imgViewDefCtnMode
+                      scale:scale
+                     target:target
+                     action:action];
 }
 
 + (UIButton *_Nonnull)btnWithImg:(NSString *)bgImg
@@ -201,13 +194,14 @@
                        action:(SEL _Nullable)action {
     UIButton *btn = [UIButton new];
 
-    NSMutableAttributedString *atStr = [YunAttributedStringFactory aStrWithIcon:icon
-                                                                      iconColor:iconColor
-                                                                       iconSize:iconSize
-                                                                          title:title
-                                                                     titleColor:titleColor
-                                                                      titleFont:titleFont
-                                                                         isHori:isHori];
+    NSMutableAttributedString *atStr =
+            [YunAttributedStringFactory aStrWithIcon:icon
+                                           iconColor:iconColor
+                                            iconSize:iconSize
+                                               title:title
+                                           titleFont:titleFont
+                                          titleColor:titleColor
+                                              isHori:isHori];
 
     [btn setAttributedTitle:atStr forState:UIControlStateNormal];
 

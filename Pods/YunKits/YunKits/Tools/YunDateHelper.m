@@ -286,7 +286,12 @@
     int minute = ((int) time) % (3600 * 24) / 3600 / 60;
     if (days <= 0 && hours <= 0 && minute <= 0) {
         NSLog(@"0天0小时0分钟");
-        return 0;
+
+        if (days == 0 && hours == 0 && minute == 0) {
+            return 0;
+        }
+
+        return -1; // todo
     }
     else {
         NSLog(@"%@", [[NSString alloc] initWithFormat:@"%i天%i小时%i分钟", days, hours, minute]);

@@ -172,7 +172,7 @@ static void *MWVideoPlayerObservation = &MWVideoPlayerObservation;
 
     // Toolbar Items
     if (self.displayNavArrows) {
-        NSString *arrowPathFormat = @"MWPhotoBrowser.bundle/UIBarButtonItemArrow%@";
+        NSString *arrowPathFormat = @"UIBarButtonItemArrow%@";
         UIImage
                 *previousButtonImage =
                 [UIImage imageForResourcePath:[NSString stringWithFormat:arrowPathFormat, @"Left"]
@@ -304,7 +304,7 @@ static void *MWVideoPlayerObservation = &MWVideoPlayerObservation;
     if (_enableGrid) {
         hasItems = YES;
         [items addObject:[[UIBarButtonItem alloc]
-                                           initWithImage:[UIImage imageForResourcePath:@"MWPhotoBrowser.bundle/UIBarButtonItemGrid"
+                                           initWithImage:[UIImage imageForResourcePath:@"UIBarButtonItemGrid"
                                                                                 ofType:@"png"
                                                                               inBundle:[NSBundle bundleForClass:[self class]]]
                                                    style:UIBarButtonItemStylePlain
@@ -922,11 +922,11 @@ static void *MWVideoPlayerObservation = &MWVideoPlayerObservation;
             // Add play button if needed
             if (page.displayingVideo) {
                 UIButton *playButton = [UIButton buttonWithType:UIButtonTypeCustom];
-                [playButton setImage:[UIImage imageForResourcePath:@"MWPhotoBrowser.bundle/PlayButtonOverlayLarge"
+                [playButton setImage:[UIImage imageForResourcePath:@"PlayButtonOverlayLarge"
                                                             ofType:@"png"
                                                           inBundle:[NSBundle bundleForClass:[self class]]]
                             forState:UIControlStateNormal];
-                [playButton setImage:[UIImage imageForResourcePath:@"MWPhotoBrowser.bundle/PlayButtonOverlayLargeTap"
+                [playButton setImage:[UIImage imageForResourcePath:@"PlayButtonOverlayLargeTap"
                                                             ofType:@"png"
                                                           inBundle:[NSBundle bundleForClass:[self class]]]
                             forState:UIControlStateHighlighted];
@@ -938,11 +938,14 @@ static void *MWVideoPlayerObservation = &MWVideoPlayerObservation;
                 [_pagingScrollView addSubview:playButton];
                 page.playButton = playButton;
             }
+            else {
+                page.playButton = nil;
+            }
 
             // Add selected button
             if (self.displaySelectionButtons) {
                 UIButton *selectedButton = [UIButton buttonWithType:UIButtonTypeCustom];
-                [selectedButton setImage:[UIImage imageForResourcePath:@"MWPhotoBrowser.bundle/ImageSelectedOff"
+                [selectedButton setImage:[UIImage imageForResourcePath:@"ImageSelectedOff"
                                                                 ofType:@"png"
                                                               inBundle:[NSBundle bundleForClass:[self class]]]
                                 forState:UIControlStateNormal];
@@ -952,7 +955,7 @@ static void *MWVideoPlayerObservation = &MWVideoPlayerObservation;
                 }
                 else {
                     selectedOnImage =
-                            [UIImage imageForResourcePath:@"MWPhotoBrowser.bundle/ImageSelectedOn"
+                            [UIImage imageForResourcePath:@"ImageSelectedOn"
                                                    ofType:@"png"
                                                  inBundle:[NSBundle bundleForClass:[self class]]];
                 }
@@ -967,7 +970,9 @@ static void *MWVideoPlayerObservation = &MWVideoPlayerObservation;
                 page.selectedButton = selectedButton;
                 selectedButton.selected = [self photoIsSelectedAtIndex:index];
             }
-
+            else {
+                page.selectedButton = nil;
+            }
         }
     }
 

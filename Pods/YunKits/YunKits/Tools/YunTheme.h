@@ -1,19 +1,19 @@
-//
-// Created by yun on 16/11/30.
-// Copyright (c) 2017 yun. All rights reserved.
-//
+///
+/// Created by yun on 16/11/30.
+/// Copyright (c) 2017 yun. All rights reserved.
+///
 
 #import <UIKit/UIKit.h>
 
 @interface YunTheme : NSObject
 
-// 默认 UIFontTextStyleHeadline
+/// 默认 UIFontTextStyleHeadline
 @property (nonatomic, assign) CGFloat baseFontSize;
 
-// 默认 当前屏幕相对于6屏幕的比列大小
+/// 默认 当前屏幕相对于6屏幕的比列大小
 @property (nonatomic, assign) CGFloat screenScale;
 
-// 放大倍数
+/// 放大倍数
 @property (nonatomic, assign) CGFloat sizeScale;
 
 + (YunTheme *)instance;

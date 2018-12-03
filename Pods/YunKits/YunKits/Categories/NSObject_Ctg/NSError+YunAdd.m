@@ -12,21 +12,31 @@ NSString *const yun_error_custom_msg_key = @"yun_error_custom_msg_key";
 @implementation NSError (YunAdd)
 
 + (instancetype)errorWithCustomMsg:(NSString *)msg {
-    return [self errorWithCustomMsg:msg andCode:-1];
+    return [self errorWithCustomMsg:msg andCode:-1 andDomain:nil];
+}
+
++ (instancetype)errorWithCustomMsg:(NSString *)msg andCode:(NSInteger)code andDomain:(NSString *)domain {
+    if (msg == nil) {msg = @"no_error_msg";}
+    if (domain == nil) {domain = @"yun_error_custom";}
+
+    return [[NSError alloc] initWithDomain:domain code:code userInfo:@{yun_error_custom_msg_key : msg}];
 }
 
 + (instancetype)errorWithCustomMsg:(NSString *)msg andCode:(NSInteger)code {
-    if (msg == nil) {msg = @"no_error_msg";}
-
-    return [[NSError alloc] initWithDomain:@"error_custom" code:code userInfo:@{yun_error_custom_msg_key : msg}];
+    return [self errorWithCustomMsg:msg andCode:code andDomain:nil];
 }
 
 + (instancetype)errorWithCustomCode:(NSInteger)code {
-    return [[NSError alloc] initWithDomain:@"error_custom" code:code userInfo:@{yun_error_custom_msg_key : @""}];
+    return [self errorWithCustomMsg:nil andCode:code andDomain:nil];
 }
 
 - (NSString *)getErrorMsg {
-    return self.userInfo[yun_error_custom_msg_key];
+    id customInfo = self.userInfo[yun_error_custom_msg_key];
+    if (customInfo) {
+        return customInfo;
+    }
+
+    return self.localizedDescription;
 }
 
 @end

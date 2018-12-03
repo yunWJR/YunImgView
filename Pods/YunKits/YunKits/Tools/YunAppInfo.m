@@ -9,6 +9,8 @@
 @implementation YunAppInfo {
 }
 
+#pragma mark - version
+
 + (NSString *)appVersion {
     return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
 }
@@ -48,6 +50,32 @@
     }
 
     return NO;
+}
+
++ (NSString *)bundleVersion {
+    NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"];
+
+    return version;
+}
+
+#pragma mark - info
+
++ (NSString *)bundleIdentifier {
+    NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"];
+
+    return version;
+}
+
++ (NSString *)bundleDisplayName {
+    NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+
+    return version;
+}
+
++ (NSString *)bundleName {
+    NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
+
+    return version;
 }
 
 @end

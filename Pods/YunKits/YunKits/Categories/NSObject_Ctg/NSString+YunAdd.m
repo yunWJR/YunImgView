@@ -14,7 +14,7 @@
 
 // 查询子字段个数
 - (NSInteger)calSubCount:(NSString *)str {
-    ////@"abcd123abcdrgabc"
+    //@"abcd123abcdrgabc"
     //@"abc"
 
     NSInteger count = 0;
