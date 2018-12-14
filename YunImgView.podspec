@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "YunImgView"
-  s.version      = "0.0.22"
+  s.version      = "0.0.23"
   s.summary      = "yun's img list view for iOS"
 
   # This description is used to generate tags and improve search results.
@@ -133,7 +133,7 @@ Pod::Spec.new do |s|
   s.requires_arc = true
 
   # s.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
-  s.dependency "YunKits"
+  s.dependency "YunBaseApp"
   s.dependency "Masonry"
   s.dependency "YunPmsHelper"
   s.dependency "YunImageBrowser"
