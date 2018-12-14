@@ -1,0 +1,1 @@
+../../../YunBaseApp/YunBaseApp/YunBaseApp/Classes/ViewCategory/YunCoverView.h
