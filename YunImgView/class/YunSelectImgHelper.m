@@ -367,32 +367,42 @@
         }
     }
 
-    if (resource == nil) {
+    if (resource == nil || [YunValueVerifier isInvalidStr:resource.originalFilename]) {
         rst(nil);
         return;
     }
 
-    NSString *fileName = @"tempAssetVideo.mov";
-    if (resource.originalFilename) {
-        fileName = resource.originalFilename;
-    }
+    NSString *fileName = resource.originalFilename;
 
     if (asset.mediaType == PHAssetMediaTypeVideo || asset.mediaSubtypes == PHAssetMediaSubtypePhotoLive) {
         PHVideoRequestOptions *options = [[PHVideoRequestOptions alloc] init];
-        options.version = PHImageRequestOptionsVersionCurrent;
-        options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+        options.version = PHVideoRequestOptionsVersionCurrent;
+        options.deliveryMode = PHVideoRequestOptionsDeliveryModeAutomatic;
 
-        NSString *PATH_MOVIE_FILE = [NSTemporaryDirectory() stringByAppendingPathComponent:fileName];
-        [[NSFileManager defaultManager] removeItemAtPath:PATH_MOVIE_FILE error:nil];
+        NSString *tmpFilePath = [NSTemporaryDirectory() stringByAppendingPathComponent:fileName];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:tmpFilePath]) {
+            [[NSFileManager defaultManager] removeItemAtPath:tmpFilePath error:nil]; // 先删除临时文件
+        }
+
         [[PHAssetResourceManager defaultManager] writeDataForAssetResource:resource
-                                                                    toFile:[NSURL fileURLWithPath:PATH_MOVIE_FILE]
+                                                                    toFile:[NSURL fileURLWithPath:tmpFilePath]
                                                                    options:nil
                                                          completionHandler:^(NSError *_Nullable error) {
-                                                             if (error) {
-                                                                 rst(nil);
+                                                             // 有些 error 不为 nil，而 userInfo 为nil
+                                                             if (error == nil) {
+                                                                 rst(tmpFilePath);
+                                                             }
+                                                             else if (error.userInfo.allValues.count == 0) {
+                                                                 if ([[NSFileManager defaultManager]
+                                                                                     fileExistsAtPath:tmpFilePath]) {
+                                                                     rst(tmpFilePath);
+                                                                 }
+                                                                 else {
+                                                                     rst(nil);
+                                                                 }
                                                              }
                                                              else {
-                                                                 rst(PATH_MOVIE_FILE);
+                                                                 rst(nil);
                                                              }
                                                          }];
     }

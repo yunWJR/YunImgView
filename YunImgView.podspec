@@ -134,6 +134,7 @@ Pod::Spec.new do |s|
 
   # s.xcconfig = { "HEADER_SEARCH_PATHS" => "$(SDKROOT)/usr/include/libxml2" }
   s.dependency "YunBaseApp"
+  s.dependency "YunKits"
   s.dependency "Masonry"
   s.dependency "YunPmsHelper"
   s.dependency "YunImageBrowser"
