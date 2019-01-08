@@ -193,11 +193,20 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 #pragma mark - UICollectionViewDelegate
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    NSInteger index = indexPath.item + indexPath.section * _rowNum;
+
+    if (index < _imgDataList.count && _delegate && [_delegate respondsToSelector:@selector(shouldShowImg:)]) {
+        BOOL should = [_delegate shouldShowImg:index];
+
+        if (!should) {
+            return;
+        }
+    }
+
     if (_delegate && [_delegate respondsToSelector:@selector(didShowImg)]) {
         [_delegate didShowImg];
     }
 
-    NSInteger index = indexPath.item + indexPath.section * _rowNum;
     if (index == _imgDataList.count) { // 最后一个cell 新增
         [self selectImg:nil];
         return;

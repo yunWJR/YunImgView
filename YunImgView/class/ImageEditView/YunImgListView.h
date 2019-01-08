@@ -19,6 +19,8 @@ __deprecated_msg("已过期, 请使用- (void)selectItemByType:(YunSelectImgType
 
 - (void)selectItemByType:(YunSelectImgType)type cmp:(void (^)(YunSelectImgType type))cmp;
 
+- (BOOL)shouldShowImg:(NSInteger)index;
+
 @end
 
 @class YunImgData;
