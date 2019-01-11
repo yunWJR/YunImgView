@@ -27,6 +27,8 @@ __deprecated_msg(
 
 @end
 
+@class YunImgData;
+
 @interface YunSelectImgHelper : NSObject
 
 @property (nonatomic, weak) UIViewController *superVC;
@@ -72,5 +74,7 @@ __deprecated_msg(
 __deprecated_msg("已过期, 请使用- (void)selectItem:(NSInteger)curCount");
 
 - (void)selectItem:(NSInteger)curCount;
+
++ (void)getItemData:(YunImgData *)item cmpFactor:(CGFloat)cmpFactor rst:(void (^)(NSData *data))rst;
 
 @end

@@ -499,4 +499,77 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
     [self notiCmpItems:@[videoItem]];
 }
 
+#pragma mark - getItemData
+
++ (void)getItemData:(YunImgData *)item cmpFactor:(CGFloat)cmpFactor rst:(void (^)(NSData *data))rst {
+    if (item.type == YunImgVideoPHAsset) {
+        [self getVideoPathFromPHAsset:item.data rst:rst];
+
+        return;
+    }
+
+    NSData *itemData = nil;
+
+    if (item.type == YunImgImage) {
+        itemData = UIImageJPEGRepresentation(item.data, cmpFactor);
+    }
+    else if (item.type == YunImgSrcName) {
+        itemData = UIImageJPEGRepresentation([UIImage imageNamed:item.data], cmpFactor);
+    }
+    else if (item.type == YunImgImgData) {
+        itemData = item.data;
+    }
+    else if (item.type == YunImgVideoFilePath) {
+        NSURL *vdFile = [NSURL fileURLWithPath:item.data];
+        itemData = [NSData dataWithContentsOfURL:vdFile];
+    }
+
+    rst(itemData);
+}
+
++ (void)getVideoPathFromPHAsset:(PHAsset *)asset rst:(void (^)(NSData *))rst {
+    NSArray *assetResources = [PHAssetResource assetResourcesForAsset:asset];
+    PHAssetResource *resource;
+
+    for (PHAssetResource *assetRes in assetResources) {
+        if (assetRes.type == PHAssetResourceTypePairedVideo ||
+            assetRes.type == PHAssetResourceTypeVideo) {
+            resource = assetRes;
+        }
+    }
+
+    if (resource == nil) {
+        rst(nil);
+        return;
+    }
+
+    NSString *fileName = @"tempAssetVideo.mov";
+    if (resource.originalFilename) {
+        fileName = resource.originalFilename;
+    }
+
+    if (asset.mediaType == PHAssetMediaTypeVideo || asset.mediaSubtypes == PHAssetMediaSubtypePhotoLive) {
+        PHVideoRequestOptions *options = [[PHVideoRequestOptions alloc] init];
+        options.version = PHImageRequestOptionsVersionCurrent;
+        options.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+
+        NSString *PATH_MOVIE_FILE = [NSTemporaryDirectory() stringByAppendingPathComponent:fileName];
+        [[NSFileManager defaultManager] removeItemAtPath:PATH_MOVIE_FILE error:nil];
+        [[PHAssetResourceManager defaultManager] writeDataForAssetResource:resource
+                                                                    toFile:[NSURL fileURLWithPath:PATH_MOVIE_FILE]
+                                                                   options:nil
+                                                         completionHandler:^(NSError *_Nullable error) {
+                                                             if (error) {
+                                                                 rst(nil);
+                                                             }
+                                                             else {
+                                                                 rst([NSData dataWithContentsOfFile:PATH_MOVIE_FILE]);
+                                                             }
+                                                         }];
+    }
+    else {
+        rst(nil);
+    }
+}
+
 @end
