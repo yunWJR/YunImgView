@@ -6,6 +6,8 @@
 #import "YunImgDef.h"
 #import <UIKit/UIKit.h>
 
+@class MWPhotoBrowser;
+
 @protocol YunImgListViewDelegate <NSObject>
 
 @optional
@@ -20,6 +22,8 @@ __deprecated_msg("已过期, 请使用- (void)selectItemByType:(YunSelectImgType
 - (void)selectItemByType:(YunSelectImgType)type cmp:(void (^)(YunSelectImgType type))cmp;
 
 - (BOOL)shouldShowImg:(NSInteger)index;
+
+- (void)initWithMWPhotoBrowser:(MWPhotoBrowser *)browser;
 
 @end
 

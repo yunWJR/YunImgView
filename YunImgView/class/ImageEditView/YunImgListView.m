@@ -580,6 +580,10 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
         _imgBrowser.navigationItem.rightBarButtonItem = nil;
     }
 
+    if (_delegate && [_delegate respondsToSelector:@selector(initWithMWPhotoBrowser:)]) {
+        [_delegate initWithMWPhotoBrowser:_imgBrowser];
+    }
+
     [[self superVC] presentViewController:ng animated:YES completion:^{
     }];
 }
