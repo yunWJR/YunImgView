@@ -54,6 +54,11 @@
         return;
     }
 
+    if (_selType == YunImgAndVideoSelByAny) {
+        [self setAllByAny];
+        return;
+    }
+
     if (_selType == YunImgSelByCameraAndPhotoAlbum ||
         _selType == YunVideoSelByCameraAndPhotoAlbum ||
         _selType == YunImgAndVideoSelByCameraAndPhotoAlbum) {
@@ -158,6 +163,36 @@
                                               [self notiCmpError:FORMAT(@"无相机权限")];
                                           }
                                       }];
+}
+
+- (void)setAllByAny {
+    TZImagePickerController *imgPk =
+            [[TZImagePickerController alloc] initWithMaxImagesCount:(_maxCount - _curCount)
+                                                           delegate:self];
+    imgPk.allowPickingImage = YES;
+    imgPk.allowPickingVideo = YES;
+    imgPk.isSelectOriginalPhoto = YES;
+    imgPk.autoDismiss = NO;
+
+    //imgPk.navigationBar.barTintColor = [[YunAppTheme instance] commonColorHl];
+
+    imgPk.sortAscendingByModificationDate = YES;
+
+    imgPk.allowTakePicture = YES; // 在内部显示拍照按钮
+    imgPk.allowTakeVideo = YES; // 在内部显示拍照按钮
+    imgPk.uiImagePickerControllerSettingBlock = ^(UIImagePickerController *imagePickerController) {
+        imagePickerController.videoQuality = _videoQuality;
+    };
+
+    if (_videoMaxDuration > 0) {
+        imgPk.videoMaximumDuration = _videoMaxDuration;
+    }
+
+    imgPk.imagePickerControllerDidCancelHandle = ^() {
+        [self notiCmpItems:nil];
+    };
+
+    [self.superVC presentViewController:imgPk animated:YES completion:nil];
 }
 
 - (void)openCamera:(BOOL)isVideo {

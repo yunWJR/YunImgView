@@ -13,7 +13,8 @@ typedef enum : NSInteger {
     YunVideoSelByCamera                    =4, //
     YunVideoSelByPhotoAlbum                =5, //
     YunVideoSelByCameraAndPhotoAlbum       =6, //
-    YunImgAndVideoSelByCameraAndPhotoAlbum =7  //
+    YunImgAndVideoSelByCameraAndPhotoAlbum =7,  //
+    YunImgAndVideoSelByAny                 =8,  //
 } YunSelectImgType;
 
 typedef enum : NSInteger {
