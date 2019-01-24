@@ -33,6 +33,8 @@
         _videoLength = -1;
         _videoMaxDuration = 10;
         _videoQuality = UIImagePickerControllerQualityTypeHigh;
+
+        _imgPsmMsg = @"我们将使用%@图片，以添加记录";
     }
 
     return self;

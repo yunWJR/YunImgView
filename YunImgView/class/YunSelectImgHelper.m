@@ -135,19 +135,20 @@
 }
 
 - (void)selByCamera:(BOOL)isVideo {
-
     // todo 权限检查
     WEAK_SELF
-    [[YunPmsHlp instance] showCameraPmsWithTitle:@"是否允许使用相机？"
-                                         message:@"是否允许使用相机？"
+    [[YunPmsHlp instance] showCameraPmsWithTitle:@"说明"
+                                         message:FORMAT(YunImgViewConfig.instance.imgPsmMsg, @"相机拍摄")
                                          denyBtn:@"取消"
-                                        grantBtn:@"允许"
+                                        grantBtn:@"请求允许"
                                       cmpHandler:^(BOOL hasPms, YunDgRst userDr, YunDgRst sysDr) {
                                           if (hasPms) {
-                                              [[YunPmsHlp instance] showPhotoPmsWithTitle:@"是否允许使用相册？"
-                                                                                  message:@"是否允许使用相册？"
+                                              [[YunPmsHlp instance] showPhotoPmsWithTitle:@"说明"
+                                                                                  message:FORMAT(YunImgViewConfig.instance
+                                                                                                                 .imgPsmMsg,
+                                                                                                 @"相册选取")
                                                                                   denyBtn:@"取消"
-                                                                                 grantBtn:@"允许"
+                                                                                 grantBtn:@"请求允许"
                                                                                cmpHandler:^(BOOL hasPmsAb,
                                                                                             YunDgRst userDrAb,
                                                                                             YunDgRst sysDrAb) {

@@ -26,6 +26,9 @@
 // 默认：UIImagePickerControllerQualityTypeHigh
 @property (nonatomic, assign) UIImagePickerControllerQualityType videoQuality;
 
+/// 相机相册请求权限文言
+@property (nonatomic, copy) NSString *imgPsmMsg;
+
 + (YunImgViewConfig *)instance;
 
 @end
