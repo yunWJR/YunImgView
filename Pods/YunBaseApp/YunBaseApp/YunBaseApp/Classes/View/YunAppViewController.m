@@ -10,6 +10,10 @@
 #import "YunYunAppViewControllerDelegate.h"
 
 typedef NS_ENUM(NSInteger, YunAppViewControllerDelegateItem) {
+    viewWillAppear,
+    viewDidAppear,
+    viewWillDisappear,
+    viewDidDisappear,
     didInitVcDataDelegateItem,
     didInitVcSubViewsDelegateItem,
     startLoadDataDelegateItem,
@@ -48,22 +52,30 @@ typedef NS_ENUM(NSInteger, YunAppViewControllerDelegateItem) {
     [super viewWillAppear:animated];
 
     [self handleViewWillAppear];
+
+    [self notiDelegate:viewWillAppear];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
     [self handleViewDidAppear];
+
+    [self notiDelegate:viewDidAppear];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+
+    [self notiDelegate:viewWillDisappear];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
 
     [self handleViewDidDisappear];
+
+    [self notiDelegate:viewDidDisappear];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -112,6 +124,12 @@ typedef NS_ENUM(NSInteger, YunAppViewControllerDelegateItem) {
         self.view.backgroundColor = YunAppTheme.colorVcBg;
     }
 
+    /// 左滑手势
+    if (_popGestureOn) {
+        self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+        self.navigationController.interactivePopGestureRecognizer.delegate = self;
+    }
+
     [self notiDelegate:didInitVcSubViewsDelegateItem];
 }
 
@@ -124,11 +142,12 @@ typedef NS_ENUM(NSInteger, YunAppViewControllerDelegateItem) {
 
         if (!_isNagBarClear) {
             // 导航栏背景颜色
-            [self setNagBg:YunAppTheme.colorNagBg];
+            [self setNagBg:self.getCurVcNagBgColor];
         }
 
         // title 字体
-        [self setNagTitle:YunAppTheme.colorNagDark font:YunAppTheme.nagFontTitle];
+        [self setNagTitleColor:self.nagTitleColor ? self.nagTitleColor : YunAppTheme.colorNagDark
+                          font:self.nagTitleFont ? self.nagTitleFont : YunAppTheme.nagFontTitle];
 
         if (_updateNagBarItem) {
             // 返回item
@@ -169,7 +188,7 @@ typedef NS_ENUM(NSInteger, YunAppViewControllerDelegateItem) {
 
     if (!_isNagBarClear) {
         // 导航栏背景颜色-修复透明导航到不透明导航，偶尔导航栏为黑色。
-        [self setNagBg:YunAppTheme.colorNagBg];
+        [self setNagBg:self.getCurVcNagBgColor];
     }
 }
 
@@ -202,10 +221,12 @@ typedef NS_ENUM(NSInteger, YunAppViewControllerDelegateItem) {
 }
 
 - (void)updateVcStateOn {
-    self.hasUpdated = YES;
-    [self setCurUpdateDate];
 
-    [self setLoadDataCmp];
+    // 移动到updateVcStateCmp
+    //self.hasUpdated = YES;
+    //[self setCurUpdateDate];
+    //
+    //[self setLoadDataCmp];
 
     if (_isNagBarClear) {
         [self setNagBarClear];
@@ -217,6 +238,11 @@ typedef NS_ENUM(NSInteger, YunAppViewControllerDelegateItem) {
 }
 
 - (void)updateVcStateCmp {
+    self.hasUpdated = YES;
+    [self setCurUpdateDate];
+
+    [self setLoadDataCmp];
+
     [self hideDefBlankView];
 
     [self notiDelegate:didUpdateVcStateCmpDelegateItem];
@@ -275,7 +301,7 @@ typedef NS_ENUM(NSInteger, YunAppViewControllerDelegateItem) {
     }
 }
 
-- (void)setNagTitle:(UIColor *)color font:(UIFont *)font {
+- (void)setNagTitleColor:(UIColor *)color font:(UIFont *)font {
     NSMutableDictionary *mDic = [NSMutableDictionary new];
     if (color) {
         mDic[NSForegroundColorAttributeName] = color;
@@ -341,6 +367,11 @@ typedef NS_ENUM(NSInteger, YunAppViewControllerDelegateItem) {
     self.isNagBarClear = YES;
 }
 
+- (void)pushVc:(UIViewController *)vc {
+    [self.navigationController pushViewController:vc
+                                         animated:YES];
+}
+
 #pragma mark - private functions
 
 - (void)showDefBlankView {
@@ -390,12 +421,12 @@ typedef NS_ENUM(NSInteger, YunAppViewControllerDelegateItem) {
 
 - (BOOL)notiDelegate:(YunAppViewControllerDelegateItem)item {
     BOOL isHandle = NO;
-    if (_delegate) {
+    if (_yunAppDelegate) {
         isHandle = [self handleNotiDelegate:item
-                                   delegate:_delegate];
+                                   delegate:_yunAppDelegate];
     }
 
-    if (isHandle) {
+    if (isHandle && !YunAppConfig.instance.isDefDelegateAlwaysOn) {
         return isHandle;
     }
 
@@ -410,6 +441,35 @@ typedef NS_ENUM(NSInteger, YunAppViewControllerDelegateItem) {
 - (BOOL)handleNotiDelegate:(YunAppViewControllerDelegateItem)item delegate:(id <YunAppViewControllerDelegate>)delegate {
     if (delegate) {
         switch (item) {
+            case viewWillAppear: {
+                if ([delegate respondsToSelector:@selector(viewWillAppear:)]) {
+                    [delegate viewWillAppear:self];
+                    return YES;
+                }
+            }
+                break;
+            case viewDidAppear: {
+                if ([delegate respondsToSelector:@selector(viewDidAppear:)]) {
+                    [delegate viewDidAppear:self];
+                    return YES;
+                }
+            }
+                break;
+            case viewWillDisappear: {
+                if ([delegate respondsToSelector:@selector(viewWillDisappear:)]) {
+                    [delegate viewWillDisappear:self];
+                    return YES;
+                }
+            }
+                break;
+            case viewDidDisappear: {
+                if ([delegate respondsToSelector:@selector(viewDidDisappear:)]) {
+                    [delegate viewDidDisappear:self];
+                    return YES;
+                }
+            }
+                break;
+
             case didInitVcDataDelegateItem: {
                 if ([delegate respondsToSelector:@selector(didInitVcData:)]) {
                     [delegate didInitVcData:self];
@@ -451,6 +511,14 @@ typedef NS_ENUM(NSInteger, YunAppViewControllerDelegateItem) {
     return NO;
 }
 
+- (UIColor *)getCurVcNagBgColor {
+    if (_nagBgColor) {
+        return _nagBgColor;
+    }
+
+    return YunAppTheme.colorNagBg;
+}
+
 #pragma mark - protocol
 
 #pragma mark - request functions
@@ -483,6 +551,20 @@ typedef NS_ENUM(NSInteger, YunAppViewControllerDelegateItem) {
     UIViewController *parent = self.navigationController.viewControllers[vcId];
 
     return parent;
+}
+
+#pragma mark - interactivePopGestureRecognizer
+
+/// 左滑手势处理
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    if (self.navigationController.childViewControllers.count == 1) {
+        // root 不返回
+        return NO;
+    }
+
+    // 其他 vc 判断
+
+    return YES;
 }
 
 @end

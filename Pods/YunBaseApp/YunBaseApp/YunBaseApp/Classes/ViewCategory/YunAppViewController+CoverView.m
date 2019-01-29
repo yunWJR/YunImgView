@@ -76,6 +76,11 @@
             make.centerY.equalTo(self.view);
         }];
 
+        if (self.curDelegate &&
+            [self.curDelegate respondsToSelector:@selector(didGetErrCtnCoverView:)]) {
+            view = [self.curDelegate didGetErrCtnCoverView:view];
+        }
+
         self.ctnErrView = view;
     }
 
@@ -85,7 +90,7 @@
 - (void)handleRetryByErrCtn {
     self.firstLoad = YES;
     self.hasUpdated = NO;
-    self.needUpdateData = NO;
+    self.needUpdateData = YES;
 
     WEAK_SELF
     self.didUpdateVcState = ^{
@@ -153,6 +158,11 @@
             make.bottom.equalTo(self.view);
         }];
 
+        if (self.curDelegate &&
+            [self.curDelegate respondsToSelector:@selector(didGetNoCtnCoverView:)]) {
+            view = [self.curDelegate didGetNoCtnCoverView:view];
+        }
+
         self.noCtnView = view;
     }
 
@@ -203,6 +213,11 @@
             make.centerX.equalTo(self.view);
             make.centerY.equalTo(self.view);
         }];
+
+        if (self.curDelegate &&
+            [self.curDelegate respondsToSelector:@selector(didGetNoNetCoverView:)]) {
+            view = [self.curDelegate didGetNoNetCoverView:view];
+        }
 
         self.netErrView = view;
     }
@@ -303,6 +318,14 @@
 - (void)hideGeneraBlankView {
     [self hideNoNetView];
     [self hideErrCtnView];
+}
+
+- (id <YunAppCoverViewDelegate>)curDelegate {
+    if (self.coverDelegate) {
+        return self.coverDelegate;
+    }
+
+    return YunAppBlankViewConfig.instance.coverDelegate;
 }
 
 @end

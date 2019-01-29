@@ -7,18 +7,22 @@
 #import <YunKits/YunViewController.h>
 
 typedef NS_ENUM(NSInteger, YunAppVc_LoadDataMode) {
-    YunAppVc_LoadDataNone       = 0, /// 不加载数据
-    YunAppVc_LoadDataFromLocal  = 1, /// 从本地加载
+    YunAppVc_LoadDataNone = 0, /// 不加载数据
+    YunAppVc_LoadDataFromLocal = 1, /// 从本地加载
     YunAppVc_LoadDataFromServer = 2  /// 从服务器加载
 };
 
 @class YunView;
 @protocol YunAppViewControllerDelegate;
+@protocol YunAppCoverViewDelegate;
 
 @interface YunAppViewController : YunViewController
 
 /// delegate
-@property (nonatomic, weak) id <YunAppViewControllerDelegate> delegate;
+@property (nonatomic, weak) id <YunAppViewControllerDelegate> yunAppDelegate;
+
+/// cover delegate
+@property (nonatomic, weak) id <YunAppCoverViewDelegate> coverDelegate;
 
 /// 第一次加载标识符 /// 默认YES
 @property (nonatomic, assign) BOOL firstLoad;
@@ -79,6 +83,18 @@ typedef NS_ENUM(NSInteger, YunAppVc_LoadDataMode) {
 /// 导航栏是否为透明：默认 NO
 @property (nonatomic, assign) BOOL isNagBarClear;
 
+/// 导航栏背景
+@property (nonatomic, strong) UIColor *nagBgColor;
+
+/// 导航栏title 颜色
+@property (nonatomic, strong) UIColor *nagTitleColor;
+
+/// 导航栏title 字体
+@property (nonatomic, strong) UIFont *nagTitleFont;
+
+/// 是否开启左滑返回手势，仅在第一层开启
+@property (nonatomic, assign) BOOL popGestureOn;
+
 #pragma mark - app vc flow
 
 /// 初始化数据
@@ -127,7 +143,7 @@ typedef NS_ENUM(NSInteger, YunAppVc_LoadDataMode) {
 
 - (void)setNagBg:(UIColor *)color;
 
-- (void)setNagTitle:(UIColor *)color font:(UIFont *)font;
+- (void)setNagTitleColor:(UIColor *)color font:(UIFont *)font;
 
 - (void)setLeftBarItemName:(NSString *)name;
 
@@ -144,6 +160,8 @@ typedef NS_ENUM(NSInteger, YunAppVc_LoadDataMode) {
 - (void)setNavTitle:(NSString *)title;
 
 - (void)setNagBarClear;
+
+- (void)pushVc:(UIViewController *)vc;
 
 - (void)setBackVcNeedUpdate;
 
