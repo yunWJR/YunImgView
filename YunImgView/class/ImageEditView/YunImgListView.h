@@ -14,6 +14,8 @@
 
 - (void)viewSizeChanged;
 
+- (void)didDeleteImg;
+
 - (void)didShowImg;
 
 - (void)selectImgByType:(void (^)(YunSelectImgType type))cmp
