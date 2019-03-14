@@ -621,6 +621,10 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     }
     else if ([btnTitle isEqualToString:@"确定"]) {
         [_imgDataList removeObjectAtIndex:_imgBrowser.currentIndex];
+        
+        if (_delegate && [_delegate respondsToSelector:@selector(didDeleteImg)]) {
+            [_delegate didDeleteImg];
+        }
 
         if (_imgDataList.count == 0) {
             [self reloadImgData];
