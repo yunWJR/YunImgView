@@ -15,12 +15,12 @@ __deprecated_msg("已过期, 请使用- (void)selectItemByType:(YunSelectImgType
 
 - (void)selectItemByType:(YunSelectImgType)type cmp:(void (^)(YunSelectImgType type))cmp;
 
-@required
-
 // 注意：imgs:压缩时，返回NSData、不压缩时，返回UIImage
 - (void)didCmp:(BOOL)cmp imgs:(NSArray *)imgs selType:(YunSelectImgType)selType
 __deprecated_msg(
-        "已过期, 请使用- (void)didCmpWithItems:(NSArray *)items error:(NSError *)error selType:(YunSelectImgType)selType");
+                 "已过期, 请使用- (void)didCmpWithItems:(NSArray *)items error:(NSError *)error selType:(YunSelectImgType)selType");
+
+@required
 
 // 注意：imgs:压缩时，返回NSData、不压缩时，返回UIImage
 - (void)didCmpWithItems:(NSArray *)items error:(NSError *)error selType:(YunSelectImgType)selType;

@@ -21,7 +21,7 @@ NSString *const c_YunImgCellId_AddItem = @"YunImgCellId_AddItem";
     self = [super initWithFrame:frame];
     if (self) {
     }
-
+    
     return self;
 }
 
@@ -36,34 +36,34 @@ NSString *const c_YunImgCellId_AddItem = @"YunImgCellId_AddItem";
         }
         return;
     }
-
+    
     if (_coverView == nil) {
         _coverView = [YunUIImageViewFactory imgViewWithImgName:@"" mode:UIViewContentModeScaleAspectFill];
-
+        
         [self addSubview:_coverView];
-
+        
         [_coverView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self);
             make.left.equalTo(self);
             make.size.equalTo(self);
         }];
     }
-
+    
     _coverView.image = coverImg;
-
+    
     [self bringSubviewToFront:_coverView];
-
+    
     _coverView.hidden = NO;
 }
 
 - (void)setAddItem:(UIView *)addView {
     if (_addView == nil) {
         [self removeAllSubView];
-
+        
         _addView = addView;
-
+        
         [self addSubview:_addView];
-
+        
         [_addView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self);
             make.left.equalTo(self);
@@ -75,18 +75,18 @@ NSString *const c_YunImgCellId_AddItem = @"YunImgCellId_AddItem";
 - (void)setImgItem:(YunImgData *)imgData isZoom:(BOOL)isZoom {
     if (_imgView == nil) {
         [self removeAllSubView];
-
+        
         _imgView = [self itemView];
-
+        
         [self addSubview:_imgView];
-
+        
         [_imgView mas_updateConstraints:^(MASConstraintMaker *make) {
             make.top.equalTo(self);
             make.left.equalTo(self);
             make.size.equalTo(self);
         }];
     }
-
+    
     [imgData setImgInView:_imgView isZoom:isZoom];
 }
 
@@ -100,7 +100,8 @@ NSString *const c_YunImgCellId_AddItem = @"YunImgCellId_AddItem";
 
 - (UIImageView *)itemView {
     UIImageView *imgView = [YunUIImageViewFactory imgView];
-
+    imgView.layer.cornerRadius = 4.f;
+    imgView.layer.masksToBounds = YES;
     return imgView;
 }
 

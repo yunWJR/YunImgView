@@ -21,23 +21,23 @@
 #import "YunAlertViewHelper.h"
 
 @interface YunImgListView () <UICollectionViewDataSource, UICollectionViewDelegate,
-        UICollectionViewDelegateFlowLayout, MWPhotoBrowserDelegate,
-        YunSelectImgDelegate, UIAlertViewDelegate> {
+UICollectionViewDelegateFlowLayout, MWPhotoBrowserDelegate,
+YunSelectImgDelegate, UIAlertViewDelegate> {
     UICollectionView *_ctnCV;
-
+    
     NSMutableArray<YunImgData *> *_imgDataList;
     CGFloat _viewWidth;
-
+    
     MWPhotoBrowser *_imgBrowser;
-
+    
     BOOL _isEdit;
-
+    
     void (^_didCmp)(BOOL changed);
-
+    
     YunSelectImgHelper *_selHelper;
-
+    
     CGFloat _lastWidth;
-
+    
     BOOL _hasAddObserver;
 }
 
@@ -50,7 +50,7 @@
     if (self) {
         [self initSubView:3];
     }
-
+    
     return self;
 }
 
@@ -59,7 +59,7 @@
     if (self) {
         [self initSubView:rowNum];
     }
-
+    
     return self;
 }
 
@@ -70,22 +70,22 @@
     _hasAddBtn = YES;
     _isZoom = YES;
     _selType = YunImgSelByCameraAndPhotoAlbum;
-
+    
     _rowNum = rowNum;
     _maxCount = 9;
-
+    
     _selHelper = [YunSelectImgHelper new];
     _selHelper.delegate = self;
-
+    
     _selVideo = NO;
-
+    
     self.backgroundColor = [UIColor clearColor];
-
+    
     [self setDefaultLayout:rowNum];
-
+    
     UICollectionViewFlowLayout *fl = [UICollectionViewFlowLayout new];
     [fl setScrollDirection:UICollectionViewScrollDirectionVertical];
-
+    
     _ctnCV = [[UICollectionView alloc] initWithFrame:CGRectMake(0, 0, _viewWidth, 0) collectionViewLayout:fl];
     _ctnCV.delegate = self;
     _ctnCV.dataSource = self;
@@ -93,15 +93,15 @@
     [_ctnCV registerClass:YunImgCVC.class forCellWithReuseIdentifier:c_YunImgCellId_ImgItem];
     [_ctnCV registerClass:YunImgCVC.class forCellWithReuseIdentifier:c_YunImgCellId_AddItem];
     _ctnCV.showsVerticalScrollIndicator = NO;
-
+    
     [self addSubview:_ctnCV];
-
+    
     [_ctnCV mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.equalTo(@0);
         make.left.equalTo(@0);
         make.size.equalTo(self);
     }];
-
+    
     [self initObserver];
 }
 
@@ -115,7 +115,7 @@
 - (void)dealloc {
     if (_hasAddObserver) {
         [self removeObserver:self forKeyPath:@"bounds"];
-
+        
         _hasAddObserver = NO;
     }
 }
@@ -138,35 +138,35 @@
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView
                   cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSInteger index = indexPath.item + indexPath.section * _rowNum;
-
+    
     if (index == _imgDataList.count) { // 最后一个cell 新增
         YunImgCVC *cell = [collectionView dequeueReusableCellWithReuseIdentifier:c_YunImgCellId_AddItem
                                                                     forIndexPath:indexPath];
         if (!cell) {
             cell = [YunImgCVC new];
         }
-
+        
         [cell setAddItem:self.getAddItemView];
         if (_itemBgColor) {
             cell.backgroundColor = _itemBgColor;
         }
-
+        
         return cell;
     }
-
+    
     YunImgCVC *cell = [collectionView dequeueReusableCellWithReuseIdentifier:c_YunImgCellId_ImgItem
                                                                 forIndexPath:indexPath];
     if (!cell) {
         cell = [YunImgCVC new];
     }
-
+    
     [cell setImgItem:_imgDataList[index] isZoom:_isZoom];
     if (_itemBgColor) {
         cell.backgroundColor = _itemBgColor;
     }
-
+    
     [cell setCoverImg:_imgDataList[index].isVideoItem ? _videoCoverImg : nil];
-
+    
     return cell;
 }
 
@@ -181,7 +181,7 @@
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView
                         layout:(UICollectionViewLayout *)collectionViewLayout
         insetForSectionAtIndex:(NSInteger)section {
-    return UIEdgeInsetsMake(_interval * 0.5f, _sideOff, _interval * 0.5f, _sideOff);
+    return UIEdgeInsetsMake(_sideOff * 0.5f, _sideOff, _sideOff * 0.5f, _sideOff);
 }
 
 - (CGFloat)               collectionView:(UICollectionView *)collectionView
@@ -194,24 +194,24 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSInteger index = indexPath.item + indexPath.section * _rowNum;
-
+    
     if (index < _imgDataList.count && _delegate && [_delegate respondsToSelector:@selector(shouldShowImg:)]) {
         BOOL should = [_delegate shouldShowImg:index];
-
+        
         if (!should) {
             return;
         }
     }
-
+    
     if (_delegate && [_delegate respondsToSelector:@selector(didShowImg)]) {
         [_delegate didShowImg];
     }
-
+    
     if (index == _imgDataList.count) { // 最后一个cell 新增
         [self selectImg:nil];
         return;
     }
-
+    
     [self showImageAtIndex:index];
 }
 
@@ -223,20 +223,20 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
 - (void)selectImg:(void (^)(BOOL))cmp {
     _didCmp = cmp;
-
+    
     _selHelper.superVC = [self superVC];
     _selHelper.selType = _selType;
     _selHelper.maxCount = _maxCount;
     _selHelper.isCompression = _isCompression;
     _selHelper.shouldStoreImg = _shouldStoreImg;
-
+    
     [_selHelper selectItem:_imgDataList.count];
 }
 
 - (void)notiCmp:(BOOL)changed {
     if (_didCmp) {
         _didCmp(changed);
-
+        
         _didCmp = nil;
     }
 }
@@ -247,11 +247,11 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
 - (void)setDefaultLayout:(NSInteger)rowNum {
     _rowNum = rowNum;
-
+    
     _maxCount = 6;
     _sideOff = 10;
     _interval = 10;
-
+    
     [self setCellSize];
 }
 
@@ -263,14 +263,14 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 - (NSInteger)sectionCount {
     NSInteger num = 0;
     NSInteger count = [self countCellNum];
-
+    
     if (count > 0 && _rowNum != 0) {
         num = count / _rowNum;
         if ((count % _rowNum) != 0) {
             num++;
         }
     }
-
+    
     return num;
 }
 
@@ -279,7 +279,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     if (_isEdit && _imgDataList.count < _maxCount && _hasAddBtn) {
         count++;
     }
-
+    
     return count;
 }
 
@@ -287,26 +287,26 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     if (_cstAddView) {
         return _cstAddView;
     }
-
+    
     UIView *view = [UIView new];
     [view setViewRadius:0 width:0.5f color:[UIColor hexColor:0xE6E6E6]];
-
+    
     UILabel *icon = [YunUILabelFactory labelWithText:@"+"
                                                 font:[UIFont boldSystemFontOfSize:30]
                                                color:UIColor.lightGrayColor
                                                align:NSTextAlignmentCenter lines:1 adjust:YES];
-
+    
     [view addSubview:icon];
-
+    
     [icon mas_makeConstraints:^(MASConstraintMaker *make) {
         make.centerX.equalTo(view);
         make.centerY.equalTo(view);
         make.width.equalTo(view);
         make.height.equalTo(view);
     }];
-
+    
     _cstAddView = view;
-
+    
     return view;
 }
 
@@ -314,13 +314,13 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
 - (void)resetImgByImgList:(NSArray<YunImgData *> *)imgList {
     [self removeAllImg];
-
+    
     [self addImgByInfoList:imgList];
 }
 
 - (void)resetImgByImgUrlList:(NSArray *)imgList {
     [self removeAllImg];
-
+    
     [self addImgByUrlStrList:imgList];
 }
 
@@ -328,18 +328,18 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     if (image == nil) {
         return;
     }
-
+    
     if (_imgDataList.count >= _maxCount) {
         [self showImageOutOfCount];
         return;
     }
-
+    
     YunImgData *imgInfo = [YunImgData new];
     imgInfo.type = YunImgImage;
     imgInfo.data = image;
-
+    
     [_imgDataList addObject:imgInfo];
-
+    
     [self reloadImgData];
 }
 
@@ -347,18 +347,18 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     if (data == nil) {
         return;
     }
-
+    
     if (_imgDataList.count >= _maxCount) {
         [self showImageOutOfCount];
         return;
     }
-
+    
     YunImgData *imgInfo = [YunImgData new];
     imgInfo.type = YunImgImgData;
     imgInfo.data = data;
-
+    
     [_imgDataList addObject:imgInfo];
-
+    
     [self reloadImgData];
 }
 
@@ -366,13 +366,13 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     if (imgList == nil) {
         return;
     }
-
+    
     if ((_imgDataList.count + imgList.count) > _maxCount) {
         [self showImageOutOfCount];
-
+        
         return;
     }
-
+    
     for (int i = 0; i < imgList.count; ++i) {
         if ([imgList[i] isKindOfClass:YunImgData.class]) {
             [_imgDataList addObject:imgList[i]];
@@ -381,7 +381,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
             [_imgDataList addObject:[YunImgData itemWithType:YunImgURLStr data:imgList[i]]];
         }
     }
-
+    
     [self reloadImgData];
 }
 
@@ -390,13 +390,13 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     if (urlList == nil) {
         return;
     }
-
+    
     if ((_imgDataList.count + urlList.count) > _maxCount) {
         [self showImageOutOfCount];
-
+        
         return;
     }
-
+    
     for (int i = 0; i < urlList.count; ++i) {
         id item = urlList[i];
         if ([item isKindOfClass:[YunImgData class]]) {
@@ -410,7 +410,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
             [self addImgDataByUrlStr:imgStr];
         }
     }
-
+    
     [self reloadImgData];
 }
 
@@ -418,61 +418,61 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     if (urlList == nil) {
         return;
     }
-
+    
     if ((_imgDataList.count + urlList.count) > _maxCount) {
         [self showImageOutOfCount];
-
+        
         return;
     }
-
+    
     for (int i = 0; i < urlList.count; ++i) {
         YunImgData *imgInfo = [YunImgData new];
         imgInfo.type = YunImgURLStr;
         imgInfo.data = urlList[i];
-
+        
         [_imgDataList addObject:imgInfo];
     }
-
+    
     [self reloadImgData];
 }
 
 - (void)addImgDataByUrlStr:(NSString *)url {
     if (_imgDataList.count >= _maxCount) {
         [self showImageOutOfCount];
-
+        
         return;
     }
-
+    
     YunImgData *imgInfo = [YunImgData new];
     imgInfo.type = YunImgURLStr;
     imgInfo.data = url;
-
+    
     [_imgDataList addObject:imgInfo];
 }
 
 - (void)addVideoByVideoItem:(YunImgData *)videoItem {
     if (_imgDataList.count >= _maxCount) {
         [self showImageOutOfCount];
-
+        
         return;
     }
-
+    
     [_imgDataList addObject:videoItem];
-
+    
     [self reloadImgData];
 }
 
 - (void)removeAllImg {
     [_imgDataList removeAllObjects];
-
+    
     [self reloadImgData];
 }
 
 - (void)reloadImgData {
     [self setViewWidth:self.width refresh:NO];
-
+    
     [self updateViewConstraints];
-
+    
     [_ctnCV reloadData];
 }
 
@@ -480,7 +480,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     [self mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.equalTo(@([self curHeight]));
     }];
-
+    
     if (_delegate && [_delegate respondsToSelector:@selector(viewSizeChanged)]) {
         [_delegate viewSizeChanged];
     }
@@ -492,27 +492,27 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
 - (BOOL)isSameImgs:(NSArray<YunImgData *> *)imgList {
     NSArray *curImgs = self.curImgList;
-
+    
     if (curImgs.count != imgList.count) {return NO;}
-
+    
     for (int i = 0; i < curImgs.count; ++i) {
         if (![curImgs[i] isSame:imgList[i]]) {return NO;}
     }
-
+    
     return YES;
 }
 
 - (CGFloat)curHeight {
-    return [self sectionCount] * (_cellSize.height + _interval) + 4;
+    return [self sectionCount] * (_cellSize.height + _sideOff) + 4;
 }
 
 - (void)setViewWidth:(CGFloat)width refresh:(BOOL)refresh {
     if (width <= 0) {return;}
-
+    
     _viewWidth = width;
-
+    
     [self setCellSize];
-
+    
     if (refresh) {
         [self reloadImgData];
     }
@@ -520,22 +520,22 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
 - (void)setEdit:(BOOL)isEdit {
     _isEdit = isEdit;
-
+    
     //[self reloadImgData];
 }
 
 - (void)updateViewWidth:(CGFloat)width andEidt:(BOOL)isEdit {
     _viewWidth = width;
     _isEdit = isEdit;
-
+    
     [self setCellSize];
-
+    
     [self mas_updateConstraints:^(MASConstraintMaker *make) {
         make.height.equalTo(@([self curHeight]));
     }];
-
+    
     [_ctnCV reloadData];
-
+    
     //[self layoutIfNeeded];
 }
 
@@ -543,7 +543,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 
 - (void)showImageAtIndex:(NSInteger)index {
     _imgBrowser = [[MWPhotoBrowser alloc] initWithDelegate:self];
-
+    
     _imgBrowser.displayActionButton = NO;
     _imgBrowser.displayNavArrows = NO;
     _imgBrowser.displaySelectionButtons = NO;
@@ -554,36 +554,36 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     _imgBrowser.enableSwipeToDismiss = NO;
     _imgBrowser.autoPlayOnAppear = YES;
     _imgBrowser.delegate = self;
-
+    
     _imgBrowser.hideNagItemDone = YES;
-
+    
     [_imgBrowser setCurrentPhotoIndex:index];
-
+    
     UINavigationController *ng = [[UINavigationController alloc] initWithRootViewController:_imgBrowser];
-
+    
     UIBarButtonItem *leftItem = [[UIBarButtonItem alloc]
-                                                  initWithBarButtonSystemItem:UIBarButtonSystemItemStop
-                                                                       target:self
-                                                                       action:@selector(didPBBack)];
-
+                                 initWithBarButtonSystemItem:UIBarButtonSystemItemStop
+                                 target:self
+                                 action:@selector(didPBBack)];
+    
     _imgBrowser.navigationItem.leftBarButtonItem = leftItem;
-
+    
     if (_isEdit || _forceDel) {
         UIBarButtonItem *rightItem = [[UIBarButtonItem alloc] initWithTitle:@"删除"
                                                                       style:UIBarButtonItemStyleDone
                                                                      target:self
                                                                      action:@selector(deleteImage:)];
-
+        
         _imgBrowser.navigationItem.rightBarButtonItem = rightItem;
     }
     else {
         _imgBrowser.navigationItem.rightBarButtonItem = nil;
     }
-
+    
     if (_delegate && [_delegate respondsToSelector:@selector(initWithMWPhotoBrowser:)]) {
         [_delegate initWithMWPhotoBrowser:_imgBrowser];
     }
-
+    
     [[self superVC] presentViewController:ng animated:YES completion:^{
     }];
 }
@@ -625,19 +625,19 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
         if (_delegate && [_delegate respondsToSelector:@selector(didDeleteImg)]) {
             [_delegate didDeleteImg];
         }
-
+        
         if (_imgDataList.count == 0) {
             [self reloadImgData];
             [self didPBBack];
             return;
         }
-
+        
         if (_imgBrowser.currentIndex > _imgDataList.count - 1) {
             [_imgBrowser setCurrentPhotoIndex:_imgBrowser.currentIndex - 1];
         }
-
+        
         [self reloadImgData];
-
+        
         [_imgBrowser reloadData];
     }
 }
@@ -648,7 +648,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     if (_imgDataList) {
         return _imgDataList.count;
     }
-
+    
     return 0;
 }
 
@@ -658,7 +658,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
             return [self imageForIndex:index];
         }
     }
-
+    
     return nil;
 }
 
@@ -687,16 +687,16 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
                 break;
             case YunImgUnknown:
                 break;
-
+                
         }
     }
-
+    
     return nil;
 }
 
 - (MWPhoto *)getMwVideo:(YunImgData *)img {
     MWPhoto *video;
-
+    
     switch (img.thumbData.type) {
         case YunImgUnknown:
             break;
@@ -719,12 +719,12 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
         case YunImgVideoPHAsset:
             break;
     }
-
+    
     if (video == nil) {
         video = [MWPhoto new];
         video.isVideo = YES;
     }
-
+    
     if (img.type == YunImgVideoURLStr) {
         video.videoURL = [NSURL URLWithString:img.data];
     }
@@ -734,7 +734,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     else if (img.type == YunImgVideoPHAsset) {
         video = [MWPhoto photoWithAsset:img.data targetSize:[UIScreen mainScreen].bounds.size];
     }
-
+    
     return video;
 }
 
@@ -756,21 +756,19 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
 - (void)didCmpWithItems:(NSArray *)items error:(NSError *)error selType:(YunSelectImgType)selType {
     if (error) {
         [YunAlertViewHelper.instance showYes:error.getErrorMsg];
-
+        
         return;
     }
-
+    
     if (items == nil || items.count == 0) {return;}
-
-    [self notiCmp:YES];
-
+    
     for (int i = 0; i < items.count; ++i) {
         if (selType == YunVideoSelByCamera || selType == YunVideoSelByPhotoAlbum) {
-
+            
             [self addVideoByVideoItem:items[i]];
             continue;
         }
-
+        
         if ([items[i] isKindOfClass:UIImage.class]) {
             [self addImgByImg:items[i]];
         }
@@ -778,6 +776,8 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
             [self addImgByImgData:items[i]];
         }
     }
+    
+    [self notiCmp:YES];
 }
 
 - (void)selectItemByType:(YunSelectImgType)type cmp:(void (^)(YunSelectImgType type))cmp {
@@ -798,7 +798,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
     if ([keyPath isEqualToString:@"bounds"]) {
         if (![YunValueVerifier isSameFloat:self.width value2:_lastWidth]) {
             _lastWidth = self.width;
-
+            
             [self reloadImgData];
         }
     }
