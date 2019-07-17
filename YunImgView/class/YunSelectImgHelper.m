@@ -263,7 +263,8 @@
     imgPk.sortAscendingByModificationDate = YES;
     
     imgPk.allowTakePicture = allowTakePicture; // 在内部显示拍照按钮
-    
+    imgPk.allowTakeVideo = allowTakePicture;    //在内部显示拍摄按钮
+
     imgPk.imagePickerControllerDidCancelHandle = ^() {
         [self notiCmpItems:nil];
     };
