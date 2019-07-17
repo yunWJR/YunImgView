@@ -72,14 +72,16 @@
 
                 return;
             }
-
-            if (YunImgViewConfig.instance.delegate &&
-                [YunImgViewConfig.instance.delegate respondsToSelector:@selector(selectImgByType:)]) {
+            else if (YunImgViewConfig.instance.delegate &&
+                     [YunImgViewConfig.instance.delegate respondsToSelector:@selector(selectImgByType:)]) {
                 [YunImgViewConfig.instance.delegate selectImgByType:^(YunSelectImgType type) {
                     [self selectImgByType:type];
                 }];
-
+                
                 return;
+            }
+            else {
+                [self selectImgByType:_selType];
             }
         }
 
@@ -93,6 +95,9 @@
             [YunImgViewConfig.instance.delegate selectItemByType:_selType cmp:^(YunSelectImgType type) {
                 [self selectImgByType:type];
             }];
+        }
+        else {
+            [self selectImgByType:_selType];
         }
     }
     else {
@@ -235,35 +240,39 @@
     [self.superVC presentViewController:_imgPk animated:YES completion:nil];
 }
 
-- (void)selByAlbum:(BOOL)isVideo {
+- (void)selByAlbum:(BOOL)isVideo allowTakePicture:(BOOL)allowTakePicture{
     // 选择一张图片时，直接打开系统相册
     if (self.maxCount == 1 && _lastSelType == YunImgSelByPhotoAlbum) {
         [self openPhotoLib:isVideo];
         return;
     }
-
+    
     // 多选
     TZImagePickerController *imgPk =
-            [[TZImagePickerController alloc] initWithMaxImagesCount:(_maxCount - _curCount)
-                                                           delegate:self];
+    [[TZImagePickerController alloc] initWithMaxImagesCount:(_maxCount - _curCount)
+                                                   delegate:self];
     imgPk.allowPickingImage = !isVideo;
     imgPk.allowPickingVideo = isVideo;
     imgPk.isSelectOriginalPhoto = YES;
     imgPk.autoDismiss = NO;
-
+    
     //imgPk.navigationBar.barTintColor = PpmTheme.colorHl;
     // imgPk.oKButtonTitleColorDisabled = [UIColor lightGrayColor];
     // imgPk.oKButtonTitleColorNormal = [UIColor greenColor];
-
+    
     imgPk.sortAscendingByModificationDate = YES;
-
-    imgPk.allowTakePicture = NO; // 在内部显示拍照按钮
-
+    
+    imgPk.allowTakePicture = allowTakePicture; // 在内部显示拍照按钮
+    
     imgPk.imagePickerControllerDidCancelHandle = ^() {
         [self notiCmpItems:nil];
     };
-
+    
     [self.superVC presentViewController:imgPk animated:YES completion:nil];
+}
+
+- (void)selByAlbum:(BOOL)isVideo {
+    [self selByAlbum:isVideo allowTakePicture:NO];
 }
 
 - (void)notiCmpError:(NSString *)error {
