@@ -82,6 +82,7 @@
             }
             else {
                 [self selectImgByType:_selType];
+                return;
             }
         }
 
