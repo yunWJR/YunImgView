@@ -21,8 +21,13 @@
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-    YunImgData *copy = self.yunDeepCopy;
+//    YunImgData *copy = self.yunDeepCopy;
 
+    YunImgData *copy = [[YunImgData allocWithZone:zone] init];
+    copy.type = self.type;
+    copy.data = [self.data copy];
+    copy.thumbData = [self.thumbData copy];
+    
     return copy;
 }
 
@@ -40,7 +45,7 @@
 
 + (instancetype)itemWithVideoUrlStr:(NSString *)videoUrl thumb:(NSString *)thumb {
     YunImgData *item = [self itemWithType:YunImgVideoURLStr data:videoUrl];
-    item.thumbData = thumb;
+    item.thumbData = item;
 
     return item;
 }
