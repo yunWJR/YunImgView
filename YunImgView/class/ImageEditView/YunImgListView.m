@@ -367,10 +367,21 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
         return;
     }
     
-    if ((_imgDataList.count + imgList.count) > _maxCount) {
-        [self showImageOutOfCount];
-        
-        return;
+    if (_isEdit) {
+        if ((_imgDataList.count + imgList.count) > _maxCount) {
+            [self showImageOutOfCount];
+            
+            return;
+        }
+    } else {
+        if ((_imgDataList.count + imgList.count) > _maxCount) {
+            
+            NSMutableArray * arr = [NSMutableArray array];
+            for (NSInteger i = 0; i < _maxCount - _imgDataList.count; i++) {
+                [arr addObject:imgList[i]];
+            }
+            imgList = [NSArray arrayWithArray:arr];
+        }
     }
     
     for (int i = 0; i < imgList.count; ++i) {
@@ -391,10 +402,21 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
         return;
     }
     
-    if ((_imgDataList.count + urlList.count) > _maxCount) {
-        [self showImageOutOfCount];
-        
-        return;
+    if (_isEdit) {
+        if ((_imgDataList.count + urlList.count) > _maxCount) {
+            [self showImageOutOfCount];
+            
+            return;
+        }
+    } else {
+        if ((_imgDataList.count + urlList.count) > _maxCount) {
+            
+            NSMutableArray * arr = [NSMutableArray array];
+            for (NSInteger i = 0; i < _maxCount - _imgDataList.count; i++) {
+                [arr addObject:urlList[i]];
+            }
+            urlList = [NSArray arrayWithArray:arr];
+        }
     }
     
     for (int i = 0; i < urlList.count; ++i) {
@@ -419,10 +441,12 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
         return;
     }
     
-    if ((_imgDataList.count + urlList.count) > _maxCount) {
-        [self showImageOutOfCount];
-        
-        return;
+    if (_isEdit) {
+        if ((_imgDataList.count + urlList.count) > _maxCount) {
+            [self showImageOutOfCount];
+            
+            return;
+        }
     }
     
     for (int i = 0; i < urlList.count; ++i) {
