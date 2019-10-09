@@ -21,7 +21,12 @@
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-    YunImgData *copy = self.yunDeepCopy;
+//    YunImgData *copy = self.yunDeepCopy;
+    
+    YunImgData *copy = [[YunImgData allocWithZone:zone] init];
+    copy.type = self.type;
+    copy.data = [self.data copy];
+    copy.thumbData = [self.thumbData copy];
 
     return copy;
 }

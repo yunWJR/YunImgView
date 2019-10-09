@@ -193,6 +193,7 @@
         [self notiCmpItems:nil];
     };
 
+    imgPk.modalPresentationStyle = UIModalPresentationFullScreen;
     [self.superVC presentViewController:imgPk animated:YES completion:nil];
 }
 
@@ -215,6 +216,7 @@
         _imgPk.allowsEditing = _editImg;
     }
 
+    _imgPk.modalPresentationStyle = UIModalPresentationFullScreen;
     [self.superVC presentViewController:_imgPk animated:YES completion:nil];
 }
 
@@ -232,6 +234,7 @@
         _imgPk.allowsEditing = _editImg;
     }
 
+    _imgPk.modalPresentationStyle = UIModalPresentationFullScreen;
     [self.superVC presentViewController:_imgPk animated:YES completion:nil];
 }
 
@@ -263,6 +266,7 @@
         [self notiCmpItems:nil];
     };
 
+    imgPk.modalPresentationStyle = UIModalPresentationFullScreen;
     [self.superVC presentViewController:imgPk animated:YES completion:nil];
 }
 
@@ -424,25 +428,26 @@
                                                                     toFile:[NSURL fileURLWithPath:tmpFilePath]
                                                                    options:nil
                                                          completionHandler:^(NSError *_Nullable error) {
-                                                             // 有些 error 不为 nil，而 userInfo 为nil
-                                                             if (error == nil) {
-                                                                 rst(tmpFilePath);
-                                                             }
-                                                             else if (error.userInfo.allValues.count == 0) {
-                                                                 if ([[NSFileManager defaultManager]
-                                                                                     fileExistsAtPath:tmpFilePath]) {
-                                                                     rst(tmpFilePath);
-                                                                 }
-                                                                 else {
-                                                                     rst(nil);
-                                                                 }
-                                                             }
-                                                             else {
-                                                                 rst(nil);
-                                                             }
-                                                         }];
-    }
-    else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // 有些 error 不为 nil，而 userInfo 为nil
+                if (error == nil) {
+                    rst(tmpFilePath);
+                }
+                else if (error.userInfo.allValues.count == 0) {
+                    if ([[NSFileManager defaultManager]
+                                        fileExistsAtPath:tmpFilePath]) {
+                        rst(tmpFilePath);
+                    }
+                    else {
+                        rst(nil);
+                    }
+                }
+                else {
+                    rst(nil);
+                }
+            });
+        }];
+    } else {
         rst(nil);
     }
 }
@@ -595,13 +600,15 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
                                                                     toFile:[NSURL fileURLWithPath:PATH_MOVIE_FILE]
                                                                    options:nil
                                                          completionHandler:^(NSError *_Nullable error) {
-                                                             if (error) {
-                                                                 rst(nil);
-                                                             }
-                                                             else {
-                                                                 rst([NSData dataWithContentsOfFile:PATH_MOVIE_FILE]);
-                                                             }
-                                                         }];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    rst(nil);
+                }
+                else {
+                    rst([NSData dataWithContentsOfFile:PATH_MOVIE_FILE]);
+                }
+            });
+        }];
     }
     else {
         rst(nil);
