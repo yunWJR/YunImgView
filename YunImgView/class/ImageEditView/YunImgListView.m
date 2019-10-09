@@ -608,6 +608,7 @@ minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
         [_delegate initWithMWPhotoBrowser:_imgBrowser];
     }
     
+    ng.modalPresentationStyle = UIModalPresentationFullScreen;
     [[self superVC] presentViewController:ng animated:YES completion:^{
     }];
 }

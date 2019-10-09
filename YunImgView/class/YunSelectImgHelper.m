@@ -72,16 +72,13 @@
 
                 return;
             }
-            else if (YunImgViewConfig.instance.delegate &&
-                     [YunImgViewConfig.instance.delegate respondsToSelector:@selector(selectImgByType:)]) {
+
+            if (YunImgViewConfig.instance.delegate &&
+                [YunImgViewConfig.instance.delegate respondsToSelector:@selector(selectImgByType:)]) {
                 [YunImgViewConfig.instance.delegate selectImgByType:^(YunSelectImgType type) {
                     [self selectImgByType:type];
                 }];
-                
-                return;
-            }
-            else {
-                [self selectImgByType:_selType];
+
                 return;
             }
         }
@@ -96,9 +93,6 @@
             [YunImgViewConfig.instance.delegate selectItemByType:_selType cmp:^(YunSelectImgType type) {
                 [self selectImgByType:type];
             }];
-        }
-        else {
-            [self selectImgByType:_selType];
         }
     }
     else {
@@ -199,6 +193,7 @@
         [self notiCmpItems:nil];
     };
 
+    imgPk.modalPresentationStyle = UIModalPresentationFullScreen;
     [self.superVC presentViewController:imgPk animated:YES completion:nil];
 }
 
@@ -221,6 +216,7 @@
         _imgPk.allowsEditing = _editImg;
     }
 
+    _imgPk.modalPresentationStyle = UIModalPresentationFullScreen;
     [self.superVC presentViewController:_imgPk animated:YES completion:nil];
 }
 
@@ -238,43 +234,40 @@
         _imgPk.allowsEditing = _editImg;
     }
 
+    _imgPk.modalPresentationStyle = UIModalPresentationFullScreen;
     [self.superVC presentViewController:_imgPk animated:YES completion:nil];
 }
 
-- (void)selByAlbum:(BOOL)isVideo allowTakePicture:(BOOL)allowTakePicture{
+- (void)selByAlbum:(BOOL)isVideo {
     // 选择一张图片时，直接打开系统相册
     if (self.maxCount == 1 && _lastSelType == YunImgSelByPhotoAlbum) {
         [self openPhotoLib:isVideo];
         return;
     }
-    
+
     // 多选
     TZImagePickerController *imgPk =
-    [[TZImagePickerController alloc] initWithMaxImagesCount:(_maxCount - _curCount)
-                                                   delegate:self];
+            [[TZImagePickerController alloc] initWithMaxImagesCount:(_maxCount - _curCount)
+                                                           delegate:self];
     imgPk.allowPickingImage = !isVideo;
     imgPk.allowPickingVideo = isVideo;
     imgPk.isSelectOriginalPhoto = YES;
     imgPk.autoDismiss = NO;
-    
+
     //imgPk.navigationBar.barTintColor = PpmTheme.colorHl;
     // imgPk.oKButtonTitleColorDisabled = [UIColor lightGrayColor];
     // imgPk.oKButtonTitleColorNormal = [UIColor greenColor];
-    
+
     imgPk.sortAscendingByModificationDate = YES;
-    
-    imgPk.allowTakePicture = allowTakePicture; // 在内部显示拍照按钮
-    imgPk.allowTakeVideo = allowTakePicture;    //在内部显示拍摄按钮
+
+    imgPk.allowTakePicture = NO; // 在内部显示拍照按钮
 
     imgPk.imagePickerControllerDidCancelHandle = ^() {
         [self notiCmpItems:nil];
     };
-    
-    [self.superVC presentViewController:imgPk animated:YES completion:nil];
-}
 
-- (void)selByAlbum:(BOOL)isVideo {
-    [self selByAlbum:isVideo allowTakePicture:NO];
+    imgPk.modalPresentationStyle = UIModalPresentationFullScreen;
+    [self.superVC presentViewController:imgPk animated:YES completion:nil];
 }
 
 - (void)notiCmpError:(NSString *)error {
@@ -435,25 +428,26 @@
                                                                     toFile:[NSURL fileURLWithPath:tmpFilePath]
                                                                    options:nil
                                                          completionHandler:^(NSError *_Nullable error) {
-                                                             // 有些 error 不为 nil，而 userInfo 为nil
-                                                             if (error == nil) {
-                                                                 rst(tmpFilePath);
-                                                             }
-                                                             else if (error.userInfo.allValues.count == 0) {
-                                                                 if ([[NSFileManager defaultManager]
-                                                                                     fileExistsAtPath:tmpFilePath]) {
-                                                                     rst(tmpFilePath);
-                                                                 }
-                                                                 else {
-                                                                     rst(nil);
-                                                                 }
-                                                             }
-                                                             else {
-                                                                 rst(nil);
-                                                             }
-                                                         }];
-    }
-    else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // 有些 error 不为 nil，而 userInfo 为nil
+                if (error == nil) {
+                    rst(tmpFilePath);
+                }
+                else if (error.userInfo.allValues.count == 0) {
+                    if ([[NSFileManager defaultManager]
+                                        fileExistsAtPath:tmpFilePath]) {
+                        rst(tmpFilePath);
+                    }
+                    else {
+                        rst(nil);
+                    }
+                }
+                else {
+                    rst(nil);
+                }
+            });
+        }];
+    } else {
         rst(nil);
     }
 }
@@ -606,13 +600,15 @@ didFinishPickingMediaWithInfo:(NSDictionary<NSString *, id> *)info {
                                                                     toFile:[NSURL fileURLWithPath:PATH_MOVIE_FILE]
                                                                    options:nil
                                                          completionHandler:^(NSError *_Nullable error) {
-                                                             if (error) {
-                                                                 rst(nil);
-                                                             }
-                                                             else {
-                                                                 rst([NSData dataWithContentsOfFile:PATH_MOVIE_FILE]);
-                                                             }
-                                                         }];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (error) {
+                    rst(nil);
+                }
+                else {
+                    rst([NSData dataWithContentsOfFile:PATH_MOVIE_FILE]);
+                }
+            });
+        }];
     }
     else {
         rst(nil);
